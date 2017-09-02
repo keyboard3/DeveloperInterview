@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_java"
+        android:icon="@mipmap/ic_java"
+        android:title="Java" />
+    <item
+        android:id="@+id/menu_android"
+        android:icon="@mipmap/ic_android"
+        android:title="Android" />
+    <item
+        android:id="@+id/menu_html"
+        android:icon="@mipmap/ic_html"
+        android:title="Html" />
+</menu>
