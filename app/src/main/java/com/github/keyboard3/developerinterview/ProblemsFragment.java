@@ -16,7 +16,6 @@ import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.google.common.io.CharStreams;
-import com.google.common.io.Files;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -82,7 +81,7 @@ public class ProblemsFragment extends Fragment {
 
 
         File file = null;
-        String path = Config.StorageDirectory + "/" + problemType + "/" + "problems" + ".json";
+        String path = Config.StorageDirectory + "/" + problemType + "/" + problemType + ".json";
         file = new File(path);
         String content = "";
         try {

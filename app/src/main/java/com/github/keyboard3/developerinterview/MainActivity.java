@@ -1,5 +1,6 @@
 package com.github.keyboard3.developerinterview;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -17,8 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.werb.mediautilsdemo.CustomPermissionChecker;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private CustomPermissionChecker permissionChecker;
+    public static final int P_READ_EXTERNAL_STORAGE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setFragmentByType(Problem.typeJava);
+
+        permissionChecker = new CustomPermissionChecker(this);
+        if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})) {
+            permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
+        } else {
+            setFragmentByType(Problem.typeJava);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case P_READ_EXTERNAL_STORAGE:
+                if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
+                    setFragmentByType(Problem.typeJava);
+                } else {
+                    permissionChecker.showDialog();
+                }
+                break;
+        }
     }
 
     @Override
@@ -90,8 +114,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setFragmentByType(Problem.typeJava);
                 break;
             case R.id.menu_android:
+                setFragmentByType(Problem.typeAndroid);
                 break;
             case R.id.menu_html:
+                setFragmentByType(Problem.typeHtml);
                 break;
             case R.id.menu_other:
                 setFragmentByType(Problem.typeOther);
