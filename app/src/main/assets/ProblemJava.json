@@ -1,0 +1,18 @@
+[
+  {
+    "id": "0001",
+    "title": "以下代码有问题吗，是什么问题？",
+    "content": "1.List<Object> obj = new ArrayList<Long>();\nobj.add(\"I love Android!\");\n2.Object[] objArray = new Long[1];\nobjArray[0] = \"I love Android!\";",
+    "answer": "1.1 编译出错</br>1.2 编译可以，运行出错。</br></br>原因：List<Object>和ArrayList<Long>没有继承关系.",
+    "source": "https://github.com/TotemsCN/Base/blob/master/Java.md",
+    "type": 1
+  },
+  {
+    "id": "0002",
+    "title": "以下代码运行结果？",
+    "content": "2.1\nLong l1 = 128L;\n\nLong l2 = 128L;\n\nSystem.out.print(l1 == l2);\n\nSystem.out.print(l1 == 128L);\n\nLong l1 = 127L;\n\nLong l2 = 127L;\n\nSystem.out.print(l1 == l2);\n\nSystem.out.print(l1 == 127L);",
+    "answer": "2.1 false  true。</br>2.2 true  true。</br></br>原因：</br>2.1 Long 包装类型常量 cache 为 -128 ～ 127 之间，所以 l1 和 l2 是两个对象，== 比较的是对象的地址，所以第一个打印为 false；接着由于包装类型在表达式中且表达式中至少有一个不是包装类型，所以 Long l1== 128L 中 l1自动拆箱比较，所以数值比较为 true。",
+    "source": "https://github.com/TotemsCN/Base/blob/master/Java.md",
+    "type": 1
+  }
+]

@@ -8,9 +8,8 @@
     tools:context="com.github.keyboard3.developerinterview.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="com.github.keyboard3.developerinterview.ContentFragment"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></fragment>
+        android:layout_height="match_parent"></FrameLayout>
 </android.support.constraint.ConstraintLayout>
