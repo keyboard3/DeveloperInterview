@@ -43,7 +43,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
         TextView tvAudio = findViewById(R.id.tv_audio);
         WebView wb_answer = findViewById(R.id.wb_answer);
 
-        tvTitle.setText(entity.title);//todo 2 bug内容显示长度太长
+        tvTitle.setText(entity.title);
         tvContent.setText(entity.content);
         wb_answer.getSettings().setDefaultTextEncodingName("UTF-8");
         wb_answer.loadData(entity.answer, "text/html; charset=UTF-8", null);
