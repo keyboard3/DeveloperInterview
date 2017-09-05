@@ -1,13 +1,12 @@
 package com.github.keyboard3.developerinterview;
 
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -26,7 +25,6 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -102,10 +100,8 @@ public class ProblemsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        //todo 1 增加题目的删除功能。json->db
         /**
-         滑动删除，弹出提示框
-         拿到该题的id
+         增加题目的删除功能。json->db
          */
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
@@ -187,6 +183,10 @@ public class ProblemsFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void goTop() {
+        recyclerView.scrollToPosition(0);
     }
 
     /**

@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private CustomPermissionChecker permissionChecker;
     public static final int P_READ_EXTERNAL_STORAGE = 101;
+    ProblemsFragment contentFragment;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         //todo 1 增加sophix热修复
-        //todo 1 回到顶部的回调
-        FloatingActionButton fab = findViewById(R.id.fab);
+
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                contentFragment.goTop();
             }
         });
 
@@ -149,18 +150,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         switch (type) {
             case Problem.typeJava:
-                fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(Config.ProblemJava), Config.ProblemJava);
+                fab.setVisibility(View.VISIBLE);
+                contentFragment = ProblemsFragment.newInstance(Config.ProblemJava);
+                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemJava);
                 fragmentTransaction.commit();
                 break;
             case Problem.typeAndroid:
-                fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(Config.ProblemAndroid), Config.ProblemAndroid);
+                fab.setVisibility(View.VISIBLE);
+                contentFragment = ProblemsFragment.newInstance(Config.ProblemAndroid);
+                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemAndroid);
                 fragmentTransaction.commit();
                 break;
             case Problem.typeHtml:
-                fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(Config.ProblemHtml), Config.ProblemHtml);
+                fab.setVisibility(View.VISIBLE);
+                contentFragment = ProblemsFragment.newInstance(Config.ProblemHtml);
+                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemHtml);
                 fragmentTransaction.commit();
                 break;
             default:
+                fab.setVisibility(View.GONE);
                 fragmentTransaction.replace(R.id.fragment_container, new ContentFragment(), "typeOther");
                 fragmentTransaction.commit();
                 break;

@@ -36,10 +36,6 @@ import java.util.List;
 public class AudioListActivity extends AppCompatActivity {
     public static final String TAG = "AudioListActivity";
     List<String> audioList = new ArrayList<>();
-    static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     public static final int P_RECORD_AUDIO = 102;
     private TextView btn_record, info;
