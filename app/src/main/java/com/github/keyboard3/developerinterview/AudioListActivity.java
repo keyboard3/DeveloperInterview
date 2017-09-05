@@ -29,9 +29,10 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * 语音列表
+ */
 public class AudioListActivity extends AppCompatActivity {
     public static final String TAG = "AudioListActivity";
     List<String> audioList = new ArrayList<>();

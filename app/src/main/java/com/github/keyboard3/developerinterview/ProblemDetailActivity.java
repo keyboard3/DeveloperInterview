@@ -17,6 +17,9 @@ import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 
 import nl.changer.audiowife.AudioWife;
 
+/**
+ * 题目详情
+ */
 public class ProblemDetailActivity extends AppCompatActivity {
     public static final String TAG = "ProblemDetailActivity";
     Problem entity;
@@ -40,7 +43,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
         TextView tvAudio = findViewById(R.id.tv_audio);
         WebView wb_answer = findViewById(R.id.wb_answer);
 
-        tvTitle.setText(entity.title);
+        tvTitle.setText(entity.title);//todo 2 bug内容显示长度太长
         tvContent.setText(entity.content);
         wb_answer.getSettings().setDefaultTextEncodingName("UTF-8");
         wb_answer.loadData(entity.answer, "text/html; charset=UTF-8", null);
@@ -72,7 +75,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
     private void initData() {
         ViewGroup audioContainer = findViewById(R.id.audio_container);
         SharePreferencesHelper spHelper = new SharePreferencesHelper(this, Config.ProblemJava);
-        String path = spHelper.getString(entity.id);
+        String path = spHelper.getSP().getString(entity.id, "");
         if (!TextUtils.isEmpty(path)) {
             audioContainer.removeAllViews();
             new AudioWife().init(this, Uri.parse(path))

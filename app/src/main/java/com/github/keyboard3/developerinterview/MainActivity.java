@@ -20,6 +20,9 @@ import android.view.View;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
+/**
+ * 容器页面  包含左侧导航和右侧内容
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private CustomPermissionChecker permissionChecker;
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //todo 1 增加sophix热修复
+        //todo 1 回到顶部的回调
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +63,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             setFragmentByType(Problem.typeJava);
         }
+        //todo 3 设置页面，关于版本升级检测
+        //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
+        //todo 3 支持gitHub正好登录
+        //todo 2 导出和导入题目
+        //todo 2 题目的滑动显示，退出回到指定项
+        //todo 3 音频分享
+        //todo 4 音频文字识别 分享
+        //todo 4 支持markdown答案内容显示
+        //todo 4 进行混淆和图片压缩模块
+        //todo 5 题目录入数据库中,题目手动录入。语音录入
+        //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
+        //todo 2.5 增加作品显示内容
     }
 
     @Override

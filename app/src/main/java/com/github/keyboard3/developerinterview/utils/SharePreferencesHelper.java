@@ -23,6 +23,16 @@ public class SharePreferencesHelper {
         edit.commit();
     }
 
+    public void putInt(String key, Integer value) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putInt(key, value);
+        edit.commit();
+    }
+
+    public SharedPreferences getSP() {
+        return sharedPreferences;
+    }
+
     public String getString(String key) {
         return sharedPreferences.getString(key, "");
     }

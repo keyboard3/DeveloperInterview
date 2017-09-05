@@ -13,6 +13,9 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 网页页面
+ */
 public class WebViewActivity extends AppCompatActivity {
 
     @Override

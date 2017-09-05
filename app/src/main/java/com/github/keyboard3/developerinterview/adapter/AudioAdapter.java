@@ -18,6 +18,7 @@ import java.util.List;
 import nl.changer.audiowife.AudioWife;
 
 /**
+ * 语音列表页适配器
  * Created by keyboard3 on 2017/9/3.
  */
 

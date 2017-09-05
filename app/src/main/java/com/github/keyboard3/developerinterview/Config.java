@@ -9,6 +9,8 @@ import android.os.Environment;
 public class Config {
     public static final String INTENT_ENTITY = "intent_entity";
     public static final String INTENT_KEY = "intent_key";
+    public static final String INTENT_LIST_POSITION = "intent_list_position";
+    public static final String INTENT_LIST_TOP = "intent_list_top";
     public static final String StorageDirectory = Environment.getExternalStorageDirectory()
             .getAbsolutePath() + "/Interview";
     public static final String ProblemJava = "ProblemJava";
