@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 repositories {
     maven {
         url "http://maven.aliyun.com/nexus/content/repositories/releases"
@@ -9,10 +10,10 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.github.keyboard3.developerinterview"
-        minSdkVersion 18
-        targetSdkVersion 26
-        versionCode 3
-        versionName "1.4"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -20,6 +21,23 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "vesion"
+    productFlavors {
+        beta {
+            applicationId rootProject.ext.android.applicationId + "_beta"
+            versionCode rootProject.ext.android.d_versionCode
+            versionName rootProject.ext.android.d_versionName
+            //minSdkVersion rootProject.ext.android.targetSdkVersion
+            resValue "string", "app_name", "猿面试beta"
+            buildConfigField "boolean", "official", "false"
+            dimension "vesion"
+        }
+        official {
+            resValue "string", "app_name", "猿面试"
+            buildConfigField "boolean", "official", "true"
+            dimension "vesion"
         }
     }
     configurations.all {

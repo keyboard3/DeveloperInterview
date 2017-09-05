@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * 语音列表
  */
-public class AudioListActivity extends AppCompatActivity {
+public class AudioListActivity extends BaseActivity {
     public static final String TAG = "AudioListActivity";
     List<String> audioList = new ArrayList<>();
     public static final int P_READ_EXTERNAL_STORAGE = 101;
@@ -56,7 +56,6 @@ public class AudioListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_list);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("语音答案");
         initPre();
         initView();
@@ -144,9 +143,6 @@ public class AudioListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.action_delete:
                 List<String> selectedItems = adapter.getSelectedItems();
                 for (String path : selectedItems) {

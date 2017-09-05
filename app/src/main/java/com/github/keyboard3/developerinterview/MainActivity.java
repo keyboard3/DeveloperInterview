@@ -3,6 +3,7 @@ package com.github.keyboard3.developerinterview;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
         //todo 2 导出和导入题目
-        //todo 2 题目的滑动显示，退出回到指定项
         //todo 3 音频分享
         //todo 4 音频文字识别 分享
         //todo 4 支持markdown答案内容显示
@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingActivity.class));
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
