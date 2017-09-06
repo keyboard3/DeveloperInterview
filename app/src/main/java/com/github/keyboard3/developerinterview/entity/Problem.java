@@ -14,6 +14,7 @@ public class Problem implements Serializable {
     public static final int typeAndroid = 2;
     public static final int typeHtml = 3;
     public static final int typeOther = 4;
+    public static final int typeAlgorithm = 5;
 
     public Problem(String id, String title, String content, String answer, String source, int type, String audio) {
         this.id = id;
@@ -35,7 +36,25 @@ public class Problem implements Serializable {
     public String source;
     public int type;//1java 2android 3html
 
+    public void setType(String typeName) {
+        //todo 2 用策略模式 实现动态增加类型
+        switch (typeName) {
+            case Config.ProblemJava:
+                type = typeJava;
+                break;
+            case Config.ProblemAndroid:
+                type = typeAndroid;
+                break;
+            case Config.ProblemHtml:
+                type = typeHtml;
+            case Config.ProblemAlgorithm:
+                type = typeAlgorithm;
+                break;
+        }
+    }
+
     public int getTypeIcon() {
+        //todo 2.策略模式 要支持动态扩展
         int rId;
         switch (type) {
             case typeJava:
@@ -46,6 +65,9 @@ public class Problem implements Serializable {
                 break;
             case typeHtml:
                 rId = R.mipmap.ic_html;
+                break;
+            case typeAlgorithm:
+                rId = R.mipmap.ic_algorithm;
                 break;
             default:
                 rId = R.mipmap.ic_other;
@@ -69,6 +91,8 @@ public class Problem implements Serializable {
             case typeHtml:
                 dir = Config.ProblemHtml;
                 break;
+            case typeAlgorithm:
+                dir = Config.ProblemAlgorithm;
             default:
                 dir = "";
         }

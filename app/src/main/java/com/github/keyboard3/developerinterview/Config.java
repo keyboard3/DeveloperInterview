@@ -16,4 +16,5 @@ public class Config {
     public static final String ProblemJava = "ProblemJava";
     public static final String ProblemAndroid = "ProblemAndroid";
     public static final String ProblemHtml = "ProblemHtml";
+    public static final String ProblemAlgorithm = "ProblemAlgorithm";
 }

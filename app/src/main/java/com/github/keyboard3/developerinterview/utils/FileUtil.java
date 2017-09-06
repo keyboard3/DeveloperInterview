@@ -1,5 +1,12 @@
 package com.github.keyboard3.developerinterview.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
+import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -10,7 +17,7 @@ import java.io.OutputStream;
  */
 
 public class FileUtil {
-    public static void inputstreamtofile(InputStream ins, File file) {
+    public static void copyFile(InputStream ins, File file) {
         OutputStream os = null;
         try {
             os = new FileOutputStream(file);
@@ -23,6 +30,36 @@ public class FileUtil {
             ins.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 打开发送文件
+     *
+     * @param context
+     * @param target
+     */
+    public static void openFile(final Context context, final File target) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", target);
+            intent.setDataAndType(contentUri, "*/*");
+        } else {
+            intent.setDataAndType(Uri.fromFile(target), "*/*");
+        }
+
+        if (context.getPackageManager().queryIntentActivities(intent, 0).isEmpty()) {
+            Toast.makeText(context, "queryIntentActivities", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "不存在打开应用" + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -13,6 +13,10 @@
         android:icon="@mipmap/ic_html"
         android:title="Html" />
     <item
+        android:id="@+id/menu_algorithm"
+        android:icon="@mipmap/ic_algorithm"
+        android:title="algorithm" />
+    <item
         android:id="@+id/menu_other"
         android:icon="@mipmap/ic_other"
         android:title="other" />

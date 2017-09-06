@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,10 @@ import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +43,7 @@ import java.util.List;
  * A ProblemsFragment {@link Fragment} subclass.
  */
 public class ProblemsFragment extends Fragment {
+    private static String TAG = "ProblemsFragment";
     List<Problem> list = new ArrayList<>();
     private ProblemAdapter adapter;
     private String problemType;
@@ -71,6 +76,19 @@ public class ProblemsFragment extends Fragment {
         gson = new Gson();
         dirPath = Config.StorageDirectory + "/" + problemType + "/";
         problemJsonPath = dirPath + problemType + ".json";
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(SettingActivity.refreshEvent event) {
+        initData();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -107,7 +125,7 @@ public class ProblemsFragment extends Fragment {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
                     viewHolder) {
-                int flag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                int flag = ItemTouchHelper.LEFT;
                 return makeMovementFlags(0, flag);
             }
 
@@ -160,6 +178,9 @@ public class ProblemsFragment extends Fragment {
     }
 
     private void initData() {
+        //todo 1.使用rxJava 在子线程执行操作
+        //todo 2.使用加载框 加载内容
+        //todo 3.增加算法板块 、添加进入leetcode入口
         //创建文件夹
         File dir = new File(dirPath);
         if (!dir.exists())
@@ -169,11 +190,12 @@ public class ProblemsFragment extends Fragment {
         file = new File(problemJsonPath);
         String content = "";
         try {
+            list.clear();
             if (!file.exists()) {
                 //将assets目录的问题文件复制到sdcard
                 AssetManager assets = getActivity().getAssets();
                 InputStream open = assets.open(problemType + ".json");
-                FileUtil.inputstreamtofile(open, file);
+                FileUtil.copyFile(open, file);
             }
             InputStream input = new FileInputStream(file);
             content = CharStreams.toString(new InputStreamReader(input));

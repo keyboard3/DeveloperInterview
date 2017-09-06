@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //todo 3 设置页面，关于版本升级检测
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
-        //todo 2 导出和导入题目
         //todo 3 音频分享
         //todo 4 音频文字识别 分享
         //todo 4 支持markdown答案内容显示
@@ -125,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        //todo  2 策略模式 要支持动态扩展
         switch (item.getItemId()) {
             case R.id.menu_java:
                 setFragmentByType(Problem.typeJava);
@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.menu_html:
                 setFragmentByType(Problem.typeHtml);
+                break;
+            case R.id.menu_algorithm:
+                setFragmentByType(Problem.typeAlgorithm);
                 break;
             case R.id.menu_other:
                 setFragmentByType(Problem.typeOther);
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setFragmentByType(int type) {
+        //todo 2.策略模式要支持动态扩展
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         switch (type) {
             case Problem.typeJava:
@@ -163,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fab.setVisibility(View.VISIBLE);
                 contentFragment = ProblemsFragment.newInstance(Config.ProblemHtml);
                 fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemHtml);
+                fragmentTransaction.commit();
+                break;
+            case Problem.typeAlgorithm:
+                fab.setVisibility(View.VISIBLE);
+                contentFragment = ProblemsFragment.newInstance(Config.ProblemAlgorithm);
+                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemAlgorithm);
                 fragmentTransaction.commit();
                 break;
             default:
