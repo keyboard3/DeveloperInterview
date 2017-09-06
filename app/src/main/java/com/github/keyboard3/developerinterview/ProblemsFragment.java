@@ -22,6 +22,7 @@ import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +56,7 @@ public class ProblemsFragment extends Fragment {
     private String problemJsonPath;
     private View ivNodata;
     private View tvInput;
+    private AVLoadingIndicatorView avi;
 
     public static ProblemsFragment newInstance(String type) {
 
@@ -82,6 +84,7 @@ public class ProblemsFragment extends Fragment {
 
         recyclerView = getView().findViewById(R.id.rl_content);
         ivNodata = getView().findViewById(R.id.iv_nodata);
+        avi = getView().findViewById(R.id.avi);
         tvInput = getView().findViewById(R.id.tv_input);
         tvInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,8 +192,8 @@ public class ProblemsFragment extends Fragment {
     }
 
     private void initData() {
+        avi.show();
         //todo 1.使用rxJava 在子线程执行操作
-        //todo 2.使用加载框 加载内容
         //todo 3.添加进入leetcode入口
         //创建文件夹
         File dir = new File(dirPath);
@@ -223,8 +226,10 @@ public class ProblemsFragment extends Fragment {
                 ivNodata.setVisibility(View.VISIBLE);
                 tvInput.setVisibility(View.VISIBLE);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            avi.hide();
         }
     }
 

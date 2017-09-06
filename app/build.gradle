@@ -24,7 +24,7 @@ android {
             versionCode rootProject.ext.android.d_versionCode
             versionName rootProject.ext.android.d_versionName
             //minSdkVersion rootProject.ext.android.targetSdkVersion
-            resValue "string", "app_name", "猿面试beta"
+            resValue "string", "app_name", "beta"
             buildConfigField "boolean", "official", "false"
             dimension "vesion"
         }
@@ -61,4 +61,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.allenliu.versionchecklib:library:1.6.5'
+    implementation 'com.wang.avi:library:2.1.3'
 }
