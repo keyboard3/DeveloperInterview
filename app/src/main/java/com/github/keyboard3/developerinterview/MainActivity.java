@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.allenliu.versionchecklib.core.AllenChecker;
+import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             setFragmentByType(Problem.typeJava);
         }
+        //版本更新检查
+        AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
+
         //todo 3 设置页面，关于版本升级检测
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //todo 5 题目录入数据库中,题目手动录入。语音录入
         //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
         //todo 2.5 增加作品显示内容
+        //todo 1 双击退出
     }
 
     @Override
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case P_READ_EXTERNAL_STORAGE:
                 if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
                     setFragmentByType(Problem.typeJava);
+                    //todo 1.进行版本检测¬
                 } else {
                     permissionChecker.showDialog();
                 }
@@ -181,5 +188,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.commit();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, UpgradService.class));
     }
 }

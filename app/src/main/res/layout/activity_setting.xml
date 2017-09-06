@@ -14,6 +14,7 @@
         android:layout_marginTop="20dp"
         android:background="@android:color/white"
         android:padding="15dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -31,6 +32,7 @@
 
     <LinearLayout
         android:id="@+id/ll_input"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -50,19 +52,48 @@
             android:text="导入题目" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:background="@android:color/white"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:text="版本检测" />
+    </LinearLayout>
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1px"
         android:background="@color/line_color"
         app:layout_constraintTop_toBottomOf="@id/ll_output"></View>
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1px"
         android:background="@color/line_color"
         app:layout_constraintTop_toTopOf="@id/ll_output"></View>
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1px"
         android:background="@color/line_color"
         app:layout_constraintBottom_toBottomOf="@id/ll_input"></View>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/line_color"
+        app:layout_constraintTop_toTopOf="@id/ll_version"></View>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/line_color"
+        app:layout_constraintBottom_toBottomOf="@id/ll_version"></View>
 </android.support.constraint.ConstraintLayout>

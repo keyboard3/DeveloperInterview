@@ -5,14 +5,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.allenliu.versionchecklib.core.AllenChecker;
+import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.ListUtil;
@@ -55,6 +55,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //类型初始化到本地share中，每次从share中读取类型初始化到本地
         findViewById(R.id.ll_input).setOnClickListener(this);
         findViewById(R.id.ll_output).setOnClickListener(this);
+        findViewById(R.id.ll_version).setOnClickListener(this);
 
         permissionChecker = new CustomPermissionChecker(this);
         gson = new Gson();
@@ -158,8 +159,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.ll_output:
-                //弹出alert 列表框
                 outputDialog.show();
+                break;
+            case R.id.ll_version:
+                if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
+                    permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
+                } else {
+                    AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
+                }
                 break;
         }
     }

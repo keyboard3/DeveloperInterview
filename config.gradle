@@ -6,8 +6,8 @@ ext {
             applicationId    : "com.github.keyboard3.developerinterview",
             minSdkVersion    : 18,
             targetSdkVersion : 26,
-            versionCode      : 4,
-            versionName      : "1.4",
+            versionCode      : 5,
+            versionName      : "1.5",
             d_versionCode    : 4,
             d_versionName    : "1.4.1"]
 }
