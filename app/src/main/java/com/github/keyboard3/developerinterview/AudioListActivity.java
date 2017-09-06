@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 import com.werb.mediautilsdemo.MediaUtils;
@@ -161,18 +163,27 @@ public class AudioListActivity extends BaseActivity {
                 //保存到sharePre
                 spHelper.putString(entity.id, signleItems.get(0));
                 Toast.makeText(this, "设置成功！", Toast.LENGTH_SHORT).show();
+
+                break;
+            case R.id.action_share:
+                List<String> list = adapter.getSelectedItems();
+                if (list.size() > 1) {
+                    Toast.makeText(this, "只能选中一条", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                //保存到sharePre
+                FileUtil.openFile(this, list.get(0));
                 break;
         }
         return super.onOptionsItemSelected(item);
+
     }
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            DateTime dateTime = new DateTime();
-            String time = dateTime.toString("yyyy-MM-dd HH-mm-ss");
-
-            mediaUtils.setTargetName(time + ".m4a");
+            String name = entity.getTypeName() + "-" + entity.id + "-" + (System.currentTimeMillis() % 10000);
+            mediaUtils.setTargetName(name + ".m4a");
 
             boolean ret = false;
             float downY = 0;

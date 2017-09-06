@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,7 @@ import com.werb.mediautilsdemo.CustomPermissionChecker;
  * 容器页面  包含左侧导航和右侧内容
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static String TAG = "MainActivity";
     private CustomPermissionChecker permissionChecker;
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     ProblemsFragment contentFragment;
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         permissionChecker = new CustomPermissionChecker(this);
         if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})) {
             permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
@@ -68,17 +68,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setFragmentByType(Problem.typeJava);
         }
 
-        //todo 3 设置页面，关于版本升级检测
+        //版本更新检查
+        AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
-        //todo 3 音频分享
         //todo 4 音频文字识别 分享
         //todo 4 支持markdown答案内容显示
         //todo 4 进行混淆和图片压缩模块
         //todo 5 题目录入数据库中,题目手动录入。语音录入
         //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
         //todo 2.5 增加作品显示内容
-        //todo 1 双击退出
+        //todo 应用图标，无数据 默认图导入。
     }
 
     @Override
@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case P_READ_EXTERNAL_STORAGE:
                 if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
                     setFragmentByType(Problem.typeJava);
-                    //版本更新检查
-                    AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
                 } else {
                     permissionChecker.showDialog();
                 }

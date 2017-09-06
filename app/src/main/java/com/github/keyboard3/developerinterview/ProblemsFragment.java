@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
+import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
@@ -53,6 +53,8 @@ public class ProblemsFragment extends Fragment {
     private Gson gson;
     private String dirPath;
     private String problemJsonPath;
+    private View ivNodata;
+    private View tvInput;
 
     public static ProblemsFragment newInstance(String type) {
 
@@ -77,6 +79,16 @@ public class ProblemsFragment extends Fragment {
         dirPath = Config.StorageDirectory + "/" + problemType + "/";
         problemJsonPath = dirPath + problemType + ".json";
         EventBus.getDefault().register(this);
+
+        recyclerView = getView().findViewById(R.id.rl_content);
+        ivNodata = getView().findViewById(R.id.iv_nodata);
+        tvInput = getView().findViewById(R.id.tv_input);
+        tvInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), SettingActivity.class));
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -96,7 +108,6 @@ public class ProblemsFragment extends Fragment {
         super.onResume();
         spHelper = new SharePreferencesHelper(getActivity(), problemType);
 
-        recyclerView = getView().findViewById(R.id.rl_content);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
 
         //下次进来还是显示上次的位置
@@ -180,7 +191,7 @@ public class ProblemsFragment extends Fragment {
     private void initData() {
         //todo 1.使用rxJava 在子线程执行操作
         //todo 2.使用加载框 加载内容
-        //todo 3.增加算法板块 、添加进入leetcode入口
+        //todo 3.添加进入leetcode入口
         //创建文件夹
         File dir = new File(dirPath);
         if (!dir.exists())
@@ -202,6 +213,16 @@ public class ProblemsFragment extends Fragment {
             List<Problem> data = gson.fromJson(content, new TypeToken<List<Problem>>() {
             }.getType());
             list.addAll(data);
+
+            if (!ListUtil.isEmpty(list)) {
+                recyclerView.setVisibility(View.VISIBLE);
+                ivNodata.setVisibility(View.GONE);
+                tvInput.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                ivNodata.setVisibility(View.VISIBLE);
+                tvInput.setVisibility(View.VISIBLE);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -210,8 +231,4 @@ public class ProblemsFragment extends Fragment {
     public void goTop() {
         recyclerView.scrollToPosition(0);
     }
-
-    /**
-     * 处理listView 的Item的各种触摸事件
-     */
 }

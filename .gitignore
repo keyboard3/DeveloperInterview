@@ -11,3 +11,4 @@
 *.bat
 /gradle
 .externalNativeBuild
+*.apk

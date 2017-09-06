@@ -33,6 +33,10 @@ public class FileUtil {
         }
     }
 
+    public static void openFile(final Context context, final String path) {
+        openFile(context, new File(path));
+    }
+
     /**
      * 打开发送文件
      *
