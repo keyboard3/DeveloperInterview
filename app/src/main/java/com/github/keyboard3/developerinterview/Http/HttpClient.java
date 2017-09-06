@@ -2,7 +2,10 @@ package com.github.keyboard3.developerinterview.Http;
 
 import com.allenliu.versionchecklib.core.VersionParams;
 import com.github.keyboard3.developerinterview.UpgradService;
+import com.github.keyboard3.developerinterview.entity.Version;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -35,4 +38,9 @@ public class HttpClient {
         return Single.instance;
     }
 
+    public void upgrad(String appId, String api_token, Callback<Version> versionCall) {
+        Call<Version> upgrad = service.upgrad(appId, api_token);
+        upgrad.enqueue(versionCall);
+        upgrad.request();
+    }
 }

@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     ProblemsFragment contentFragment;
     private FloatingActionButton fab;
+    private long firstClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             setFragmentByType(Problem.typeJava);
         }
-        //版本更新检查
-        AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
 
         //todo 3 设置页面，关于版本升级检测
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case P_READ_EXTERNAL_STORAGE:
                 if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
                     setFragmentByType(Problem.typeJava);
-                    //todo 1.进行版本检测¬
+                    //版本更新检查
+                    AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
                 } else {
                     permissionChecker.showDialog();
                 }
@@ -108,9 +109,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+            return;
         }
+        if (System.currentTimeMillis() - firstClickTime < 2000) {
+            //执行退出应用
+            QuitActivity.exitApplication(this);
+        } else {
+            Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+        }
+        firstClickTime = System.currentTimeMillis();
     }
 
     @Override

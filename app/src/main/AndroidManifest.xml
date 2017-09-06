@@ -16,17 +16,17 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".WebViewActivity" />
-        <activity android:name=".ProblemDetailActivity" />
-        <activity android:name=".AudioListActivity" />
-        <activity android:name=".SettingActivity">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".ProblemDetailActivity" />
+        <activity android:name=".AudioListActivity" />
+        <activity android:name=".SettingActivity"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -38,9 +38,13 @@
                 android:resource="@xml/problem_path"
                 tools:replace="android:resource" />
         </provider>
+
         <service
             android:name=".UpgradService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity android:name=".QuitActivity"></activity>
     </application>
+
 </manifest>

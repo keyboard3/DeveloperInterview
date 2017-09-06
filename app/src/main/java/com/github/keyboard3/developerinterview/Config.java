@@ -17,4 +17,7 @@ public class Config {
     public static final String ProblemAndroid = "ProblemAndroid";
     public static final String ProblemHtml = "ProblemHtml";
     public static final String ProblemAlgorithm = "ProblemAlgorithm";
+    public static final String firAppId = "59acbc2d959d6940060002ee";
+    public static final String firApi_token = "aefd90754f9288ff2e54949a8bc21e20";
+    public static final String upgradUrl = "http://api.fir.im/apps/latest/" + firAppId + "?api_token=" + firApi_token;
 }

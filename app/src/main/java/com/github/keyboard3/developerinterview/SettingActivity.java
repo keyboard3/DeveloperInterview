@@ -9,13 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.entity.Version;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.ListUtil;
+import com.github.keyboard3.developerinterview.utils.VersionUtil;
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +31,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 设置界面
@@ -57,6 +64,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.ll_output).setOnClickListener(this);
         findViewById(R.id.ll_version).setOnClickListener(this);
 
+        TextView tvVersion = findViewById(R.id.tv_version);
+        tvVersion.setText("版本v" + VersionUtil.getVersion(this));
         permissionChecker = new CustomPermissionChecker(this);
         gson = new Gson();
 
@@ -165,7 +174,28 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
                     permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
                 } else {
-                    AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
+                    //弹出更新内容
+                    HttpClient.getInstance().upgrad(Config.firAppId, Config.firApi_token, new Callback<Version>() {
+                        @Override
+                        public void onResponse(Call<Version> call, Response<Version> response) {
+                            if (response.isSuccessful()) {
+                                Version entity = response.body();
+                                if (entity.getVersionShort().compareTo(VersionUtil.getVersion(getApplicationContext())) == 0) {
+                                    new AlertDialog.Builder(SettingActivity.this)
+                                            .setTitle(entity.getVersionShort())
+                                            .setMessage(entity.getChangelog())
+                                            .show();
+                                } else {
+                                    Toast.makeText(SettingActivity.this, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Version> call, Throwable t) {
+                            Toast.makeText(SettingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
                 break;
         }
