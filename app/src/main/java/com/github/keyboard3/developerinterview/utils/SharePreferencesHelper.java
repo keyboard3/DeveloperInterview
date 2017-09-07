@@ -3,7 +3,6 @@ package com.github.keyboard3.developerinterview.utils;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.pattern.JavaType;
 
 /**

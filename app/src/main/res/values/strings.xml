@@ -83,4 +83,8 @@
     <string name="action_delete">删除</string>
     <string name="action_share">分享</string>
     <string name="action_set">设置</string>
+    <string name="action_open_url">在浏览器打开</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_copy_url">复制链接</string>
+    <string name="action_send">发送</string>
 </resources>

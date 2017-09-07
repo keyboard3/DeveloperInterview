@@ -4,8 +4,6 @@ import android.Manifest;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,8 +24,6 @@ import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 import com.werb.mediautilsdemo.MediaUtils;
-
-import org.joda.time.DateTime;
 
 import java.io.File;
 import java.util.ArrayList;

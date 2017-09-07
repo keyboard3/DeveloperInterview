@@ -132,9 +132,6 @@ public class ProblemsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        /**
-         增加题目的删除功能。json->db
-         */
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
@@ -194,7 +191,7 @@ public class ProblemsFragment extends Fragment {
     private void initData() {
         avi.show();
         //todo 1.使用rxJava 在子线程执行操作
-        //todo 3.添加进入leetcode入口
+        //todo 3.添加进入leetCode 账号
         //创建文件夹
         File dir = new File(dirPath);
         if (!dir.exists())

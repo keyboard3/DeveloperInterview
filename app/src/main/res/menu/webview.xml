@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_open_url"
+        android:orderInCategory="1"
+        android:title="@string/action_open_url"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="2"
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_copy_url"
+        android:orderInCategory="3"
+        android:title="@string/action_copy_url"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_send"
+        android:orderInCategory="3"
+        android:title="@string/action_send"
+        app:showAsAction="never" />
+</menu>
