@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.pattern.ProblemType;
+import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 
 import java.util.List;
 

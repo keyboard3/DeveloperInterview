@@ -2,6 +2,12 @@ package com.github.keyboard3.developerinterview.entity;
 
 import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.R;
+import com.github.keyboard3.developerinterview.pattern.AlgorithmType;
+import com.github.keyboard3.developerinterview.pattern.AndroidType;
+import com.github.keyboard3.developerinterview.pattern.HtmlType;
+import com.github.keyboard3.developerinterview.pattern.JavaType;
+import com.github.keyboard3.developerinterview.pattern.ProblemType;
+import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 
 import java.io.Serializable;
 
@@ -10,11 +16,6 @@ import java.io.Serializable;
  */
 
 public class Problem implements Serializable {
-    public static final int typeJava = 1;
-    public static final int typeAndroid = 2;
-    public static final int typeHtml = 3;
-    public static final int typeOther = 4;
-    public static final int typeAlgorithm = 5;
 
     public Problem(String id, String title, String content, String answer, String source, int type, String audio) {
         this.id = id;
@@ -25,10 +26,6 @@ public class Problem implements Serializable {
         this.source = "";
     }
 
-    public static Problem newJava(String id, String title, String content, String answer) {
-        return new Problem(id, title, content, answer, "", 1, "");
-    }
-
     public String id;
     public String title;
     public String content;
@@ -37,42 +34,11 @@ public class Problem implements Serializable {
     public int type;//1java 2android 3html
 
     public void setType(String typeName) {
-        //todo 2 用策略模式 实现动态增加类型
-        switch (typeName) {
-            case Config.ProblemJava:
-                type = typeJava;
-                break;
-            case Config.ProblemAndroid:
-                type = typeAndroid;
-                break;
-            case Config.ProblemHtml:
-                type = typeHtml;
-            case Config.ProblemAlgorithm:
-                type = typeAlgorithm;
-                break;
-        }
+        type = ProblemTypeFactory.getProblemType(typeName).getType();
     }
 
     public int getTypeIcon() {
-        //todo 2.策略模式 要支持动态扩展
-        int rId;
-        switch (type) {
-            case typeJava:
-                rId = R.mipmap.ic_java;
-                break;
-            case typeAndroid:
-                rId = R.mipmap.ic_android;
-                break;
-            case typeHtml:
-                rId = R.mipmap.ic_html;
-                break;
-            case typeAlgorithm:
-                rId = R.mipmap.ic_algorithm;
-                break;
-            default:
-                rId = R.mipmap.ic_other;
-        }
-        return rId;
+        return ProblemTypeFactory.getProblemType(type).getTypeIcon();
     }
 
     public String getStorageDir() {
@@ -80,23 +46,7 @@ public class Problem implements Serializable {
     }
 
     public String getTypeName() {
-        String dir;
-        switch (type) {
-            case typeJava:
-                dir = Config.ProblemJava;
-                break;
-            case typeAndroid:
-                dir = Config.ProblemAndroid;
-                break;
-            case typeHtml:
-                dir = Config.ProblemHtml;
-                break;
-            case typeAlgorithm:
-                dir = Config.ProblemAlgorithm;
-            default:
-                dir = "";
-        }
-        return dir;
+        return ProblemTypeFactory.getProblemType(type).getTypeStr();
     }
 
     @Override

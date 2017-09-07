@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 
 import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.pattern.JavaType;
 
 /**
  * Created by keyboard3 on 2017/9/4.
@@ -14,7 +15,7 @@ public class SharePreferencesHelper {
     private final SharedPreferences sharedPreferences;
 
     public SharePreferencesHelper(Activity activity, String name) {
-        sharedPreferences = activity.getSharedPreferences(Config.ProblemJava, activity.MODE_PRIVATE);
+        sharedPreferences = activity.getSharedPreferences(JavaType.typeStr, activity.MODE_PRIVATE);
     }
 
     public void putString(String key, String value) {

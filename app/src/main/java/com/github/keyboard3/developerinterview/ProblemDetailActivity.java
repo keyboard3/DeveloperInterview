@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.pattern.JavaType;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 
 import nl.changer.audiowife.AudioWife;
@@ -74,7 +75,7 @@ public class ProblemDetailActivity extends AppCompatActivity {
 
     private void initData() {
         ViewGroup audioContainer = findViewById(R.id.audio_container);
-        SharePreferencesHelper spHelper = new SharePreferencesHelper(this, Config.ProblemJava);
+        SharePreferencesHelper spHelper = new SharePreferencesHelper(this, JavaType.typeStr);
         String path = spHelper.getSP().getString(entity.id, "");
         if (!TextUtils.isEmpty(path)) {
             audioContainer.removeAllViews();

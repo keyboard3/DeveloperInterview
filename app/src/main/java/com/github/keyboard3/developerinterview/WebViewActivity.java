@@ -38,6 +38,7 @@ public class WebViewActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(view.getTitle());
             }
         });
+        //todo 2 链接分享
     }
 
     @Override

@@ -23,6 +23,13 @@ import android.widget.Toast;
 import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.pattern.AlgorithmType;
+import com.github.keyboard3.developerinterview.pattern.AndroidType;
+import com.github.keyboard3.developerinterview.pattern.HtmlType;
+import com.github.keyboard3.developerinterview.pattern.JavaType;
+import com.github.keyboard3.developerinterview.pattern.OtherType;
+import com.github.keyboard3.developerinterview.pattern.ProblemType;
+import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
 /**
@@ -32,9 +39,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static String TAG = "MainActivity";
     private CustomPermissionChecker permissionChecker;
     public static final int P_READ_EXTERNAL_STORAGE = 101;
-    ProblemsFragment contentFragment;
     private FloatingActionButton fab;
     private long firstClickTime = 0;
+    ProblemType problemType = JavaType.getInstance();//初始的是javaType
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contentFragment.goTop();
+                ProblemsFragment fragment = getContentFragment();
+                if (fragment != null)
+                    fragment.goTop();
             }
         });
 
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})) {
             permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
         } else {
-            setFragmentByType(Problem.typeJava);
+            problemType.setFragmentByType(fab, getFragmentManager());
         }
 
         //版本更新检查
@@ -77,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //todo 4 进行混淆和图片压缩模块
         //todo 5 题目录入数据库中,题目手动录入。语音录入
         //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
-        //todo 2.5 增加作品显示内容
-        //todo 应用图标，无数据 默认图导入。
+        //todo 3 增加作品显示内容
+        //todo 应用图标。
     }
 
     @Override
@@ -86,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case P_READ_EXTERNAL_STORAGE:
                 if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
-                    setFragmentByType(Problem.typeJava);
+                    problemType.setFragmentByType(fab, getFragmentManager());
                 } else {
                     permissionChecker.showDialog();
                 }
@@ -136,63 +145,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        //todo  2 策略模式 要支持动态扩展
-        switch (item.getItemId()) {
-            case R.id.menu_java:
-                setFragmentByType(Problem.typeJava);
-                break;
-            case R.id.menu_android:
-                setFragmentByType(Problem.typeAndroid);
-                break;
-            case R.id.menu_html:
-                setFragmentByType(Problem.typeHtml);
-                break;
-            case R.id.menu_algorithm:
-                setFragmentByType(Problem.typeAlgorithm);
-                break;
-            case R.id.menu_other:
-                setFragmentByType(Problem.typeOther);
-                break;
-        }
+        problemType = ProblemTypeFactory.getProblemTypeByMenu(item.getItemId());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        problemType.setFragmentByType(fab, getFragmentManager());
         return true;
     }
 
-    public void setFragmentByType(int type) {
-        //todo 2.策略模式要支持动态扩展
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        switch (type) {
-            case Problem.typeJava:
-                fab.setVisibility(View.VISIBLE);
-                contentFragment = ProblemsFragment.newInstance(Config.ProblemJava);
-                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemJava);
-                fragmentTransaction.commit();
-                break;
-            case Problem.typeAndroid:
-                fab.setVisibility(View.VISIBLE);
-                contentFragment = ProblemsFragment.newInstance(Config.ProblemAndroid);
-                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemAndroid);
-                fragmentTransaction.commit();
-                break;
-            case Problem.typeHtml:
-                fab.setVisibility(View.VISIBLE);
-                contentFragment = ProblemsFragment.newInstance(Config.ProblemHtml);
-                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemHtml);
-                fragmentTransaction.commit();
-                break;
-            case Problem.typeAlgorithm:
-                fab.setVisibility(View.VISIBLE);
-                contentFragment = ProblemsFragment.newInstance(Config.ProblemAlgorithm);
-                fragmentTransaction.replace(R.id.fragment_container, contentFragment, Config.ProblemAlgorithm);
-                fragmentTransaction.commit();
-                break;
-            default:
-                fab.setVisibility(View.GONE);
-                fragmentTransaction.replace(R.id.fragment_container, new ContentFragment(), "typeOther");
-                fragmentTransaction.commit();
-                break;
-        }
+    public ProblemsFragment getContentFragment() {
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+        return fragment instanceof ProblemsFragment ? ((ProblemsFragment) fragment) : null;
     }
 
     @Override

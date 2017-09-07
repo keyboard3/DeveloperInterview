@@ -17,6 +17,11 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.entity.Version;
+import com.github.keyboard3.developerinterview.pattern.AlgorithmType;
+import com.github.keyboard3.developerinterview.pattern.AndroidType;
+import com.github.keyboard3.developerinterview.pattern.HtmlType;
+import com.github.keyboard3.developerinterview.pattern.JavaType;
+import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.VersionUtil;
@@ -43,9 +48,10 @@ import retrofit2.Response;
 
 /**
  * 设置
+ * 导入、导出、版本检测
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
-    String[] problemTypes = {Config.ProblemJava, Config.ProblemAndroid, Config.ProblemHtml, Config.ProblemAlgorithm};
+
     private static String TAG = "SettingActivity";
     private AlertDialog outputDialog;
     private Dialog inputDialog;
@@ -54,11 +60,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private CustomPermissionChecker permissionChecker;
     String curTypeStr = "";
     private AlertDialog trainsferDialog;
+    private LinkedList<Problem> oldList;
     private LinkedList<Problem> newList;
     private Gson gson;
     private File oldTargeFile;
-    private LinkedList<Problem> oldList;
     private int validNum;
+    private String[] problemTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +84,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         gson = new Gson();
 
         initDialog();
-        //todo 2.增加  增量 导入
-        //todo 3.爬虫同步工匠若水的题目 [差异化新增]
+        //todo 3.爬虫同步工匠若水的题目
     }
 
     private void initDialog() {
+        problemTypes = new String[ProblemTypeFactory.mapString.keySet().size()];
+        ProblemTypeFactory.mapString.keySet().toArray(problemTypes);//todo 1 RxJava 过滤数据
+
         outputDialog = new AlertDialog.Builder(this).setTitle("选择题目类型")
                 .setItems(problemTypes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
