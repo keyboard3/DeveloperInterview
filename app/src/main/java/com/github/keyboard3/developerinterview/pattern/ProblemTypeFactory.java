@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 /**
- * 问题的策略模式
+ * 问题的状态模式和工厂模式
  * Created by keyboard3 on 2017/9/7.
  */
 
