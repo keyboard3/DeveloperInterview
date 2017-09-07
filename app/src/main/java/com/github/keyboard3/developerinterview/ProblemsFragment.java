@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -199,22 +200,9 @@ public class ProblemsFragment extends Fragment {
         if (!dir.exists())
             dir.mkdirs();
 
-        File file = null;
-        file = new File(problemJsonPath);
-        String content = "";
+        File file = new File(problemJsonPath);
         try {
-            list.clear();
-            if (!file.exists()) {
-                //将assets目录的问题文件复制到sdcard
-                AssetManager assets = getActivity().getAssets();
-                InputStream open = assets.open(problemType + ".json");
-                FileUtil.copyFile(open, file);
-            }
-            InputStream input = new FileInputStream(file);
-            content = CharStreams.toString(new InputStreamReader(input));
-            List<Problem> data = gson.fromJson(content, new TypeToken<List<Problem>>() {
-            }.getType());
-            list.addAll(data);
+            initProblemsFromFile(file);
 
             if (!ListUtil.isEmpty(list)) {
                 recyclerView.setVisibility(View.VISIBLE);
@@ -230,6 +218,22 @@ public class ProblemsFragment extends Fragment {
         } finally {
             avi.hide();
         }
+    }
+
+    private void initProblemsFromFile(File file) throws IOException {
+        String content;
+        list.clear();
+        if (!file.exists()) {
+            //将assets目录的问题文件复制到sdcard
+            AssetManager assets = getActivity().getAssets();
+            InputStream open = assets.open(problemType + ".json");
+            FileUtil.copyFile(open, file);
+        }
+        InputStream input = new FileInputStream(file);
+        content = CharStreams.toString(new InputStreamReader(input));
+        List<Problem> data = gson.fromJson(content, new TypeToken<List<Problem>>() {
+        }.getType());
+        list.addAll(data);
     }
 
     public void goTop() {

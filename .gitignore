@@ -13,3 +13,4 @@
 .externalNativeBuild
 *.apk
 /release/
+sophix-patch.jar

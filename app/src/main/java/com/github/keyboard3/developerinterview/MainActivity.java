@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //todo 3 支持gitHub正好登录
         //todo 4 音频文字识别 分享
         //todo 4 支持markdown答案内容显示
-        //todo 4 进行混淆和图片压缩模块
+        //todo 4 进行混淆和图片压缩模块 -
         //todo 5 题目录入数据库中,题目手动录入。语音录入
         //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
         //todo 3 增加作品显示内容

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
+import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 import com.werb.mediautilsdemo.MediaUtils;
@@ -147,6 +148,10 @@ public class AudioListActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 List<String> selectedItems = adapter.getSelectedItems();
+                if (ListUtil.isEmpty(selectedItems)) {
+                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 for (String path : selectedItems) {
                     File file = new File(path);
                     file.delete();
@@ -159,6 +164,9 @@ public class AudioListActivity extends BaseActivity {
                 if (signleItems.size() > 1) {
                     Toast.makeText(this, "只能选中一条", Toast.LENGTH_SHORT).show();
                     return true;
+                } else if (ListUtil.isEmpty(signleItems)) {
+                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
                 //保存到sharePre
                 spHelper.putString(entity.id, signleItems.get(0));
@@ -169,6 +177,9 @@ public class AudioListActivity extends BaseActivity {
                 List<String> list = adapter.getSelectedItems();
                 if (list.size() > 1) {
                     Toast.makeText(this, "只能选中一条", Toast.LENGTH_SHORT).show();
+                    return true;
+                } else if (ListUtil.isEmpty(list)) {
+                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 //保存到sharePre
