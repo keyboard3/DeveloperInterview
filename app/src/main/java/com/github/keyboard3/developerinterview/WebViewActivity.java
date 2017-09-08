@@ -2,6 +2,7 @@ package com.github.keyboard3.developerinterview;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.utils.SystemUtil;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.lang.reflect.Method;
+
 /**
  * 网页页面
  */
@@ -19,6 +22,8 @@ public class WebViewActivity extends BaseActivity {
 
     private WebView webView;
     private AVLoadingIndicatorView avi;
+    private String searchKey;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,8 @@ public class WebViewActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("网页详情");
 
-        String url = getIntent().getStringExtra(Config.INTENT_KEY);
+        url = getIntent().getStringExtra(Config.INTENT_KEY);
+        searchKey = getIntent().getStringExtra(Config.INTENT_SEARCH_KEY);
         avi = findViewById(R.id.avi);
         webView = findViewById(R.id.wb_content);
         webView.loadUrl(url);
@@ -37,17 +43,31 @@ public class WebViewActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
                 avi.show();
+                super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                avi.hide();
                 super.onPageFinished(view, url);
                 getSupportActionBar().setTitle(view.getTitle());
-                avi.hide();
+                if (!TextUtils.isEmpty(searchKey)) {
+                    searchContent(searchKey);
+                }
             }
         });
+
+    }
+
+    public void searchContent(String content) {
+        webView.findAllAsync(content);
+        try {
+            Method m = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
+            m.invoke(webView, true);
+        } catch (Throwable ignored) {
+
+        }
     }
 
     @Override
@@ -58,13 +78,13 @@ public class WebViewActivity extends BaseActivity {
                 Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_open_url:
-                SystemUtil.openText(getApplicationContext(), webView.getUrl());
+                SystemUtil.openBrowser(WebViewActivity.this, webView.getUrl());
                 break;
             case R.id.action_refresh:
                 webView.reload();
                 break;
             case R.id.action_send:
-                SystemUtil.sendText(getApplicationContext(), webView.getUrl());
+                SystemUtil.sendText(WebViewActivity.this, webView.getUrl());
                 break;
         }
         return super.onOptionsItemSelected(item);

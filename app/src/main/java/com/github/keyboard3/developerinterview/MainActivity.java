@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import com.github.keyboard3.developerinterview.pattern.JavaType;
 import com.github.keyboard3.developerinterview.pattern.OtherType;
 import com.github.keyboard3.developerinterview.pattern.ProblemType;
 import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
+import com.github.keyboard3.developerinterview.utils.SystemUtil;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
 /**
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //版本更新检查
         AllenChecker.startVersionCheck(this, HttpClient.getInstance().builder.build());
+        SystemUtil.setClipboard(this, "", "content://com.github.keyboard3.developerinterview_beta/problem?type=1&&id=0003&title=内部类你知多少&source=https://github.com/TotemsCN/Base/blob/master/Java.md");
+        openComingIntent(getIntent().getData());
+        //openInnerUri();
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
         //todo 4 音频文字识别 分享
@@ -139,8 +145,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingActivity.class));
             return true;
+        } else if (id == R.id.action_open_uri) {
+            openInnerUri();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openInnerUri() {
+        String uri = SystemUtil.getClipboard(getApplicationContext());
+        openComingIntent(Uri.parse(uri));
+    }
+
+    private void openComingIntent(Uri data) {
+        if (data != null && data.toString().contains("content://" + getPackageName())) {
+            String id = data.getQueryParameter(Config.INTENT_ID);
+            String type = data.getQueryParameter(Config.INTENT_TYPE);
+            String source = data.getQueryParameter(Config.INTENT_SOURCE);
+            String title = data.getQueryParameter(Config.INTENT_TITLE);
+            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
+                Intent intent = new Intent(this, ProblemDetailActivity.class);
+                intent.putExtra(Config.INTENT_KEY, data.toString());
+                startActivity(intent);
+            } else if (!TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
+                Intent intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra(Config.INTENT_KEY, source);
+                intent.putExtra(Config.INTENT_SEARCH_KEY, title);
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

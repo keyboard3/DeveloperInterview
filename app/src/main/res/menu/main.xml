@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_open_uri"
+        android:orderInCategory="100"
+        android:title="@string/action_uri"
+        app:showAsAction="never" />
 </menu>

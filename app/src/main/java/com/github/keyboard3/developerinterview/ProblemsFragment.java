@@ -1,7 +1,9 @@
 package com.github.keyboard3.developerinterview;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -147,18 +149,56 @@ public class ProblemsFragment extends Fragment {
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                deleteItem(viewHolder.getAdapterPosition());
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                new AlertDialog.Builder(getActivity()).setTitle("提示")
+                        .setMessage("是否确定删除该题目？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteItem(viewHolder.getAdapterPosition());
+                                dialogInterface.dismiss();
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }
+                }).create().show();
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public void deleteItem(int position) {
+    public void deleteItem(final int position) {
         Problem problem = list.get(position);
         String path = dirPath + problem.id + "/";
         File audio = new File(path);
+        audio.delete();
+        if (audio.exists()) {
+            new AlertDialog.Builder(getActivity()).setTitle("提示")
+                    .setMessage("是否删除语音资源")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            removeProblem(position);
+                        }
+                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    removeProblem(position);
+
+                }
+            }).create().show();
+        } else {
+            removeProblem(position);
+        }
+    }
+
+    private void removeProblem(int position) {
         list.remove(position);
         String contentStr = gson.toJson(list);
         try {
@@ -169,7 +209,6 @@ public class ProblemsFragment extends Fragment {
             e.printStackTrace();
             Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT).show();
         }
-        audio.delete();
         adapter.notifyItemRemoved(position);
         Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
     }

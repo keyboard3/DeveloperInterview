@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.entity.Version;
@@ -265,6 +266,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 .setMessage(entity.getChangelog())
                                 .show();
                     } else {
+                        AllenChecker.startVersionCheck(getApplicationContext(), HttpClient.getInstance().builder.build());
                         Toast.makeText(SettingActivity.this, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
                     }
                 }

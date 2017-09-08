@@ -1,5 +1,7 @@
 package com.github.keyboard3.developerinterview.entity;
 
+import android.support.annotation.NonNull;
+
 import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.pattern.AlgorithmType;
@@ -15,7 +17,7 @@ import java.io.Serializable;
  * Created by keyboard3 on 2017/9/3.
  */
 
-public class Problem implements Serializable {
+public class Problem implements Serializable, Comparable<Problem> {
 
     public Problem(String id, String title, String content, String answer, String source, int type, String audio) {
         this.id = id;
@@ -32,6 +34,10 @@ public class Problem implements Serializable {
     public String answer;
     public String source;
     public int type;//1java 2android 3html
+
+    public int getId() {
+        return Integer.parseInt(id);
+    }
 
     public void setType(String typeName) {
         type = ProblemTypeFactory.getProblemType(typeName).getType();
@@ -58,5 +64,10 @@ public class Problem implements Serializable {
                 ", answer='" + answer + '\'' +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Problem problem) {
+        return getId() - problem.getId();
     }
 }
