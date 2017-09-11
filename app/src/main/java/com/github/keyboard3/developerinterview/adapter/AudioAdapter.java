@@ -22,16 +22,11 @@ import nl.changer.audiowife.AudioWife;
  * Created by keyboard3 on 2017/9/3.
  */
 
-public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder> {
+public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String> {
     public static final String TAG = "AudioAdapter";
-    List<String> data;
-    public WeakReference<Activity> awr;
-    List<AudioAdapter.MyViewHolder> viewHolders;
 
     public AudioAdapter(List<String> data, Activity activity) {
-        this.data = data;
-        awr = new WeakReference(activity);
-        viewHolders = new ArrayList<>();
+        super(data, activity);
     }
 
     @Override
@@ -52,12 +47,6 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder> {
                 .useDefaultUi(holder.audioContainer, awr.get().getLayoutInflater());
     }
 
-    @Override
-    public int getItemCount() {
-        int count = data == null ? 0 : data.size();
-        return count;
-    }
-
     public static class MyViewHolder extends BaseAdapter.ViewHolder {
         public ViewGroup audioContainer;
         public CheckBox radioButton;
@@ -72,8 +61,9 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder> {
     public List<String> getSelectedItems() {
         Log.d(TAG, "getSelectedItems");
         List<String> list = new ArrayList<>();
-        for (MyViewHolder item :
+        for (ViewHolder item1 :
                 viewHolders) {
+            MyViewHolder item = (MyViewHolder) item1;
             if (item.radioButton.isChecked()) {
                 String path = data.get(item.position);
                 Log.d(TAG, "viewHolder-hash¬code:" + item.hashCode() + "position:" + item.position + " path:" + path);
@@ -85,8 +75,8 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder> {
 
     public void init() {
         Log.d(TAG, "init");
-        for (MyViewHolder item :
-                viewHolders) {
+        for (ViewHolder item1 : viewHolders) {
+            MyViewHolder item = (MyViewHolder) item1;
             if (item == null) continue;
             item.audioContainer.removeAllViews();
             if (item.radioButton.isChecked()) {

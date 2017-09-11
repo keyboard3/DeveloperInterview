@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview;
+package com.github.keyboard3.developerinterview.fragments;
 
 
 import android.app.Fragment;
@@ -13,6 +13,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+
+import com.github.keyboard3.developerinterview.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -25,6 +25,7 @@
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:ellipsize="end"
             android:maxEms="20"
             android:maxLines="2"

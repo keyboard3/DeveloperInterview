@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview;
+package com.github.keyboard3.developerinterview.fragments;
 
 
 import android.app.AlertDialog;
@@ -16,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ProblemDetailActivity;
+import com.github.keyboard3.developerinterview.R;
+import com.github.keyboard3.developerinterview.SettingActivity;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
@@ -123,7 +127,7 @@ public class ProblemsFragment extends Fragment {
 
         initData();
 
-        adapter = new ProblemAdapter(list);
+        adapter = new ProblemAdapter(list, getActivity());
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.github.keyboard3.developerinterview.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +8,31 @@ import android.view.ViewGroup;
 
 import com.github.keyboard3.developerinterview.R;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 基类适配器
  * Created by keyboard3 on 2017/9/3.
  */
 
-public abstract class BaseAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T> {
+public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
+    public List<D> data;
+    public WeakReference<Activity> awr;
+    public List<ViewHolder> viewHolders;
+
+    public BaseAdapter(List<D> data, Activity activity) {
+        this.data = data;
+        awr = new WeakReference(activity);
+        viewHolders = new ArrayList<>();
+    }
+
+    @Override
+    public int getItemCount() {
+        int count = data == null ? 0 : data.size();
+        return count;
+    }
 
     public void initViewHolder(BaseAdapter.ViewHolder viewHolder) {
         //创建viewHolder的时候就绑定好点击事件、绑定数据时设置当前viewHolder的数据索引。触发点击事件时拿到当前的数据索引

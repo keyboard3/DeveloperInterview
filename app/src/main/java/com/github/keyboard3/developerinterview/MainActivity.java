@@ -2,6 +2,7 @@ package com.github.keyboard3.developerinterview;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -21,29 +21,32 @@ import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
+import com.github.keyboard3.developerinterview.fragments.ContentFragment;
+import com.github.keyboard3.developerinterview.fragments.ProblemsFragment;
 import com.github.keyboard3.developerinterview.pattern.JavaType;
 import com.github.keyboard3.developerinterview.pattern.ProblemType;
 import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
-import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.SystemUtil;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.model.PluginInfo;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * 容器页面  包含左侧导航和右侧内容
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static String TAG = "MainActivity";
     private CustomPermissionChecker permissionChecker;
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     private FloatingActionButton fab;
     private long firstClickTime = 0;
     ProblemType problemType = JavaType.getInstance();//初始的是javaType
+    private ProgressDialog progressDialog;
+
+    @Override
+    public boolean hasActionBar() {
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //版本更新检查
         AllenChecker.startVersionCheck(this, HttpClient.getInstance().hostBuilder.build());
         openComingIntent(getIntent().getData());
+
         //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
         //todo 3 支持gitHub正好登录
         //todo 4 音频文字识别 分享
@@ -175,21 +179,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_product) {
-            PluginInfo pi = RePlugin.install(Config.StorageDirectory + "/selfView.apk");
-            if (pi != null) {
-                RePlugin.preload(pi);
-            }
-            RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.github.keyboard3.selfview",
-                    "com.github.keyboard3.selfview.MainActivity"));
-            return true;
-        }
         problemType = ProblemTypeFactory.getProblemTypeByMenu(item.getItemId());
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         problemType.setFragmentByType(fab, getFragmentManager());
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideDialog();
     }
 
     public ProblemsFragment getContentFragment() {

@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".WebViewActivity" />
-        <activity android:name="com.github.keyboard3.developerinterview.ProblemDetailActivity">
+        <activity android:name=".ProblemDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AudioListActivity" />
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SettingActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -56,7 +56,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".QuitActivity"></activity>
+        <activity android:name=".QuitActivity" />
+        <activity android:name=".fragments.ProductListFragment"></activity>
     </application>
 
 </manifest>

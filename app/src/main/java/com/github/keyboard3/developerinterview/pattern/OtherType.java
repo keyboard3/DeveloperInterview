@@ -5,7 +5,7 @@ import android.app.FragmentTransaction;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-import com.github.keyboard3.developerinterview.ContentFragment;
+import com.github.keyboard3.developerinterview.fragments.ContentFragment;
 import com.github.keyboard3.developerinterview.R;
 
 /**

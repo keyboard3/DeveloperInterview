@@ -22,18 +22,21 @@ public class ProblemTypeFactory {
         mapType.put(HtmlType.type, HtmlType.getInstance());
         mapType.put(AlgorithmType.type, AlgorithmType.getInstance());
         mapType.put(OtherType.type, OtherType.getInstance());
+        mapType.put(ProductType.type, ProductType.getInstance());
 
         mapString.put(JavaType.typeStr, JavaType.getInstance());
         mapString.put(AndroidType.typeStr, AndroidType.getInstance());
         mapString.put(HtmlType.typeStr, HtmlType.getInstance());
         mapString.put(AlgorithmType.typeStr, AlgorithmType.getInstance());
         mapString.put(OtherType.typeStr, OtherType.getInstance());
+        mapString.put(ProductType.typeStr, ProductType.getInstance());
 
         mapMenuId.put(R.id.menu_java, JavaType.getInstance());
         mapMenuId.put(R.id.menu_android, AndroidType.getInstance());
         mapMenuId.put(R.id.menu_html, HtmlType.getInstance());
         mapMenuId.put(R.id.menu_algorithm, AlgorithmType.getInstance());
         mapMenuId.put(R.id.menu_other, OtherType.getInstance());
+        mapMenuId.put(R.id.menu_product, ProductType.getInstance());
     }
 
     public static ProblemType getProblemType(int type) {

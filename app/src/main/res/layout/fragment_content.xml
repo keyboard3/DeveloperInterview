@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.keyboard3.developerinterview.ContentFragment">
+    tools:context="com.github.keyboard3.developerinterview.fragments.ContentFragment">
 
     <TextView
         android:id="@+id/tv_content"

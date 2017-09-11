@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
+import com.github.keyboard3.developerinterview.hotRepair.HostCallbacks;
 import com.github.keyboard3.developerinterview.utils.VersionUtil;
 import com.qihoo360.replugin.RePlugin;
+import com.qihoo360.replugin.RePluginConfig;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
@@ -28,7 +30,9 @@ public class SophixApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        RePlugin.App.attachBaseContext(this);
+        RePluginConfig c = new RePluginConfig();
+        c.setCallbacks(new HostCallbacks(base));
+        RePlugin.App.attachBaseContext(this, c);
     }
 
     @Override

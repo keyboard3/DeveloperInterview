@@ -1,5 +1,6 @@
 package com.github.keyboard3.developerinterview.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,11 @@ import java.util.List;
  * Created by keyboard3 on 2017/9/3.
  */
 
-public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder> {
-    List<Problem> data;
+public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Problem> {
 
-    public ProblemAdapter(List<Problem> data) {
-        this.data = data;
+
+    public ProblemAdapter(List<Problem> data, Activity activity) {
+        super(data, activity);
     }
 
     @Override
@@ -39,11 +40,6 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder> {
         holder.icon.setImageResource(entity.getTypeIcon());
         holder.tvTitle.setText(entity.title);
         holder.tvContent.setText(entity.content);
-    }
-
-    @Override
-    public int getItemCount() {
-        return data != null ? data.size() : 0;
     }
 
     public static class MyViewHolder extends BaseAdapter.ViewHolder {

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
-    tools:context="com.github.keyboard3.developerinterview.ProblemsFragment">
+    tools:context="com.github.keyboard3.developerinterview.fragments.ProblemsFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rl_content"
