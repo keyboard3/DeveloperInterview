@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".DIApplication"
+        android:name=".SophixApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,19 +21,22 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".WebViewActivity" />
+        <activity android:name="com.github.keyboard3.developerinterview.ProblemDetailActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="${applicationId}"
+                    android:host="com.github.keyboard3.developerinterview"
                     android:path="/problem"
                     android:scheme="content" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebViewActivity" />
-        <activity android:name=".ProblemDetailActivity"></activity>
         <activity android:name=".AudioListActivity" />
         <activity android:name=".SettingActivity"></activity>
 

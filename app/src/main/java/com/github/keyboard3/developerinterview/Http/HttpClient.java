@@ -1,6 +1,7 @@
 package com.github.keyboard3.developerinterview.Http;
 
 import com.allenliu.versionchecklib.core.VersionParams;
+import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.UpgradService;
 import com.github.keyboard3.developerinterview.entity.Version;
 
@@ -15,7 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HttpClient {
     private final HttpService service;
-    public final VersionParams.Builder builder;
+    public final VersionParams.Builder hostBuilder;
+    public final VersionParams.Builder selfBuilder;
 
     public HttpClient() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -25,8 +27,16 @@ public class HttpClient {
 
         service = retrofit.create(HttpService.class);
 
-        builder = new VersionParams.Builder()
-                .setRequestUrl("http://api.fir.im/apps/latest/59acbc2d959d6940060002ee?api_token=aefd90754f9288ff2e54949a8bc21e20")
+        hostBuilder = new VersionParams.Builder()
+                .setRequestUrl(Config.upgradHostUrl)
+                .setApkName("interview")
+                .setDownloadAPKPath(Config.StorageDirectory)
+                .setService(UpgradService.class);
+        selfBuilder = new VersionParams.Builder()
+                .setApkName("selfView")
+                .setOnlyDownload(true)
+                .setRequestUrl(Config.upgradSelfUrl)
+                .setDownloadAPKPath(Config.StorageDirectory)
                 .setService(UpgradService.class);
     }
 

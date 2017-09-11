@@ -44,6 +44,9 @@ public class ProblemDetailActivity extends BaseActivity {
         //从外面进来
         if (entity == null) {
             String uri = getIntent().getStringExtra(Config.INTENT_KEY);
+            if (TextUtils.isEmpty(uri)) {
+                uri = getIntent().getData().toString();
+            }
             if (openComingIntent(Uri.parse(uri))) {
                 return;
             }
@@ -91,8 +94,12 @@ public class ProblemDetailActivity extends BaseActivity {
 
         tvTitle.setText(entity.title);
         tvContent.setText(entity.content);
-        wb_answer.getSettings().setDefaultTextEncodingName("UTF-8");
-        wb_answer.loadData(entity.answer, "text/html; charset=UTF-8", null);
+        if (entity.answer.startsWith("http://") || entity.answer.startsWith("https://")) {
+            wb_answer.loadUrl(entity.answer);
+        }else{
+            wb_answer.getSettings().setDefaultTextEncodingName("UTF-8");
+            wb_answer.loadData(entity.answer, "text/html; charset=UTF-8", null);
+        }
         wb_answer.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {

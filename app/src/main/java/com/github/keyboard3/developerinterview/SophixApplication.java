@@ -1,9 +1,12 @@
 package com.github.keyboard3.developerinterview;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import com.github.keyboard3.developerinterview.utils.VersionUtil;
+import com.qihoo360.replugin.RePlugin;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
@@ -12,18 +15,43 @@ import com.taobao.sophix.listener.PatchLoadStatusListener;
  * Created by keyboard3 on 2017/9/5.
  */
 
-public class DIApplication extends Application {
+public class SophixApplication extends Application {
     private static String TAG = "DIApplication";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sophixInit();
+        sophixInit(this);
+        RePlugin.App.onCreate();
     }
 
-    private void sophixInit() {
-        String appVersion = VersionUtil.getVersion(getApplicationContext());
-        SophixManager.getInstance().setContext(this)
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        RePlugin.App.attachBaseContext(this);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        RePlugin.App.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        RePlugin.App.onTrimMemory(level);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        RePlugin.App.onConfigurationChanged(newConfig);
+    }
+
+    private static void sophixInit(SophixApplication application) {
+        String appVersion = VersionUtil.getVersion(application);
+        SophixManager.getInstance().setContext(application)
                 .setAppVersion(appVersion)
                 //.setAesKey(null)
                 .setEnableDebug(true)

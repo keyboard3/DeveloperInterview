@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.allenliu.versionchecklib">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true"
+       >
+        <activity
+            android:name=".core.VersionDialogActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/versionCheckLibvtransparentTheme" />
+        <provider
+            android:name="com.allenliu.versionchecklib.core.VersionFileProvider"
+            android:authorities="${applicationId}.versionProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/versionchecklib_file_paths" />
+        </provider>
+    </application>
+
+</manifest>

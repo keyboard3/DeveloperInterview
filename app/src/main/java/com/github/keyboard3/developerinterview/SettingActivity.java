@@ -255,7 +255,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private void versionCheck() {
         //弹出更新内容
-        HttpClient.getInstance().upgrad(Config.firAppId, Config.firApi_token, new Callback<Version>() {
+        HttpClient.getInstance().upgrad(Config.firHostAppId, Config.firApi_token, new Callback<Version>() {
             @Override
             public void onResponse(Call<Version> call, Response<Version> response) {
                 if (response.isSuccessful()) {
@@ -266,7 +266,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 .setMessage(entity.getChangelog())
                                 .show();
                     } else {
-                        AllenChecker.startVersionCheck(getApplicationContext(), HttpClient.getInstance().builder.build());
+                        AllenChecker.startVersionCheck(getApplicationContext(), HttpClient.getInstance().hostBuilder.build());
                         Toast.makeText(SettingActivity.this, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
                     }
                 }

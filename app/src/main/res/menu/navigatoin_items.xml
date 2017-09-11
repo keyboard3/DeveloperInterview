@@ -20,4 +20,8 @@
         android:id="@+id/menu_other"
         android:icon="@mipmap/ic_other"
         android:title="other" />
+    <item
+        android:id="@+id/menu_product"
+        android:icon="@mipmap/ic_product"
+        android:title="product" />
 </menu>
