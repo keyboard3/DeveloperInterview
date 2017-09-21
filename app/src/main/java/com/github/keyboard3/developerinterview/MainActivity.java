@@ -41,7 +41,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private FloatingActionButton fab;
     private long firstClickTime = 0;
     ProblemType problemType = JavaType.getInstance();//初始的是javaType
-    private ProgressDialog progressDialog;
 
     @Override
     public boolean hasActionBar() {
@@ -84,17 +83,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //版本更新检查
         AllenChecker.startVersionCheck(this, HttpClient.getInstance().hostBuilder.build());
-        openComingIntent(getIntent().getData());
-
-        //todo 3 自己定制导航栏板块（仅支持选择显示的板块）
-        //todo 3 支持gitHub正好登录
-        //todo 4 音频文字识别 分享
-        //todo 4 支持markdown答案内容显示
-        //todo 5 题目录入数据库中,题目手动录入。语音录入
-        //todo 6 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
-        //todo 3 增加作品显示内容
+        //todo n 自己定制导航栏板块（仅支持选择显示的板块）
+        //todo n 支持gitHub正好登录
+        //todo n 音频文字识别 分享
+        //todo n 支持markdown答案内容显示
+        //todo n 题目录入数据库中,题目手动录入。语音录入
+        //todo n 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
         //todo 应用图标。
-        //todo 7 和github登录用户聊天
     }
 
     @Override
@@ -185,12 +180,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         problemType.setFragmentByType(fab, getFragmentManager());
         return true;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideDialog();
     }
 
     public ProblemsFragment getContentFragment() {

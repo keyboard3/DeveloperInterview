@@ -91,7 +91,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     public void onClick(DialogInterface dialog, int which) {
                         //选择题目类型 调用系统的发送文件功能
                         String type = problemTypes[which];
-                        File imagePath = new File(Environment.getExternalStorageDirectory(), "Interview/" + type + "/");
+                        File imagePath = new File(Environment.getExternalStorageDirectory(), Config.AppDir + "/" + type + "/");
                         File newFile = new File(imagePath, type + ".json");
                         FileUtil.openFile(SettingActivity.this, newFile);
                         dialog.dismiss();
@@ -190,12 +190,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             Problem nextOld = oldIterator.next();
             while (newIterator.hasNext()) {
                 Problem nextNew = newIterator.next();
-                if (Integer.parseInt(nextNew.id) - Integer.parseInt(nextOld.id) < 0) {
+                if (nextNew.getId() - nextOld.getId() < 0) {
                     num++;
                     oldIterator.previous();
                     oldIterator.add(nextNew);
                     oldIterator.next();
                 } else {
+                    if (nextNew.getId() == nextOld.getId() && nextNew.hashCode() != nextOld.hashCode()) {
+                        oldIterator.set(nextNew);
+                    }
                     if (newIterator.hasNext()) {
                         nextOld = oldIterator.next();
                     }

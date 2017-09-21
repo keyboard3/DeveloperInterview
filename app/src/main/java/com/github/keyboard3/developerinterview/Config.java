@@ -12,6 +12,7 @@ import com.github.keyboard3.developerinterview.entity.Problem;
 public class Config {
     public static final String INTENT_ENTITY = "intent_entity";
     public static final String INTENT_KEY = "intent_key";
+    public static final String AppDir = "Interview";
     public static final String INTENT_SEARCH_KEY = "search_key";
     public static final String INTENT_LIST_POSITION = "intent_list_position";
     public static final String INTENT_LIST_TOP = "intent_list_top";

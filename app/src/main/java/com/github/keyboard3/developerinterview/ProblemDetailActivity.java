@@ -96,7 +96,7 @@ public class ProblemDetailActivity extends BaseActivity {
         tvContent.setText(entity.content);
         if (entity.answer.startsWith("http://") || entity.answer.startsWith("https://")) {
             wb_answer.loadUrl(entity.answer);
-        }else{
+        } else {
             wb_answer.getSettings().setDefaultTextEncodingName("UTF-8");
             wb_answer.loadData(entity.answer, "text/html; charset=UTF-8", null);
         }

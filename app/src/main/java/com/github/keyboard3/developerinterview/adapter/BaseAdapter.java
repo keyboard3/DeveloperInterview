@@ -23,6 +23,9 @@ public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends 
     public List<ViewHolder> viewHolders;
 
     public BaseAdapter(List<D> data, Activity activity) {
+        if (activity == null || data == null) {
+            return;
+        }
         this.data = data;
         awr = new WeakReference(activity);
         viewHolders = new ArrayList<>();
@@ -30,8 +33,7 @@ public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends 
 
     @Override
     public int getItemCount() {
-        int count = data == null ? 0 : data.size();
-        return count;
+        return data == null ? 0 : data.size();
     }
 
     public void initViewHolder(BaseAdapter.ViewHolder viewHolder) {
