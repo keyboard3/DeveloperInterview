@@ -35,7 +35,7 @@ public class HtmlType extends ProblemType {
 
     @Override
     public int getTypeIcon() {
-        return R.mipmap.ic_html;
+        return R.mipmap.ic_menu_html;
     }
 
     @Override

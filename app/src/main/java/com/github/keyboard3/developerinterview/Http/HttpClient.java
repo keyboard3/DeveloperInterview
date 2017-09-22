@@ -15,9 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class HttpClient {
-    private final HttpService service;
-    public final VersionParams.Builder hostBuilder;
-    public final VersionParams.Builder selfBuilder;
+    private final HttpService mService;
+    public final VersionParams.Builder mHostBuilder;
+    public final VersionParams.Builder mSelfBuilder;
 
     public HttpClient() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -25,18 +25,18 @@ public class HttpClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        service = retrofit.create(HttpService.class);
+        mService = retrofit.create(HttpService.class);
 
-        hostBuilder = new VersionParams.Builder()
-                .setRequestUrl(Config.upgradHostUrl)
+        mHostBuilder = new VersionParams.Builder()
+                .setRequestUrl(Config.UPGRAD_HOST_URL)
                 .setApkName("interview")
-                .setDownloadAPKPath(Config.StorageDirectory)
+                .setDownloadAPKPath(Config.STORAGE_DIRECTORY)
                 .setService(UpgradService.class);
-        selfBuilder = new VersionParams.Builder()
+        mSelfBuilder = new VersionParams.Builder()
                 .setApkName("selfView")
                 .setOnlyDownload(true)
-                .setRequestUrl(Config.upgradSelfUrl)
-                .setDownloadAPKPath(Config.StorageDirectory)
+                .setRequestUrl(Config.UPGRAD_SELF_URL)
+                .setDownloadAPKPath(Config.STORAGE_DIRECTORY)
                 .setService(UpgradService.class);
     }
 
@@ -49,7 +49,7 @@ public class HttpClient {
     }
 
     public void upgrad(String appId, String api_token, Callback<Version> versionCall) {
-        Call<Version> upgrad = service.upgrad(appId, api_token);
+        Call<Version> upgrad = mService.upgrad(appId, api_token);
         upgrad.enqueue(versionCall);
         upgrad.request();
     }

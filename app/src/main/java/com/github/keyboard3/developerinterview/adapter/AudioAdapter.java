@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 
 import com.github.keyboard3.developerinterview.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +31,45 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
     public AudioAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_audio, parent, false));
         initViewHolder(viewHolder);
-        viewHolders.add(viewHolder);
+        mViewHolders.add(viewHolder);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(AudioAdapter.MyViewHolder holder, int position) {
-        if (awr.get() == null) return;
+        if (mAwr.get() == null) return;
         holder.setPosition(position);
-        String audioUrl = data.get(position);
+        String audioUrl = mData.get(position);
         //初始化默认UI
-        new AudioWife().init(awr.get(), Uri.parse(audioUrl))
-                .useDefaultUi(holder.audioContainer, awr.get().getLayoutInflater());
+        new AudioWife().init(mAwr.get(), Uri.parse(audioUrl))
+                .useDefaultUi(holder.audioContainer, mAwr.get().getLayoutInflater());
+    }
+
+    public List<String> getSelectedItems() {
+        Log.d(TAG, "getSelectedItems");
+        List<String> list = new ArrayList<>();
+        for (ViewHolder item1 :
+                mViewHolders) {
+            MyViewHolder item = (MyViewHolder) item1;
+            if (item.radioButton.isChecked()) {
+                String path = mData.get(item.position);
+                Log.d(TAG, "viewHolder-hash¬code:" + item.hashCode() + "position:" + item.position + " path:" + path);
+                list.add(path);
+            }
+        }
+        return list;
+    }
+
+    public void init() {
+        Log.d(TAG, "init");
+        for (ViewHolder item1 : mViewHolders) {
+            MyViewHolder item = (MyViewHolder) item1;
+            if (item == null) continue;
+            item.audioContainer.removeAllViews();
+            if (item.radioButton.isChecked()) {
+                item.radioButton.setChecked(false);
+            }
+        }
     }
 
     public static class MyViewHolder extends BaseAdapter.ViewHolder {
@@ -55,33 +80,6 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
             super(itemView);
             audioContainer = itemView.findViewById(R.id.audio_container);
             radioButton = itemView.findViewById(R.id.rb_check);
-        }
-    }
-
-    public List<String> getSelectedItems() {
-        Log.d(TAG, "getSelectedItems");
-        List<String> list = new ArrayList<>();
-        for (ViewHolder item1 :
-                viewHolders) {
-            MyViewHolder item = (MyViewHolder) item1;
-            if (item.radioButton.isChecked()) {
-                String path = data.get(item.position);
-                Log.d(TAG, "viewHolder-hash¬code:" + item.hashCode() + "position:" + item.position + " path:" + path);
-                list.add(path);
-            }
-        }
-        return list;
-    }
-
-    public void init() {
-        Log.d(TAG, "init");
-        for (ViewHolder item1 : viewHolders) {
-            MyViewHolder item = (MyViewHolder) item1;
-            if (item == null) continue;
-            item.audioContainer.removeAllViews();
-            if (item.radioButton.isChecked()) {
-                item.radioButton.setChecked(false);
-            }
         }
     }
 }

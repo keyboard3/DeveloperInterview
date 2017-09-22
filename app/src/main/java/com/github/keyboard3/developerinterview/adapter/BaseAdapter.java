@@ -2,11 +2,7 @@ package com.github.keyboard3.developerinterview.adapter;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.github.keyboard3.developerinterview.R;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -18,55 +14,58 @@ import java.util.List;
  */
 
 public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
-    public List<D> data;
-    public WeakReference<Activity> awr;
-    public List<ViewHolder> viewHolders;
+    protected WeakReference<Activity> mAwr;
+    protected List<ViewHolder> mViewHolders;
+    protected List<D> mData;
+
+    private OnItemClickListener mListener;//外部listView的 itemClick
 
     public BaseAdapter(List<D> data, Activity activity) {
         if (activity == null || data == null) {
             return;
         }
-        this.data = data;
-        awr = new WeakReference(activity);
-        viewHolders = new ArrayList<>();
+        this.mData = data;
+        mAwr = new WeakReference(activity);
+        mViewHolders = new ArrayList<>();
     }
 
     @Override
     public int getItemCount() {
-        return data == null ? 0 : data.size();
+        return mData == null ? 0 : mData.size();
     }
 
-    public void initViewHolder(BaseAdapter.ViewHolder viewHolder) {
+    protected void initViewHolder(BaseAdapter.ViewHolder viewHolder) {
         //创建viewHolder的时候就绑定好点击事件、绑定数据时设置当前viewHolder的数据索引。触发点击事件时拿到当前的数据索引
         viewHolder.listener = new InnerItemViewClickListener() {
 
             @Override
             public void onClick(View view) {
-                if (listener != null) {
-                    listener.onItemClick(view, position);
+                if (mListener != null) {
+                    mListener.onItemClick(view, position);
                 }
             }
         };
         viewHolder.itemView.setOnClickListener(viewHolder.listener);
     }
 
-    //内部列表 优化的clickListener
-    public abstract class InnerItemViewClickListener implements View.OnClickListener {
-        public int position;
-    }
-
-    //外部listView的 itemClick
-    public OnItemClickListener listener;
-
     public void setOnItemClickListener(OnItemClickListener clickListener) {
-        listener = clickListener;
+        mListener = clickListener;
     }
 
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
 
-    //优化后itemClick的viewHolder
+    /**
+     * 内部列表 优化的clickListener
+     */
+    public abstract class InnerItemViewClickListener implements View.OnClickListener {
+        public int position;
+    }
+
+    /**
+     * 优化后itemClick的viewHolder
+     */
     public static abstract class ViewHolder extends RecyclerView.ViewHolder {
         public int position;
         public BaseAdapter.InnerItemViewClickListener listener;

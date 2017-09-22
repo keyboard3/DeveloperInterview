@@ -3,12 +3,6 @@ package com.github.keyboard3.developerinterview.entity;
 import android.support.annotation.NonNull;
 
 import com.github.keyboard3.developerinterview.Config;
-import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.pattern.AlgorithmType;
-import com.github.keyboard3.developerinterview.pattern.AndroidType;
-import com.github.keyboard3.developerinterview.pattern.HtmlType;
-import com.github.keyboard3.developerinterview.pattern.JavaType;
-import com.github.keyboard3.developerinterview.pattern.ProblemType;
 import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 
 import java.io.Serializable;
@@ -48,7 +42,7 @@ public class Problem implements Serializable, Comparable<Problem> {
     }
 
     public String getStorageDir() {
-        return Config.StorageDirectory + "/" + getTypeName();
+        return Config.STORAGE_DIRECTORY + "/" + getTypeName();
     }
 
     public String getTypeName() {

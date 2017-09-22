@@ -12,9 +12,9 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 import com.github.keyboard3.developerinterview.R;
+import com.github.keyboard3.developerinterview.views.CusWebViewClient;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,10 +24,9 @@ import java.util.regex.Pattern;
  * 面经内容
  * ContentFragment {@link Fragment} subclass.
  */
-public class ContentFragment extends Fragment {
+public class ContentFragment extends BaseFragment {
 
-    private TextView tvContent;
-    public WebView webView;
+    public WebView mWebView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,8 +41,7 @@ public class ContentFragment extends Fragment {
     }
 
     private void initView() {
-        tvContent = getActivity().findViewById(R.id.tv_content);
-        webView = getActivity().findViewById(R.id.wb_content);
+        mWebView = getActivity().findViewById(R.id.wb_content);
         String content = "[Android 名企面试题及涉及知识点整理。](https://github.com/karmalove/AndroidInterview)\n" +
                 "[gtibook版面试资料](http://www.jackywang.tech/AndroidInterview-Q-A/)\n" +
                 "[［干货］2017已来，最全面试总结——这些Android面试题你一定需要](http://www.jianshu.com/p/39e8768843d2)\n" +
@@ -67,17 +65,10 @@ public class ContentFragment extends Fragment {
         while (matcher.find()) {
             htmlData += "<a href='" + matcher.group(2) + "'>" + matcher.group(1) + "</a></br>";
         }
-        webView.getSettings().setDefaultTextEncodingName("UTF-8");
-        webView.loadData(htmlData, "text/html; charset=UTF-8", null);
-        WebSettings settings = webView.getSettings();
-        settings.supportZoom();
-        settings.setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                super.onReceivedHttpError(view, request, errorResponse);
-
-            }
-        });
+        mWebView.getSettings().setDefaultTextEncodingName("UTF-8");
+        mWebView.loadData(htmlData, "text/html; charset=UTF-8", null);
+        mWebView.getSettings().supportZoom();
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new CusWebViewClient(this));
     }
 }

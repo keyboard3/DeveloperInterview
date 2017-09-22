@@ -35,7 +35,7 @@ public class AlgorithmType extends ProblemType {
 
     @Override
     public int getTypeIcon() {
-        return R.mipmap.ic_algorithm;
+        return R.mipmap.ic_menu_algorithm;
     }
 
     @Override

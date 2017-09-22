@@ -24,9 +24,9 @@ import java.util.List;
 
 public class ProductListFragment extends BaseFragment {
 
-    private RecyclerView recyclerView;
-    List<PluginInfo> list = new ArrayList<>();
-    private ProductAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private ProductAdapter mAdapter;
+    private List<PluginInfo> mList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -38,15 +38,16 @@ public class ProductListFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-        recyclerView = getView().findViewById(R.id.rl_content);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new ProductAdapter(list, getActivity());
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+        mRecyclerView = getView().findViewById(R.id.rl_content);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mAdapter = new ProductAdapter(mList, getActivity());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                PluginInfo entity = list.get(position);
-                com.qihoo360.replugin.model.PluginInfo pi = RePlugin.install(Config.StorageDirectory + "/" + entity.name + ".apk");
+                PluginInfo entity = mList.get(position);
+                com.qihoo360.replugin.model.PluginInfo pi = RePlugin.install(Config.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
                 if (pi != null) {
                     RePlugin.preload(pi);
                 }
@@ -55,6 +56,7 @@ public class ProductListFragment extends BaseFragment {
                         entity.mainClass));
             }
         });
+
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
@@ -71,30 +73,30 @@ public class ProductListFragment extends BaseFragment {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                final PluginInfo entity = list.get(viewHolder.getAdapterPosition());
-                new AlertDialog.Builder(getActivity()).setTitle("提示")
-                        .setMessage("是否确定卸载该插件？")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                final PluginInfo entity = mList.get(viewHolder.getAdapterPosition());
+                new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
+                        .setMessage(R.string.products_dialog_uninstall)
+                        .setPositiveButton(getString(R.string.com_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (RePlugin.uninstall(entity.packageName)) {
-                                    Toast.makeText(getActivity(), "卸载成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.product_uninstall_success, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(getActivity(), "卸载失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.product_uninstall_fail, Toast.LENGTH_SHORT).show();
                                 }
                                 dialogInterface.dismiss();
                             }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton(getString(R.string.com_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        adapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
                     }
                 }).create().show();
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
+        touchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     @Override
@@ -104,7 +106,7 @@ public class ProductListFragment extends BaseFragment {
     }
 
     private void initData() {
-        list.add(new PluginInfo("selfView",
+        mList.add(new PluginInfo("selfView",
                 "com.github.keyboard3.selfview",
                 "com.github.keyboard3.selfview.MainActivity",
                 "自定义view集合"));

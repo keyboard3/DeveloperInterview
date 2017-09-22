@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            tools:text="以下题目请做出回答" />
+            tools:text="@string/problem_title" />
 
         <TextView
             android:id="@+id/tv_content"
@@ -27,7 +27,7 @@
             android:layout_marginTop="10dp"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="当前题目的内容" />
+            tools:text="@string/problem_content" />
 
         <FrameLayout
             android:id="@+id/audio_container"
@@ -46,8 +46,8 @@
             android:layout_marginRight="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="语音"
-            android:textColor="@color/colorPrimary"
+            android:text="@string/com_audio"
+            android:textColor="@color/color_primary"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/wb_answer"
             app:layout_constraintLeft_toRightOf="@id/audio_container"
@@ -58,8 +58,8 @@
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="来源"
-            android:textColor="@color/colorPrimary"
+            android:text="@string/com_source"
+            android:textColor="@color/color_primary"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/wb_answer"
             app:layout_constraintRight_toRightOf="parent"
@@ -76,7 +76,7 @@
             android:id="@+id/avi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:indicatorColor="@color/colorPrimary"
+            app:indicatorColor="@color/color_primary"
             app:indicatorName="BallPulseIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

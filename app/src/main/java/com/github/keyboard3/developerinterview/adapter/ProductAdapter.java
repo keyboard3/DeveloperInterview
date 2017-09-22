@@ -13,9 +13,9 @@ import com.github.keyboard3.developerinterview.entity.PluginInfo;
 import java.util.List;
 
 /**
+ * 作品适配器
  * Created by keyboard3 on 2017/9/12.
  */
-
 public class ProductAdapter extends BaseAdapter<ProductAdapter.MyViewHolder, PluginInfo> {
 
     public ProductAdapter(List<PluginInfo> data, Activity activity) {
@@ -24,16 +24,17 @@ public class ProductAdapter extends BaseAdapter<ProductAdapter.MyViewHolder, Plu
 
     @Override
     public ProductAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ProductAdapter.MyViewHolder viewHolder = new ProductAdapter.MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_problem, parent, false));
+        ProductAdapter.MyViewHolder viewHolder = new ProductAdapter.MyViewHolder(LayoutInflater
+                .from(parent.getContext()).inflate(R.layout.item_list_problem, parent, false));
         initViewHolder(viewHolder);
-        viewHolders.add(viewHolder);
+        mViewHolders.add(viewHolder);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ProductAdapter.MyViewHolder holder, int position) {
-        PluginInfo entity = data.get(position);
-        holder.icon.setImageResource(R.mipmap.ic_product);
+        PluginInfo entity = mData.get(position);
+        holder.icon.setImageResource(R.mipmap.ic_menu_product);
         holder.tvTitle.setText(entity.name);
         holder.tvContent.setText(entity.desc);
     }
@@ -41,7 +42,8 @@ public class ProductAdapter extends BaseAdapter<ProductAdapter.MyViewHolder, Plu
 
     public static class MyViewHolder extends BaseAdapter.ViewHolder {
         public ImageView icon;
-        public TextView tvTitle, tvContent;
+        public TextView tvTitle;
+        public TextView tvContent;
 
         public MyViewHolder(View itemView) {
             super(itemView);

@@ -35,7 +35,7 @@ public class ProductType extends ProblemType {
 
     @Override
     public int getTypeIcon() {
-        return R.mipmap.ic_product;
+        return R.mipmap.ic_menu_product;
     }
 
     @Override

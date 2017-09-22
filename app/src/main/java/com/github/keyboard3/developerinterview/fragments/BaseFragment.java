@@ -4,26 +4,50 @@ package com.github.keyboard3.developerinterview.fragments;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 
+import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.interfaces.IProgressDialog;
+import com.wang.avi.AVLoadingIndicatorView;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A BaseFragment {@link Fragment} subclass.
  */
 public class BaseFragment extends Fragment implements IProgressDialog {
-    private ProgressDialog progressDialog;
+    private ProgressDialog mProgressDialog;
+    private AVLoadingIndicatorView mAdvanceProgressView;
+
+    private boolean mAdvanceDialogToggle;
+
+    protected void toggleDialogAdvance(boolean toggle) {
+        mAdvanceDialogToggle = toggle;
+    }
 
     @Override
     public void showDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("加载中...");
-            progressDialog.setIndeterminate(true);
+        if (mAdvanceDialogToggle && mAdvanceProgressView == null) {
+            mAdvanceProgressView = getView().findViewById(R.id.avi);
+        } else if (!mAdvanceDialogToggle && mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage(getString(R.string.com_loading));
+            mProgressDialog.setIndeterminate(true);
         }
-        progressDialog.show();
+        if (mAdvanceDialogToggle) {
+            mAdvanceProgressView.show();
+        } else {
+            mProgressDialog.show();
+        }
     }
 
     @Override
     public void hideDialog() {
-        if (progressDialog != null) progressDialog.hide();
+        if (mAdvanceDialogToggle && mAdvanceProgressView != null) {
+            mAdvanceProgressView.hide();
+        } else if ((mAdvanceDialogToggle == false || mAdvanceProgressView == null) && mProgressDialog != null) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    public boolean isShowing() {
+        return mProgressDialog.isShowing();
     }
 }

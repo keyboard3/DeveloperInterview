@@ -1,17 +1,14 @@
 package com.github.keyboard3.developerinterview;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.utils.SystemUtil;
-import com.wang.avi.AVLoadingIndicatorView;
+import com.github.keyboard3.developerinterview.views.CusWebViewClient;
 
 import java.lang.reflect.Method;
 
@@ -20,51 +17,48 @@ import java.lang.reflect.Method;
  */
 public class WebViewActivity extends BaseActivity {
 
-    private WebView webView;
-    private AVLoadingIndicatorView avi;
-    private String searchKey;
-    private String url;
+    private WebView mWebView;
+    private String mSearchKey;
+    private String mUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+        setTitle(R.string.title_web);
+        initData();
+        initWebView();
+    }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("网页详情");
+    private void initData() {
+        mUrl = getIntent().getStringExtra(Config.INTENT_KEY);
+        mSearchKey = getIntent().getStringExtra(Config.INTENT_SEARCH_KEY);
+    }
 
-        url = getIntent().getStringExtra(Config.INTENT_KEY);
-        searchKey = getIntent().getStringExtra(Config.INTENT_SEARCH_KEY);
-        avi = findViewById(R.id.avi);
-        webView = findViewById(R.id.wb_content);
-        webView.loadUrl(url);
-        webView.getSettings().supportZoom();
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                avi.show();
-                super.onPageStarted(view, url, favicon);
-            }
+    private void initWebView() {
+        toggleDialogAdvance(true);
 
+        mWebView = findViewById(R.id.wb_content);
+        mWebView.loadUrl(mUrl);
+        mWebView.getSettings().supportZoom();
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new CusWebViewClient(this) {
             @Override
             public void onPageFinished(WebView view, String url) {
-                avi.hide();
                 super.onPageFinished(view, url);
                 getSupportActionBar().setTitle(view.getTitle());
-                if (!TextUtils.isEmpty(searchKey)) {
-                    searchContent(searchKey);
+                if (!TextUtils.isEmpty(mSearchKey)) {
+                    searchContent(mSearchKey);
                 }
             }
         });
-
     }
 
     public void searchContent(String content) {
-        webView.findAllAsync(content);
+        mWebView.findAllAsync(content);
         try {
             Method m = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
-            m.invoke(webView, true);
+            m.invoke(mWebView, true);
         } catch (Throwable ignored) {
 
         }
@@ -74,17 +68,17 @@ public class WebViewActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_copy_url:
-                SystemUtil.setClipboard(getApplicationContext(), webView.getTitle(), webView.getUrl());
+                SystemUtil.setClipboard(getApplicationContext(), mWebView.getTitle(), mWebView.getUrl());
                 Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_open_url:
-                SystemUtil.openBrowser(WebViewActivity.this, webView.getUrl());
+                SystemUtil.openBrowser(WebViewActivity.this, mWebView.getUrl());
                 break;
             case R.id.action_refresh:
-                webView.reload();
+                mWebView.reload();
                 break;
             case R.id.action_send:
-                SystemUtil.sendText(WebViewActivity.this, webView.getUrl());
+                SystemUtil.sendText(WebViewActivity.this, mWebView.getUrl());
                 break;
         }
         return super.onOptionsItemSelected(item);

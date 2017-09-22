@@ -13,8 +13,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/colorPrimary"
-        android:text="按下说话"
+        android:background="@color/color_primary"
+        android:text="@string/audio_press"
         android:textColor="@android:color/white"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent" />

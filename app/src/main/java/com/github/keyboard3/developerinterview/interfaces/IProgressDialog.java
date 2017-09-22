@@ -8,4 +8,6 @@ public interface IProgressDialog {
     void showDialog();
 
     void hideDialog();
+
+    boolean isShowing();
 }

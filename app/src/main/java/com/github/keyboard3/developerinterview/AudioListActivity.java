@@ -1,6 +1,8 @@
 package com.github.keyboard3.developerinterview;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -19,10 +21,10 @@ import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.model.AudioModel;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
-import com.werb.mediautilsdemo.CustomPermissionChecker;
 import com.werb.mediautilsdemo.MediaUtils;
 
 import java.io.File;
@@ -34,50 +36,53 @@ import java.util.List;
  */
 public class AudioListActivity extends BaseActivity {
     public static final String TAG = "AudioListActivity";
-    List<String> audioList = new ArrayList<>();
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     public static final int P_RECORD_AUDIO = 102;
-    private TextView btn_record, info;
+
+    private TextView mBtnRecord;
+    private TextView mInfo;
     private ImageView micIcon;
+    private RelativeLayout mAudioLayout;
+
+    private List<String> mAudioList = new ArrayList<>();
+    private Problem mEntity;
+    private String mPath;
+    private String mDuration;
+    private boolean mIsCancel;
+
     private MediaUtils mediaUtils;
-    private boolean isCancel;
     private Chronometer chronometer;
-    private RelativeLayout audioLayout;
-    private String duration;
-    private CustomPermissionChecker permissionChecker;
     private AudioAdapter adapter;
-    private Problem entity;
-    private String path;
-    private SharePreferencesHelper spHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_list);
 
-        getSupportActionBar().setTitle("语音答案");
-        initPre();
+        initActionBar();
+        initData();
+        initHandle();
         initView();
     }
 
-    private void initPre() {
-        entity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);
-        path = entity.getStorageDir() + "/" + entity.id + "/";
-        File file = new File(path);
+    private void initActionBar() {
+        getSupportActionBar().setTitle(R.string.title_audio);
+    }
+
+    private void initData() {
+        mEntity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);
+        mPath = mEntity.getStorageDir() + "/" + mEntity.id + "/";
+        File file = new File(mPath);
         if (!file.exists()) {
             file.mkdirs();
         }
+    }
 
-        permissionChecker = new CustomPermissionChecker(this);
-        if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})) {
-            permissionChecker.requestPermissions(P_READ_EXTERNAL_STORAGE);
-        } else {
-            initData();
+    private void initHandle() {
+        if (checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, P_READ_EXTERNAL_STORAGE)) {
+            getAudioDataFromFile();
         }
-        if (permissionChecker.isLackPermissions(new String[]{Manifest.permission.RECORD_AUDIO})) {
-            permissionChecker.requestPermissions(P_RECORD_AUDIO);
-        }
-        spHelper = new SharePreferencesHelper(this, entity.getTypeName());
+        checkPermission(new String[]{Manifest.permission.RECORD_AUDIO}, P_RECORD_AUDIO);
     }
 
     @Override
@@ -90,17 +95,12 @@ public class AudioListActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case P_READ_EXTERNAL_STORAGE:
-                if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
-                    initData();
-                } else {
-                    permissionChecker.showDialog();
+                if (hasAllPermissionsGranted(grantResults)) {
+                    getAudioDataFromFile();
                 }
                 break;
-            case P_RECORD_AUDIO:
-                if (permissionChecker.hasAllPermissionsGranted(grantResults)) {
-                } else {
-                    permissionChecker.showDialog();
-                }
+            default:
+                hasAllPermissionsGranted(grantResults);
                 break;
         }
     }
@@ -108,32 +108,36 @@ public class AudioListActivity extends BaseActivity {
     private void initView() {
         RecyclerView recyclerView = findViewById(R.id.rl_content);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
-        adapter = new AudioAdapter(audioList, this);
+        adapter = new AudioAdapter(mAudioList, this);
         recyclerView.setAdapter(adapter);
 
         mediaUtils = new MediaUtils(this);
         mediaUtils.setRecorderType(MediaUtils.MEDIA_AUDIO);
-        mediaUtils.setTargetDir(new File(path));
+        mediaUtils.setTargetDir(new File(mPath));
 
-        btn_record = findViewById(R.id.btn_record);
-        info = findViewById(R.id.tv_info);
-        btn_record.setOnTouchListener(touchListener);
+        mBtnRecord = findViewById(R.id.btn_record);
+        mInfo = findViewById(R.id.tv_info);
+        mBtnRecord.setOnTouchListener(touchListener);
         chronometer = findViewById(R.id.time_display);
         chronometer.setOnChronometerTickListener(tickListener);
         micIcon = findViewById(R.id.mic_icon);
-        audioLayout = findViewById(R.id.audio_layout);
+        mAudioLayout = findViewById(R.id.audio_layout);
+
+        toggleDialogAdvance(true);
     }
 
-    private void initData() {
-        audioList.clear();
+    private void getAudioDataFromFile() {
+        mAudioList.clear();
         //从指定目录下所有文件的名字  组成绝对文件的地址
-        File dir = new File(path);
+        File dir = new File(mPath);
         if (dir == null) return;
+
         File[] files = dir.listFiles();
         if (files == null) return;
+
         for (File item : files) {
             Log.d(TAG, "path:" + item.getAbsolutePath());
-            audioList.add(item.getAbsolutePath());
+            mAudioList.add(item.getAbsolutePath());
         }
         if (adapter != null)
             adapter.notifyDataSetChanged();
@@ -143,43 +147,15 @@ public class AudioListActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                List<String> selectedItems = adapter.getSelectedItems();
-                if (ListUtil.isEmpty(selectedItems)) {
-                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                for (String path : selectedItems) {
-                    File file = new File(path);
-                    file.delete();
-                }
-                initData();
+                if (AudioModel.deleteAudio(getApplicationContext(), adapter)) return true;
+                getAudioDataFromFile();
                 adapter.init();
                 return true;
             case R.id.action_set:
-                List<String> signleItems = adapter.getSelectedItems();
-                if (signleItems.size() > 1) {
-                    Toast.makeText(this, "只能选中一条", Toast.LENGTH_SHORT).show();
-                    return true;
-                } else if (ListUtil.isEmpty(signleItems)) {
-                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                //保存到sharePre
-                spHelper.putString(entity.id, signleItems.get(0));
-                Toast.makeText(this, "设置成功！", Toast.LENGTH_SHORT).show();
-
+                if (AudioModel.setAudio(this, adapter, mEntity)) return true;
                 break;
             case R.id.action_share:
-                List<String> list = adapter.getSelectedItems();
-                if (list.size() > 1) {
-                    Toast.makeText(this, "只能选中一条", Toast.LENGTH_SHORT).show();
-                    return true;
-                } else if (ListUtil.isEmpty(list)) {
-                    Toast.makeText(this, "请选中", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                //保存到sharePre
-                FileUtil.openFile(this, list.get(0));
+                if (AudioModel.shareAudio(adapter, getApplicationContext())) return true;
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -189,7 +165,7 @@ public class AudioListActivity extends BaseActivity {
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            String name = entity.getTypeName() + "-" + entity.id + "-" + (System.currentTimeMillis() % 10000);
+            String name = mEntity.getTypeName() + "-" + mEntity.id + "-" + (System.currentTimeMillis() % 10000);
             mediaUtils.setTargetName(name + ".m4a");
 
             boolean ret = false;
@@ -205,10 +181,10 @@ public class AudioListActivity extends BaseActivity {
                             break;
                         case MotionEvent.ACTION_UP:
                             stopAnim();
-                            if (isCancel) {
-                                isCancel = false;
+                            if (mIsCancel) {
+                                mIsCancel = false;
                                 mediaUtils.stopRecordUnSave();
-                                Toast.makeText(AudioListActivity.this, "取消保存", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AudioListActivity.this, R.string.audio_cancel_save, Toast.LENGTH_SHORT).show();
                             } else {
                                 int duration = getDuration(chronometer.getText().toString());
                                 switch (duration) {
@@ -223,7 +199,7 @@ public class AudioListActivity extends BaseActivity {
                                         //String path = mediaUtils.getTargetFilePath();
                                         Toast.makeText(AudioListActivity.this, "文件以保存成功", Toast.LENGTH_SHORT).show();
                                         adapter.init();
-                                        initData();
+                                        getAudioDataFromFile();
                                         break;
                                 }
                             }
@@ -232,9 +208,9 @@ public class AudioListActivity extends BaseActivity {
                             float currentY = event.getY();
                             if (downY - currentY > 10) {
                                 moveAnim();
-                                isCancel = true;
+                                mIsCancel = true;
                             } else {
-                                isCancel = false;
+                                mIsCancel = false;
                                 startAnim(false);
                             }
                             break;
@@ -267,23 +243,23 @@ public class AudioListActivity extends BaseActivity {
             if (c.equals("0") && Integer.valueOf(d) < 1) {
                 return -2;
             } else if (c.equals("0") && Integer.valueOf(d) > 1) {
-                duration = d;
+                mDuration = d;
                 return Integer.valueOf(d);
             } else {
-                duration = c + d;
+                mDuration = c + d;
                 return Integer.valueOf(c + d);
             }
         } else {
-            duration = "60";
+            mDuration = "60";
             return -1;
         }
 
     }
 
     private void startAnim(boolean isStart) {
-        audioLayout.setVisibility(View.VISIBLE);
-        info.setText("上滑取消");
-        btn_record.setBackground(getResources().getDrawable(R.color.colorPrimary));
+        mAudioLayout.setVisibility(View.VISIBLE);
+        mInfo.setText("上滑取消");
+        mBtnRecord.setBackground(getResources().getDrawable(R.color.color_primary));
         micIcon.setBackground(null);
         micIcon.setBackground(getResources().getDrawable(R.drawable.ic_mic_white_24dp));
         if (isStart) {
@@ -294,13 +270,13 @@ public class AudioListActivity extends BaseActivity {
     }
 
     private void stopAnim() {
-        audioLayout.setVisibility(View.GONE);
-        btn_record.setBackground(getResources().getDrawable(R.color.colorPrimary));
+        mAudioLayout.setVisibility(View.GONE);
+        mBtnRecord.setBackground(getResources().getDrawable(R.color.color_primary));
         chronometer.stop();
     }
 
     private void moveAnim() {
-        info.setText("松手取消");
+        mInfo.setText("松手取消");
         micIcon.setBackground(null);
         micIcon.setBackground(getResources().getDrawable(R.drawable.ic_undo_black_24dp));
     }

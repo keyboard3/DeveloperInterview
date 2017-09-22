@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.pattern.ProblemType;
-import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
 
 import java.util.List;
 
@@ -18,7 +16,6 @@ import java.util.List;
  * 问题列表页适配器
  * Created by keyboard3 on 2017/9/3.
  */
-
 public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Problem> {
 
 
@@ -28,7 +25,8 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_problem, parent, false));
+        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_list_problem, parent, false));
         initViewHolder(viewHolder);
         return viewHolder;
     }
@@ -36,7 +34,7 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.setPosition(position);
-        Problem entity = data.get(position);
+        Problem entity = mData.get(position);
         holder.icon.setImageResource(entity.getTypeIcon());
         holder.tvTitle.setText(entity.title);
         holder.tvContent.setText(entity.content);
@@ -44,7 +42,8 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
 
     public static class MyViewHolder extends BaseAdapter.ViewHolder {
         public ImageView icon;
-        public TextView tvTitle, tvContent;
+        public TextView tvTitle;
+        public TextView tvContent;
 
         public MyViewHolder(View itemView) {
             super(itemView);

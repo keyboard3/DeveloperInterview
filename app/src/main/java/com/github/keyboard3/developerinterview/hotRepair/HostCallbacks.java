@@ -2,9 +2,9 @@ package com.github.keyboard3.developerinterview.hotRepair;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
+import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.Http.HttpClient;
 import com.qihoo360.replugin.RePluginCallbacks;
 
@@ -21,9 +21,8 @@ public class HostCallbacks extends RePluginCallbacks {
 
     @Override
     public boolean onPluginNotExistsForActivity(final Context context, String plugin, Intent intent, int process) {
-        if (plugin.equals("com.github.keyboard3.selfview")) {
-            Log.d(TAG, "去下载selfView");
-            AllenChecker.startVersionCheck(context, HttpClient.getInstance().selfBuilder.build());
+        if (plugin.equals(Config.PACKAGE_SELFVIEW)) {
+            AllenChecker.startVersionCheck(context, HttpClient.getInstance().mSelfBuilder.build());
         }
         return super.onPluginNotExistsForActivity(context, plugin, intent, process);
     }

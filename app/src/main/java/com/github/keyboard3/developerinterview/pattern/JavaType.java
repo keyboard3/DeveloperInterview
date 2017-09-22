@@ -35,7 +35,7 @@ public class JavaType extends ProblemType {
 
     @Override
     public int getTypeIcon() {
-        return R.mipmap.ic_java;
+        return R.mipmap.ic_menu_java;
     }
 
     @Override

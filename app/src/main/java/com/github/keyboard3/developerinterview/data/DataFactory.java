@@ -27,15 +27,15 @@ import java.util.TreeSet;
  */
 
 public class DataFactory {
-    public static Map<Integer, List<Problem>> listMap = new HashMap<>();
-    public String problemJsonPath;
-    ProblemType problemType;
-    Context applicationContext;
+    private static Map<Integer, List<Problem>> listMap = new HashMap<>();
+    private ProblemType problemType;
+    private Context applicationContext;
+    private String problemJsonPath;
 
     public DataFactory(Context applicationContext, ProblemType problemType) {
         this.applicationContext = applicationContext;
         this.problemType = problemType;
-        problemJsonPath = Config.StorageDirectory + "/" + problemType.getTypeStr() + "/" + problemType.getTypeStr() + ".json";
+        problemJsonPath = Config.STORAGE_DIRECTORY + "/" + problemType.getTypeStr() + "/" + problemType.getTypeStr() + ".json";
     }
 
     /**
@@ -97,7 +97,7 @@ public class DataFactory {
         int right = list.size() - 1;
         int mid;
         while (left <= right) {
-            mid = (left + right+1) / 2;
+            mid = (left + right + 1) / 2;
             Problem item = list.get(mid);
             if (Id < item.getId()) {
                 right = mid - 1;

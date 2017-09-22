@@ -8,20 +8,32 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.github.keyboard3.developerinterview.R;
+
 /**
  * Created by keyboard3 on 2017/9/7.
  */
 
 public class SystemUtil {
     public static void setClipboard(Context context, String title, String text) {
-        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText(title, text);
-        clipboardManager.setPrimaryClip(clipData);
+        try {
+            ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText(title, text);
+            clipboardManager.setPrimaryClip(clipData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getClipboard(Context context) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        String message = clipboardManager.getPrimaryClip().getDescription().getLabel() + "" + (String) clipboardManager.getPrimaryClip().getItemAt(0).getText();
+        String message = "";
+        try {
+            message = clipboardManager.getPrimaryClip().getDescription().getLabel() + ""
+                    + clipboardManager.getPrimaryClip().getItemAt(0).getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return message;
     }
 
@@ -31,9 +43,9 @@ public class SystemUtil {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, text);
         try {
-            context.startActivity(Intent.createChooser(intent, "发送"));
+            context.startActivity(Intent.createChooser(intent, context.getString(R.string.com_send)));
         } catch (Exception e) {
-            Toast.makeText(context, "不存在打开应用" + e.getMessage(),
+            Toast.makeText(context, context.getString(R.string.com_no_exist_app) + e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -43,7 +55,7 @@ public class SystemUtil {
         try {
             context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context, "不存在打开应用" + e.getMessage(),
+            Toast.makeText(context, context.getString(R.string.com_no_exist_app) + e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
     }

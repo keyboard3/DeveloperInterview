@@ -28,14 +28,14 @@ public class OtherType extends ProblemType {
     public ProblemType setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
         fab.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new ContentFragment(), "typeOther");
+        fragmentTransaction.replace(R.id.fragment_container, new ContentFragment(), typeStr);
         fragmentTransaction.commit();
         return this;
     }
 
     @Override
     public int getTypeIcon() {
-        return R.mipmap.ic_other;
+        return R.mipmap.ic_menu_other;
     }
 
     @Override
