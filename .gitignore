@@ -14,3 +14,4 @@
 *.apk
 /release/
 sophix-patch.jar
+/output.json
