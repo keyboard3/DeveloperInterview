@@ -42,6 +42,6 @@ public class CusWebViewClient extends WebViewClient implements IProgressDialog {
 
     @Override
     public boolean isShowing() {
-        return (dialog != null) ? dialog.isShowing() : false;
+        return (dialog != null) && dialog.isShowing();
     }
 }

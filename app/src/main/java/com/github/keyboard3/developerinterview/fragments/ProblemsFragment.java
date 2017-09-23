@@ -53,7 +53,6 @@ public class ProblemsFragment extends BaseFragment {
     private String mProblemJsonPath;
     private SharePreferencesHelper mSpHelper;
 
-
     public static ProblemsFragment newInstance(String type) {
 
         Bundle args = new Bundle();

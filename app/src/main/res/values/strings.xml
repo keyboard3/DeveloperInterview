@@ -15,6 +15,10 @@
     <string name="com_cancel">取消</string>
     <string name="com_ok">确定</string>
     <string name="com_tint">提醒</string>
+    <string name="com_delete_fail">删除失败</string>
+    <string name="com_delete_success">删除成功</string>
+    <string name="com_send">发送</string>
+    <string name="com_no_exist_app">不存在打开应用</string>
 
     <string name="title_setting">设置</string>
     <string name="title_problem_detail">题目详情</string>
@@ -22,36 +26,36 @@
     <string name="title_audio">语音答案</string>
 
     <string name="audio_press">按下说话</string>
-
-    <string name="problem_content">当前题目的内容</string>
-    <string name="problem_title">以下题目请做出回答</string>
-    <string name="problem_no_exist">不存在该题目</string>
-
-    <string name="setting_check_format">对不起题目为空或者题目json格式不符合系统格式，请您重新检查！</string>
-    <string name="setting_check_type">检测到您导入的题目文件和选择的题目类型不符合，是否强行改成所选类型！</string>
-    <string name="setting_select_type">选择题目类型</string>
-    <string name="setting_input_success">导入成功</string>
     <string name="audio_set_success">设置成功！</string>
     <string name="audio_select_only">只能选中一条</string>
     <string name="audio_please_select">请选中</string>
     <string name="audio_cancel_save">取消保存</string>
-    <string name="home_press_quit">再按一次退出应用</string>
-    <string name="setting_version">版本v</string>
-    <string name="home_delete_audio">是否删除语音资源</string>
-    <string name="home_delete_problem">是否确定删除该题目？</string>
-    <string name="com_delete_fail">删除失败</string>
-    <string name="com_delete_success">删除成功</string>
-    <string name="products_dialog_uninstall">是否确定卸载该插件？</string>
-    <string name="product_uninstall_success">卸载成功</string>
-    <string name="product_uninstall_fail">卸载失败</string>
-    <string name="navigation_drawer_open">打开</string>
-    <string name="navigation_drawer_close">关闭</string>
-    <string name="com_send">发送</string>
-    <string name="com_no_exist_app">不存在打开应用</string>
     <string name="audio_time_short">时间太短</string>
     <string name="audio_file_save">文件以保存成功</string>
     <string name="audio_file_save_to">文件以保存至：</string>
     <string name="audio_record_out_time">录音超时</string>
     <string name="audio_up_cancel">上滑取消</string>
     <string name="audio_release_cancel">松手取消</string>
+
+    <string name="problem_content">当前题目的内容</string>
+    <string name="problem_title">以下题目请做出回答</string>
+    <string name="problem_no_exist">不存在该题目</string>
+    <string name="problem_input">去导入题目吧！</string>
+
+    <string name="setting_check_format">对不起题目为空或者题目json格式不符合系统格式，请您重新检查！</string>
+    <string name="setting_check_type">检测到您导入的题目文件和选择的题目类型不符合，是否强行改成所选类型！</string>
+    <string name="setting_select_type">选择题目类型</string>
+    <string name="setting_input_success">导入成功</string>
+    <string name="setting_version">版本v</string>
+
+    <string name="home_press_quit">再按一次退出应用</string>
+    <string name="home_delete_audio">是否删除语音资源</string>
+    <string name="home_delete_problem">是否确定删除该题目？</string>
+
+    <string name="products_dialog_uninstall">是否确定卸载该插件？</string>
+    <string name="product_uninstall_success">卸载成功</string>
+    <string name="product_uninstall_fail">卸载失败</string>
+
+    <string name="navigation_drawer_open">打开</string>
+    <string name="navigation_drawer_close">关闭</string>
 </resources>
