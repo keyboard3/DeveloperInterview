@@ -25,6 +25,7 @@ import com.github.keyboard3.developerinterview.model.AudioModel;
 import com.github.keyboard3.developerinterview.utils.FileUtil;
 import com.github.keyboard3.developerinterview.utils.ListUtil;
 import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
+import com.github.keyboard3.developerinterview.views.RecordButton;
 import com.werb.mediautilsdemo.MediaUtils;
 
 import java.io.File;
@@ -39,19 +40,12 @@ public class AudioListActivity extends BaseActivity {
     public static final int P_READ_EXTERNAL_STORAGE = 101;
     public static final int P_RECORD_AUDIO = 102;
 
-    private TextView mBtnRecord;
-    private TextView mInfo;
-    private ImageView micIcon;
-    private RelativeLayout mAudioLayout;
+    private RecordButton mBtnRecord;
 
     private List<String> mAudioList = new ArrayList<>();
     private Problem mEntity;
     private String mPath;
-    private String mDuration;
-    private boolean mIsCancel;
 
-    private MediaUtils mediaUtils;
-    private Chronometer chronometer;
     private AudioAdapter adapter;
 
     @Override
@@ -79,8 +73,8 @@ public class AudioListActivity extends BaseActivity {
     }
 
     private void initHandle() {
-        if (checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, P_READ_EXTERNAL_STORAGE)) {
-            getAudioDataFromFile();
+        if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, P_READ_EXTERNAL_STORAGE)) {
+            AudioModel.getAudioDataFromFile(mAudioList, mPath, adapter);
         }
         checkPermission(new String[]{Manifest.permission.RECORD_AUDIO}, P_RECORD_AUDIO);
     }
@@ -96,7 +90,7 @@ public class AudioListActivity extends BaseActivity {
         switch (requestCode) {
             case P_READ_EXTERNAL_STORAGE:
                 if (hasAllPermissionsGranted(grantResults)) {
-                    getAudioDataFromFile();
+                    AudioModel.getAudioDataFromFile(mAudioList, mPath, adapter);
                 }
                 break;
             default:
@@ -106,41 +100,30 @@ public class AudioListActivity extends BaseActivity {
     }
 
     private void initView() {
+        toggleDialogAdvance(true);
+
         RecyclerView recyclerView = findViewById(R.id.rl_content);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
         adapter = new AudioAdapter(mAudioList, this);
         recyclerView.setAdapter(adapter);
 
-        mediaUtils = new MediaUtils(this);
-        mediaUtils.setRecorderType(MediaUtils.MEDIA_AUDIO);
-        mediaUtils.setTargetDir(new File(mPath));
-
         mBtnRecord = findViewById(R.id.btn_record);
-        mInfo = findViewById(R.id.tv_info);
-        mBtnRecord.setOnTouchListener(touchListener);
-        chronometer = findViewById(R.id.time_display);
-        chronometer.setOnChronometerTickListener(tickListener);
-        micIcon = findViewById(R.id.mic_icon);
-        mAudioLayout = findViewById(R.id.audio_layout);
+        mBtnRecord.init(this, mPath, mEntity.getTypeName() + "-" + mEntity.id);
+        mBtnRecord.setOnRecordListener(new RecordButton.OnRecordListener() {
+            @Override
+            public void onStart() {
+            }
 
-        toggleDialogAdvance(true);
-    }
+            @Override
+            public void onEnd() {
+                adapter.init();
+                AudioModel.getAudioDataFromFile(mAudioList, mPath, adapter);
+            }
 
-    private void getAudioDataFromFile() {
-        mAudioList.clear();
-        //从指定目录下所有文件的名字  组成绝对文件的地址
-        File dir = new File(mPath);
-        if (dir == null) return;
-
-        File[] files = dir.listFiles();
-        if (files == null) return;
-
-        for (File item : files) {
-            Log.d(TAG, "path:" + item.getAbsolutePath());
-            mAudioList.add(item.getAbsolutePath());
-        }
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
+            @Override
+            public void onError(String msg) {
+            }
+        });
     }
 
     @Override
@@ -148,7 +131,7 @@ public class AudioListActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 if (AudioModel.deleteAudio(getApplicationContext(), adapter)) return true;
-                getAudioDataFromFile();
+                AudioModel.getAudioDataFromFile(mAudioList, mPath, adapter);
                 adapter.init();
                 return true;
             case R.id.action_set:
@@ -159,125 +142,5 @@ public class AudioListActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-
-    }
-
-    private View.OnTouchListener touchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            String name = mEntity.getTypeName() + "-" + mEntity.id + "-" + (System.currentTimeMillis() % 10000);
-            mediaUtils.setTargetName(name + ".m4a");
-
-            boolean ret = false;
-            float downY = 0;
-            int action = event.getAction();
-            switch (v.getId()) {
-                case R.id.btn_record:
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            startAnim(true);
-                            mediaUtils.record();
-                            ret = true;
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            stopAnim();
-                            if (mIsCancel) {
-                                mIsCancel = false;
-                                mediaUtils.stopRecordUnSave();
-                                Toast.makeText(AudioListActivity.this, R.string.audio_cancel_save, Toast.LENGTH_SHORT).show();
-                            } else {
-                                int duration = getDuration(chronometer.getText().toString());
-                                switch (duration) {
-                                    case -1:
-                                        break;
-                                    case -2:
-                                        mediaUtils.stopRecordUnSave();
-                                        Toast.makeText(AudioListActivity.this, "时间太短", Toast.LENGTH_SHORT).show();
-                                        break;
-                                    default:
-                                        mediaUtils.stopRecordSave();
-                                        //String path = mediaUtils.getTargetFilePath();
-                                        Toast.makeText(AudioListActivity.this, "文件以保存成功", Toast.LENGTH_SHORT).show();
-                                        adapter.init();
-                                        getAudioDataFromFile();
-                                        break;
-                                }
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            float currentY = event.getY();
-                            if (downY - currentY > 10) {
-                                moveAnim();
-                                mIsCancel = true;
-                            } else {
-                                mIsCancel = false;
-                                startAnim(false);
-                            }
-                            break;
-                    }
-                    break;
-            }
-            return ret;
-        }
-    };
-
-    Chronometer.OnChronometerTickListener tickListener = new Chronometer.OnChronometerTickListener() {
-        @Override
-        public void onChronometerTick(Chronometer chronometer) {
-            if (SystemClock.elapsedRealtime() - chronometer.getBase() > 60 * 1000) {
-                stopAnim();
-                mediaUtils.stopRecordSave();
-                Toast.makeText(AudioListActivity.this, "录音超时", Toast.LENGTH_SHORT).show();
-                String path = mediaUtils.getTargetFilePath();
-                Toast.makeText(AudioListActivity.this, "文件以保存至：" + path, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    private int getDuration(String str) {
-        String a = str.substring(0, 1);
-        String b = str.substring(1, 2);
-        String c = str.substring(3, 4);
-        String d = str.substring(4);
-        if (a.equals("0") && b.equals("0")) {
-            if (c.equals("0") && Integer.valueOf(d) < 1) {
-                return -2;
-            } else if (c.equals("0") && Integer.valueOf(d) > 1) {
-                mDuration = d;
-                return Integer.valueOf(d);
-            } else {
-                mDuration = c + d;
-                return Integer.valueOf(c + d);
-            }
-        } else {
-            mDuration = "60";
-            return -1;
-        }
-
-    }
-
-    private void startAnim(boolean isStart) {
-        mAudioLayout.setVisibility(View.VISIBLE);
-        mInfo.setText("上滑取消");
-        mBtnRecord.setBackground(getResources().getDrawable(R.color.color_primary));
-        micIcon.setBackground(null);
-        micIcon.setBackground(getResources().getDrawable(R.drawable.ic_mic_white_24dp));
-        if (isStart) {
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.setFormat("%S");
-            chronometer.start();
-        }
-    }
-
-    private void stopAnim() {
-        mAudioLayout.setVisibility(View.GONE);
-        mBtnRecord.setBackground(getResources().getDrawable(R.color.color_primary));
-        chronometer.stop();
-    }
-
-    private void moveAnim() {
-        mInfo.setText("松手取消");
-        micIcon.setBackground(null);
-        micIcon.setBackground(getResources().getDrawable(R.drawable.ic_undo_black_24dp));
     }
 }

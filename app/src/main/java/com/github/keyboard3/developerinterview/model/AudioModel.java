@@ -2,6 +2,7 @@ package com.github.keyboard3.developerinterview.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.R;
@@ -60,5 +61,21 @@ public class AudioModel {
             file.delete();
         }
         return false;
+    }
+
+    public static void getAudioDataFromFile(List<String> mAudioList, String mPath, AudioAdapter adapter) {
+        mAudioList.clear();
+        //从指定目录下所有文件的名字  组成绝对文件的地址
+        File dir = new File(mPath);
+        if (dir == null) return;
+
+        File[] files = dir.listFiles();
+        if (files == null) return;
+
+        for (File item : files) {
+            mAudioList.add(item.getAbsolutePath());
+        }
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 }

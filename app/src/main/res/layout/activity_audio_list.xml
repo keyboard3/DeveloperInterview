@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.github.keyboard3.developerinterview.AudioListActivity">
 
-    <Button
+    <com.github.keyboard3.developerinterview.views.RecordButton
         android:id="@+id/btn_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +14,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/color_primary"
+        android:gravity="center"
+        android:padding="10dp"
         android:text="@string/audio_press"
         android:textColor="@android:color/white"
         android:textSize="13sp"
@@ -29,42 +31,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_list_audio"></android.support.v7.widget.RecyclerView>
 
-    <RelativeLayout
-        android:id="@+id/audio_layout"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/mic_bg"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Chronometer
-            android:id="@+id/time_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/mic_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
-
-        <ImageView
-            android:id="@+id/mic_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerInParent="true" />
-
-        <TextView
-            android:id="@+id/tv_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mic_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
-
-    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

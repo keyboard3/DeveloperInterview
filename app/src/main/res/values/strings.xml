@@ -48,4 +48,10 @@
     <string name="navigation_drawer_close">关闭</string>
     <string name="com_send">发送</string>
     <string name="com_no_exist_app">不存在打开应用</string>
+    <string name="audio_time_short">时间太短</string>
+    <string name="audio_file_save">文件以保存成功</string>
+    <string name="audio_file_save_to">文件以保存至：</string>
+    <string name="audio_record_out_time">录音超时</string>
+    <string name="audio_up_cancel">上滑取消</string>
+    <string name="audio_release_cancel">松手取消</string>
 </resources>
