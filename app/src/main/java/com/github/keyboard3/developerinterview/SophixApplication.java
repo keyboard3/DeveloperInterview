@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 import com.github.keyboard3.developerinterview.hotRepair.HostCallbacks;
-import com.github.keyboard3.developerinterview.utils.VersionUtil;
+import com.github.keyboard3.developerinterview.util.VersionUtil;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.RePluginConfig;
 import com.taobao.sophix.PatchStatus;

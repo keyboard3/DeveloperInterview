@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.views;
+package com.github.keyboard3.developerinterview.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.utils.SystemUtil;
+import com.github.keyboard3.developerinterview.util.SystemUtil;
 import com.werb.mediautilsdemo.MediaUtils;
 
 import java.io.File;
@@ -37,7 +37,6 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
     private OnRecordListener mRecordListener;
     private String mFileName;
     private boolean mIsCancel;
-    private String mDuration;
     private int maximum = 120;
 
 
@@ -115,6 +114,7 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
         String b = str.substring(1, 2);
         String c = str.substring(3, 4);
         String d = str.substring(4);
+        String mDuration;
         if (a.equals("0") && b.equals("0")) {
             if (c.equals("0") && Integer.valueOf(d) < 1) {
                 return -2;

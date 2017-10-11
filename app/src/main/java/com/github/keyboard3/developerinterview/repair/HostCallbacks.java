@@ -1,10 +1,10 @@
-package com.github.keyboard3.developerinterview.hotRepair;
+package com.github.keyboard3.developerinterview.repair;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConsts;
 import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.qihoo360.replugin.RePluginCallbacks;
 
@@ -21,7 +21,7 @@ public class HostCallbacks extends RePluginCallbacks {
 
     @Override
     public boolean onPluginNotExistsForActivity(final Context context, String plugin, Intent intent, int process) {
-        if (plugin.equals(Config.PACKAGE_SELFVIEW)) {
+        if (plugin.equals(ConfigConsts.PACKAGE_SELFVIEW)) {
             AllenChecker.startVersionCheck(context, HttpClient.getInstance().mSelfBuilder.build());
         }
         return super.onPluginNotExistsForActivity(context, plugin, intent, process);

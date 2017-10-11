@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.fragments;
+package com.github.keyboard3.developerinterview.fragment;
 
 
 import android.app.Fragment;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.base.IProgressDialog;
+import com.github.keyboard3.developerinterview.base.BaseFragment;
 import com.github.keyboard3.developerinterview.view.CusWebViewClient;
 
 import java.util.regex.Matcher;
@@ -58,14 +58,14 @@ public class ContentFragment extends BaseFragment {
         String regex = "\\s*\\[(.+?)\\]\\((.+?)\\)";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         Matcher matcher = pattern.matcher(content);
-        String htmlData = "";
+        StringBuilder htmlData = new StringBuilder();
         while (matcher.find()) {
-            htmlData += "<a href='" + matcher.group(2) + "'>" + matcher.group(1) + "</a></br>";
+            htmlData.append("<a href='").append(matcher.group(2)).append("'>").append(matcher.group(1)).append("</a></br>");
         }
         mWebView.getSettings().setDefaultTextEncodingName("UTF-8");
-        mWebView.loadData(htmlData, "text/html; charset=UTF-8", null);
+        mWebView.loadData(htmlData.toString(), "text/html; charset=UTF-8", null);
         mWebView.getSettings().supportZoom();
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new CusWebViewClient((IProgressDialog) this));
+        mWebView.setWebViewClient(new CusWebViewClient(this));
     }
 }

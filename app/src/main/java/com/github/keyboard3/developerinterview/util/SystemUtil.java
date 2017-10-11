@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.utils;
+package com.github.keyboard3.developerinterview.util;
 
 import android.app.Activity;
 import android.content.ClipData;

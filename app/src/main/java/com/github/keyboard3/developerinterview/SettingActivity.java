@@ -16,9 +16,8 @@ import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ProblemsIOModel;
 import com.github.keyboard3.developerinterview.model.VersionCheckModel;
 import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
-import com.github.keyboard3.developerinterview.utils.FileUtil;
-import com.github.keyboard3.developerinterview.utils.VersionUtil;
-import com.werb.mediautilsdemo.CustomPermissionChecker;
+import com.github.keyboard3.developerinterview.util.FileUtil;
+import com.github.keyboard3.developerinterview.util.VersionUtil;
 
 import java.io.File;
 import java.util.LinkedList;

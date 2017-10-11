@@ -7,8 +7,9 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.github.keyboard3.developerinterview.utils.SystemUtil;
-import com.github.keyboard3.developerinterview.views.CusWebViewClient;
+import com.github.keyboard3.developerinterview.base.IProgressDialog;
+import com.github.keyboard3.developerinterview.util.SystemUtil;
+import com.github.keyboard3.developerinterview.view.CusWebViewClient;
 
 import java.lang.reflect.Method;
 
@@ -42,7 +43,7 @@ public class WebViewActivity extends BaseActivity {
         mWebView.loadUrl(mUrl);
         mWebView.getSettings().supportZoom();
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new CusWebViewClient(this) {
+        mWebView.setWebViewClient(new CusWebViewClient((IProgressDialog) this) {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);

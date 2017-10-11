@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.Http;
+package com.github.keyboard3.developerinterview.http;
 
 import com.allenliu.versionchecklib.core.VersionParams;
 import com.github.keyboard3.developerinterview.Config;

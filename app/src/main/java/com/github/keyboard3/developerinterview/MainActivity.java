@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
-import com.github.keyboard3.developerinterview.Http.HttpClient;
+import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.fragments.ContentFragment;
 import com.github.keyboard3.developerinterview.fragments.ProblemsFragment;
 import com.github.keyboard3.developerinterview.model.ShareModel;

@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.Http;
+package com.github.keyboard3.developerinterview.http;
 
 import com.github.keyboard3.developerinterview.entity.Version;
 

@@ -6,9 +6,9 @@ import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.Config;
-import com.github.keyboard3.developerinterview.Http.HttpClient;
+import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.entity.Version;
-import com.github.keyboard3.developerinterview.utils.VersionUtil;
+import com.github.keyboard3.developerinterview.util.VersionUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;

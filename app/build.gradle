@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'replugin-host-gradle'
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.github.keyboard3.developerinterview"
         minSdkVersion rootProject.ext.android.minSdkVersion

@@ -1,32 +1,17 @@
 package com.github.keyboard3.developerinterview;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Chronometer;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.AudioModel;
-import com.github.keyboard3.developerinterview.utils.FileUtil;
-import com.github.keyboard3.developerinterview.utils.ListUtil;
-import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
-import com.github.keyboard3.developerinterview.views.RecordButton;
-import com.werb.mediautilsdemo.MediaUtils;
+import com.github.keyboard3.developerinterview.view.RecordButton;
 
 import java.io.File;
 import java.util.ArrayList;

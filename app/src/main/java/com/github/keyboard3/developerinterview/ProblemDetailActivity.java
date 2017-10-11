@@ -16,8 +16,8 @@ import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ShareModel;
 import com.github.keyboard3.developerinterview.model.WebViewModel;
 import com.github.keyboard3.developerinterview.pattern.JavaType;
-import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
-import com.github.keyboard3.developerinterview.utils.SystemUtil;
+import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
+import com.github.keyboard3.developerinterview.util.SystemUtil;
 
 import nl.changer.audiowife.AudioWife;
 

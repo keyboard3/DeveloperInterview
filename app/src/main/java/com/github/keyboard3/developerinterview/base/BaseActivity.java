@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview;
+package com.github.keyboard3.developerinterview.base;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.werb.mediautilsdemo.CustomPermissionChecker;

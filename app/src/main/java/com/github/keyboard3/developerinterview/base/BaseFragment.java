@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.fragments;
+package com.github.keyboard3.developerinterview.base;
 
 
 import android.app.Fragment;

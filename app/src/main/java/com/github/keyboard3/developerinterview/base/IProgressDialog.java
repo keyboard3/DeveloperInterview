@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.interfaces;
+package com.github.keyboard3.developerinterview.base;
 
 /**
  * Created by keyboard3 on 2017/9/11.

@@ -2,8 +2,8 @@ package com.github.keyboard3.developerinterview.model;
 
 import android.webkit.WebView;
 
-import com.github.keyboard3.developerinterview.interfaces.IProgressDialog;
-import com.github.keyboard3.developerinterview.views.CusWebViewClient;
+import com.github.keyboard3.developerinterview.base.IProgressDialog;
+import com.github.keyboard3.developerinterview.view.CusWebViewClient;
 
 /**
  * Created by keyboard3 on 2017/9/22.

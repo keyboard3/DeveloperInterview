@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.fragments;
+package com.github.keyboard3.developerinterview.fragment;
 
 
 import android.app.AlertDialog;
@@ -14,16 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConsts;
 import com.github.keyboard3.developerinterview.ProblemDetailActivity;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.SettingActivity;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
+import com.github.keyboard3.developerinterview.base.BaseFragment;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ProblemListModel;
 import com.github.keyboard3.developerinterview.util.ListUtil;
 import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +56,7 @@ public class ProblemsFragment extends BaseFragment {
     public static ProblemsFragment newInstance(String type) {
 
         Bundle args = new Bundle();
-        args.putString(Config.INTENT_KEY, type);
+        args.putString(ConfigConsts.INTENT_KEY, type);
         ProblemsFragment fragment = new ProblemsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -71,8 +71,8 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mProblemType = getArguments().getString(Config.INTENT_KEY);
-        mDirPath = Config.STORAGE_DIRECTORY + "/" + mProblemType + "/";
+        mProblemType = getArguments().getString(ConfigConsts.INTENT_KEY);
+        mDirPath = ConfigConsts.STORAGE_DIRECTORY + "/" + mProblemType + "/";
         mProblemJsonPath = mDirPath + mProblemType + ".json";
         EventBus.getDefault().register(this);
 
@@ -104,7 +104,7 @@ public class ProblemsFragment extends BaseFragment {
             public void onItemClick(View itemView, int position) {
                 Problem entity = mList.get(position);
                 Intent intent = new Intent(getActivity(), ProblemDetailActivity.class);
-                intent.putExtra(Config.INTENT_ENTITY, entity);
+                intent.putExtra(ConfigConsts.INTENT_ENTITY, entity);
                 startActivity(intent);
             }
         });
@@ -129,7 +129,7 @@ public class ProblemsFragment extends BaseFragment {
                         .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ProblemListModel.deleteItem(getActivity(), mAdapter, mList, mProblemJsonPath, mDirPath, viewHolder.getAdapterPosition());
+                                ProblemListModel.removeProblem(getActivity(), mAdapter, mList, viewHolder.getAdapterPosition(), mProblemJsonPath);
                                 dialogInterface.dismiss();
                             }
                         }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {

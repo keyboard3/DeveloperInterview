@@ -1,10 +1,10 @@
-package com.github.keyboard3.developerinterview.views;
+package com.github.keyboard3.developerinterview.view;
 
 import android.graphics.Bitmap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.github.keyboard3.developerinterview.interfaces.IProgressDialog;
+import com.github.keyboard3.developerinterview.base.IProgressDialog;
 
 /**
  * Created by keyboard3 on 2017/9/22.

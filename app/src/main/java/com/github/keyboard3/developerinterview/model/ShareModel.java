@@ -12,7 +12,7 @@ import com.github.keyboard3.developerinterview.data.DataFactory;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.pattern.ProblemType;
 import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
-import com.github.keyboard3.developerinterview.utils.SystemUtil;
+import com.github.keyboard3.developerinterview.util.SystemUtil;
 
 /**
  * 分享处理逻辑类

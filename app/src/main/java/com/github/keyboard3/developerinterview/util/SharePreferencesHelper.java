@@ -1,10 +1,10 @@
-package com.github.keyboard3.developerinterview.utils;
+package com.github.keyboard3.developerinterview.util;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.github.keyboard3.developerinterview.pattern.JavaType;
+import com.github.keyboard3.developerinterview.pattern.JavaState;
 
 /**
  * Created by keyboard3 on 2017/9/4.
@@ -15,7 +15,7 @@ public class SharePreferencesHelper {
     private final SharedPreferences sharedPreferences;
 
     public SharePreferencesHelper(Activity activity, String name) {
-        sharedPreferences = activity.getSharedPreferences(JavaType.typeStr, Context.MODE_PRIVATE);
+        sharedPreferences = activity.getSharedPreferences(JavaState.typeStr, Context.MODE_PRIVATE);
     }
 
     public void putString(String key, String value) {

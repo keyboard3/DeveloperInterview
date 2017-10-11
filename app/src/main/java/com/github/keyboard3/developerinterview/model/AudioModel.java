@@ -8,9 +8,9 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.utils.FileUtil;
-import com.github.keyboard3.developerinterview.utils.ListUtil;
-import com.github.keyboard3.developerinterview.utils.SharePreferencesHelper;
+import com.github.keyboard3.developerinterview.util.FileUtil;
+import com.github.keyboard3.developerinterview.util.ListUtil;
+import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
 
 import java.io.File;
 import java.util.List;

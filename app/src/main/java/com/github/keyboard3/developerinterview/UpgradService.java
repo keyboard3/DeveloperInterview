@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.allenliu.versionchecklib.core.AVersionService;
 import com.github.keyboard3.developerinterview.entity.Version;
-import com.github.keyboard3.developerinterview.utils.VersionUtil;
+import com.github.keyboard3.developerinterview.util.VersionUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

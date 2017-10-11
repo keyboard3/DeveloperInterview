@@ -6,7 +6,7 @@ import android.content.res.AssetManager;
 import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.pattern.ProblemType;
-import com.github.keyboard3.developerinterview.utils.FileUtil;
+import com.github.keyboard3.developerinterview.util.FileUtil;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
