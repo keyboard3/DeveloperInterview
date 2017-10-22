@@ -25,6 +25,7 @@ public class SophixApplication extends Application {
         super.onCreate();
         sophixInit(this);
         RePlugin.App.onCreate();
+        ConfigConst.STORAGE_DIRECTORY = getApplicationContext().getFilesDir() + "/Interview";
     }
 
     @Override

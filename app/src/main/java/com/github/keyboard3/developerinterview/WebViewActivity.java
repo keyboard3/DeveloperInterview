@@ -16,6 +16,8 @@ import java.lang.reflect.Method;
 
 /**
  * 网页页面
+ *
+ * @author keyboard3
  */
 public class WebViewActivity extends BaseActivity {
 
@@ -33,8 +35,8 @@ public class WebViewActivity extends BaseActivity {
     }
 
     private void initData() {
-        mUrl = getIntent().getStringExtra(Config.INTENT_KEY);
-        mSearchKey = getIntent().getStringExtra(Config.INTENT_SEARCH_KEY);
+        mUrl = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
+        mSearchKey = getIntent().getStringExtra(ConfigConst.INTENT_SEARCH_KEY);
     }
 
     private void initWebView() {
@@ -82,6 +84,7 @@ public class WebViewActivity extends BaseActivity {
             case R.id.action_send:
                 SystemUtil.sendText(WebViewActivity.this, mWebView.getUrl());
                 break;
+            default:
         }
         return super.onOptionsItemSelected(item);
     }

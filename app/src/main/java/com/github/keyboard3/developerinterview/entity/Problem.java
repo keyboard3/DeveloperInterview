@@ -2,7 +2,7 @@ package com.github.keyboard3.developerinterview.entity;
 
 import android.support.annotation.NonNull;
 
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 
 import java.io.Serializable;
@@ -30,7 +30,9 @@ public class Problem implements Serializable, Comparable<Problem> {
     public String content;
     public String answer;
     public String source;
-    //1java 2android 3html
+    /**
+     * 1java 2android 3html
+     */
     public int type;
 
     public int getId() {
@@ -46,7 +48,7 @@ public class Problem implements Serializable, Comparable<Problem> {
     }
 
     public String getStorageDir() {
-        return Config.STORAGE_DIRECTORY + "/" + getTypeName();
+        return ConfigConst.STORAGE_DIRECTORY + "/" + getTypeName();
     }
 
     public String getTypeName() {

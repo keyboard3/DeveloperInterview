@@ -1,7 +1,7 @@
 package com.github.keyboard3.developerinterview.http;
 
 import com.allenliu.versionchecklib.core.VersionParams;
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.UpgradService;
 import com.github.keyboard3.developerinterview.entity.Version;
 
@@ -31,15 +31,15 @@ public class HttpClient {
         mService = retrofit.create(HttpService.class);
 
         mHostBuilder = new VersionParams.Builder()
-                .setRequestUrl(Config.UPGRAD_HOST_URL)
+                .setRequestUrl(ConfigConst.UPGRAD_HOST_URL)
                 .setApkName("interview")
-                .setDownloadAPKPath(Config.STORAGE_DIRECTORY)
+                .setDownloadAPKPath(ConfigConst.STORAGE_DIRECTORY)
                 .setService(UpgradService.class);
         mSelfBuilder = new VersionParams.Builder()
                 .setApkName("selfView")
                 .setOnlyDownload(true)
-                .setRequestUrl(Config.UPGRAD_SELF_URL)
-                .setDownloadAPKPath(Config.STORAGE_DIRECTORY)
+                .setRequestUrl(ConfigConst.UPGRAD_SELF_URL)
+                .setDownloadAPKPath(ConfigConst.STORAGE_DIRECTORY)
                 .setService(UpgradService.class);
     }
 

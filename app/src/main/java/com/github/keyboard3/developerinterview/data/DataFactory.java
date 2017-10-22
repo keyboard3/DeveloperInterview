@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
 
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.util.FileUtil;
@@ -39,7 +39,7 @@ public class DataFactory {
     public DataFactory(Context applicationContext, BaseProblemState BaseProblemState) {
         this.applicationContext = applicationContext;
         this.BaseProblemState = BaseProblemState;
-        problemJsonPath = Config.STORAGE_DIRECTORY + "/" + BaseProblemState.getTypeStr() + "/" + BaseProblemState.getTypeStr() + ".json";
+        problemJsonPath = ConfigConst.STORAGE_DIRECTORY + "/" + BaseProblemState.getTypeStr() + "/" + BaseProblemState.getTypeStr() + ".json";
     }
 
     /**

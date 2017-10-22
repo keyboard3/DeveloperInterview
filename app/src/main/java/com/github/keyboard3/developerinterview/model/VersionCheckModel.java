@@ -5,9 +5,9 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
-import com.github.keyboard3.developerinterview.Config;
-import com.github.keyboard3.developerinterview.http.HttpClient;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.entity.Version;
+import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.util.VersionUtil;
 
 import retrofit2.Call;
@@ -24,7 +24,7 @@ import retrofit2.Response;
 public class VersionCheckModel {
     public static void versionCheck(final Context context) {
         //弹出更新内容
-        HttpClient.getInstance().upgrade(Config.FIR_HOST_APPID, Config.FIR_API_TOKEN, new Callback<Version>() {
+        HttpClient.getInstance().upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, new Callback<Version>() {
             @Override
             public void onResponse(Call<Version> call, Response<Version> response) {
                 if (response.isSuccessful()) {

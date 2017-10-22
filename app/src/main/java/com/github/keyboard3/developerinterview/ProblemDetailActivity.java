@@ -59,7 +59,7 @@ public class ProblemDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                SystemUtil.sendText(this, Config.getShareInnerLink(this, mEntity));
+                SystemUtil.sendText(this, ConfigConst.getShareInnerLink(this, mEntity));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -67,9 +67,9 @@ public class ProblemDetailActivity extends BaseActivity {
     }
 
     private boolean initIntentData() {
-        mEntity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);
+        mEntity = (Problem) getIntent().getSerializableExtra(ConfigConst.INTENT_ENTITY);
         if (mEntity == null) {
-            String uri = getIntent().getStringExtra(Config.INTENT_KEY);
+            String uri = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
             if (TextUtils.isEmpty(uri)) {
                 uri = getIntent().getData().toString();
             }
@@ -105,7 +105,7 @@ public class ProblemDetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProblemDetailActivity.this, AudioListActivity.class);
-                intent.putExtra(Config.INTENT_ENTITY, mEntity);
+                intent.putExtra(ConfigConst.INTENT_ENTITY, mEntity);
                 startActivity(intent);
             }
         });
@@ -113,8 +113,8 @@ public class ProblemDetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProblemDetailActivity.this, WebViewActivity.class);
-                intent.putExtra(Config.INTENT_KEY, mEntity.source);
-                intent.putExtra(Config.INTENT_SEARCH_KEY, mEntity.title);
+                intent.putExtra(ConfigConst.INTENT_KEY, mEntity.source);
+                intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, mEntity.title);
                 startActivity(intent);
             }
         });

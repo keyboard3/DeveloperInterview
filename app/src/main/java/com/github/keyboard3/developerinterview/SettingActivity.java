@@ -77,7 +77,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         String type = mProblemTypes[which];
                         FileUtil.openFile(SettingActivity.this,
                                 new File(Environment.getExternalStorageDirectory()
-                                        + "/" + Config.APP_DIR
+                                        + "/" + ConfigConst.APP_DIR
                                         + "/" + type + "/"
                                         , type + ".json"));
                         dialog.dismiss();
@@ -177,7 +177,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initSelectedFile() {
-        mOldTargetFile = new File(Config.STORAGE_DIRECTORY + "/" + mCurTypeStr + "/" + mCurTypeStr + ".json");
+        mOldTargetFile = new File(ConfigConst.STORAGE_DIRECTORY + "/" + mCurTypeStr + "/" + mCurTypeStr + ".json");
     }
 
     private boolean problemTypeOk() {

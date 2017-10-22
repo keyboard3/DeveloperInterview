@@ -51,7 +51,7 @@ public class AudioListActivity extends BaseActivity {
     }
 
     private void initData() {
-        mEntity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);
+        mEntity = (Problem) getIntent().getSerializableExtra(ConfigConst.INTENT_ENTITY);
         mPath = mEntity.getStorageDir() + "/" + mEntity.id + "/";
         File file = new File(mPath);
         if (!file.exists()) {

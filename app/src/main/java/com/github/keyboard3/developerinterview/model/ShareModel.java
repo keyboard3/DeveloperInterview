@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.github.keyboard3.developerinterview.Config;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.ProblemDetailActivity;
 import com.github.keyboard3.developerinterview.WebViewActivity;
 import com.github.keyboard3.developerinterview.data.DataFactory;
@@ -24,18 +24,18 @@ import com.github.keyboard3.developerinterview.util.SystemUtil;
 public class ShareModel {
     public static void mainOpenComingIntent(Activity activity, Uri data) {
         if (data != null && data.toString().contains("content://" + activity.getPackageName())) {
-            String id = data.getQueryParameter(Config.INTENT_ID);
-            String type = data.getQueryParameter(Config.INTENT_TYPE);
-            String source = data.getQueryParameter(Config.INTENT_SOURCE);
-            String title = data.getQueryParameter(Config.INTENT_TITLE);
+            String id = data.getQueryParameter(ConfigConst.INTENT_ID);
+            String type = data.getQueryParameter(ConfigConst.INTENT_TYPE);
+            String source = data.getQueryParameter(ConfigConst.INTENT_SOURCE);
+            String title = data.getQueryParameter(ConfigConst.INTENT_TITLE);
             if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
                 Intent intent = new Intent(activity, ProblemDetailActivity.class);
-                intent.putExtra(Config.INTENT_KEY, data.toString());
+                intent.putExtra(ConfigConst.INTENT_KEY, data.toString());
                 activity.startActivity(intent);
             } else if (!TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
                 Intent intent = new Intent(activity, WebViewActivity.class);
-                intent.putExtra(Config.INTENT_KEY, source);
-                intent.putExtra(Config.INTENT_SEARCH_KEY, title);
+                intent.putExtra(ConfigConst.INTENT_KEY, source);
+                intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, title);
                 activity.startActivity(intent);
             }
         }
@@ -43,18 +43,18 @@ public class ShareModel {
 
     public static Problem problemOpenComingIntent(Activity activity, Uri data) {
         Problem mEntity = null;
-        String id = data.getQueryParameter(Config.INTENT_ID);
-        String type = data.getQueryParameter(Config.INTENT_TYPE);
-        String source = data.getQueryParameter(Config.INTENT_SOURCE);
-        String title = data.getQueryParameter(Config.INTENT_TITLE);
+        String id = data.getQueryParameter(ConfigConst.INTENT_ID);
+        String type = data.getQueryParameter(ConfigConst.INTENT_TYPE);
+        String source = data.getQueryParameter(ConfigConst.INTENT_SOURCE);
+        String title = data.getQueryParameter(ConfigConst.INTENT_TITLE);
         if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
             BaseProblemState problemType = ProblemStateFactory.getProblemType(Integer.parseInt(type));
             mEntity = new DataFactory(activity.getApplicationContext(), problemType).queryProblem(id);
             if (mEntity == null) {
                 if (!TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
                     Intent intent = new Intent(activity, WebViewActivity.class);
-                    intent.putExtra(Config.INTENT_KEY, source);
-                    intent.putExtra(Config.INTENT_SEARCH_KEY, title);
+                    intent.putExtra(ConfigConst.INTENT_KEY, source);
+                    intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, title);
                     activity.startActivity(intent);
                     activity.finish();
                     return mEntity;

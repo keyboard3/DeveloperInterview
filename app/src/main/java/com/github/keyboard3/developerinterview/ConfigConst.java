@@ -24,8 +24,7 @@ public class ConfigConst {
     public static final String INTENT_TYPE = "type";
 
     public static final String APP_DIR = "Interview";
-    public static final String STORAGE_DIRECTORY = Environment
-            .getExternalStorageDirectory().getAbsolutePath() + "/Interview";
+    public static String STORAGE_DIRECTORY;
     public static final String FIR_HOST_APPID = "59acbc2d959d6940060002ee";
     public static final String FIR_SELF_APPID = "59b63f33548b7a28a000008b";
     public static final String FIR_API_TOKEN = "aefd90754f9288ff2e54949a8bc21e20";

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.github.keyboard3.developerinterview.AudioListActivity">
 
-    <com.github.keyboard3.developerinterview.views.RecordButton
+    <com.github.keyboard3.developerinterview.view.RecordButton
         android:id="@+id/btn_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
