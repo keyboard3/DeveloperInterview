@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initHandler() {
         //版本更新检查
-        AllenChecker.startVersionCheck(this, HttpClient.getInstance().mHostBuilder.build());
+        AllenChecker.startVersionCheck(this, HttpClient.getInstance(getApplicationContext()).mHostBuilder.build());
     }
 
     private void doubleClickQuit() {

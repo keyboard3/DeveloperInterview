@@ -33,8 +33,14 @@ public class BaseFragment extends Fragment implements IProgressDialog {
             mProgressDialog.setIndeterminate(true);
         }
         if (mAdvanceDialogToggle) {
+            if (mAdvanceProgressView == null) {
+                return;
+            }
             mAdvanceProgressView.show();
         } else {
+            if (mProgressDialog == null) {
+                return;
+            }
             mProgressDialog.show();
         }
     }

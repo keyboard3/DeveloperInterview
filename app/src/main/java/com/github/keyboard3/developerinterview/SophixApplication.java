@@ -25,14 +25,14 @@ public class SophixApplication extends Application {
         super.onCreate();
         sophixInit(this);
         RePlugin.App.onCreate();
-        ConfigConst.STORAGE_DIRECTORY = getApplicationContext().getFilesDir() + "/Interview";
+        ConfigConst.STORAGE_DIRECTORY = getApplicationContext().getExternalCacheDir() + "/Interview";
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         RePluginConfig c = new RePluginConfig();
-        c.setCallbacks(new com.github.keyboard3.developerinterview.repair.HostCallbacks(base));
+        c.setCallbacks(new com.github.keyboard3.developerinterview.callback.HostCallbacks(base));
         RePlugin.App.attachBaseContext(this, c);
     }
 

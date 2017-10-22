@@ -45,22 +45,6 @@ public class ProblemListModel {
         mSpHelper.putInt(ConfigConst.INTENT_LIST_TOP, top);
     }
 
-    public static void initProblemsFromFile(Context context, List<Problem> mList, File file, String mProblemType) throws IOException {
-        String content;
-        mList.clear();
-        if (!file.exists()) {
-            //将assets目录的问题文件复制到sdcard
-            AssetManager assets = context.getAssets();
-            InputStream open = assets.open(mProblemType + ".json");
-            FileUtil.copyFile(open, file);
-        }
-        InputStream input = new FileInputStream(file);
-        content = CharStreams.toString(new InputStreamReader(input));
-        List<Problem> data = new Gson().fromJson(content, new TypeToken<List<Problem>>() {
-        }.getType());
-        mList.addAll(data);
-    }
-
     public static void restoreListPosition(LinearLayoutManager mLinearLayoutManager, SharePreferencesHelper mSpHelper) {
         //下次进来还是显示上次的位置
         final int position = mSpHelper.getSP().getInt(ConfigConst.INTENT_LIST_POSITION, 0);

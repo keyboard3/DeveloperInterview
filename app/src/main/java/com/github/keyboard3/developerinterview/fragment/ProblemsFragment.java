@@ -20,8 +20,11 @@ import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.SettingActivity;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.base.BaseFragment;
+import com.github.keyboard3.developerinterview.callback.Callback;
+import com.github.keyboard3.developerinterview.data.DataFactory;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ProblemListModel;
+import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.util.ListUtil;
 import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
 
@@ -50,15 +53,14 @@ public class ProblemsFragment extends BaseFragment {
     private List<Problem> mList = new ArrayList<>();
     private ProblemAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private String mProblemType;
-    private String mDirPath;
-    private String mProblemJsonPath;
+    private BaseProblemState mState;
     private SharePreferencesHelper mSpHelper;
+    private DataFactory dataFactory;
 
-    public static ProblemsFragment newInstance(String type) {
+    public static ProblemsFragment newInstance(BaseProblemState state) {
 
         Bundle args = new Bundle();
-        args.putString(ConfigConst.INTENT_KEY, type);
+        args.putSerializable(ConfigConst.INTENT_KEY, state);
         ProblemsFragment fragment = new ProblemsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -73,9 +75,9 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mProblemType = getArguments().getString(ConfigConst.INTENT_KEY);
-        mDirPath = ConfigConst.STORAGE_DIRECTORY + "/" + mProblemType + "/";
-        mProblemJsonPath = mDirPath + mProblemType + ".json";
+        mState = (BaseProblemState) getArguments().getSerializable(ConfigConst.INTENT_KEY);
+        dataFactory = new DataFactory(getActivity().getApplicationContext(), mState);
+
         EventBus.getDefault().register(this);
 
         mRecyclerView = getView().findViewById(R.id.rl_content);
@@ -92,14 +94,13 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSpHelper = new SharePreferencesHelper(getActivity(), mProblemType);
+        mSpHelper = new SharePreferencesHelper(getActivity(), mState.getTypeStr());
         mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         ProblemListModel.restoreListPosition(mLinearLayoutManager, mSpHelper);
-
+        mAdapter = new ProblemAdapter(mList, getActivity());
         initData();
 
-        mAdapter = new ProblemAdapter(mList, getActivity());
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
             @Override
@@ -131,7 +132,7 @@ public class ProblemsFragment extends BaseFragment {
                         .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ProblemListModel.removeProblem(getActivity(), mAdapter, mList, viewHolder.getAdapterPosition(), mProblemJsonPath);
+                                ProblemListModel.removeProblem(getActivity(), mAdapter, mList, viewHolder.getAdapterPosition(), dataFactory.problemJsonPath);
                                 dialogInterface.dismiss();
                             }
                         }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
@@ -169,30 +170,28 @@ public class ProblemsFragment extends BaseFragment {
     protected void initData() {
         toggleDialogAdvance(true);
         showDialog();
-        //创建文件夹
-        File dir = new File(mDirPath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File file = new File(mProblemJsonPath);
-        try {
-            ProblemListModel.initProblemsFromFile(getActivity(), mList, file, mProblemType);
-
-            if (!ListUtil.isEmpty(mList)) {
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mIvNoData.setVisibility(View.GONE);
-                mTvInput.setVisibility(View.GONE);
-            } else {
-                mRecyclerView.setVisibility(View.GONE);
-                mIvNoData.setVisibility(View.VISIBLE);
-                mTvInput.setVisibility(View.VISIBLE);
+        dataFactory.init2LocalProblems(new Callback<List<Problem>>() {
+            @Override
+            public void success(List<Problem> item) {
+                mList.addAll(item);
+                mAdapter.notifyDataSetChanged();
+                try {
+                    if (!ListUtil.isEmpty(mList)) {
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mIvNoData.setVisibility(View.GONE);
+                        mTvInput.setVisibility(View.GONE);
+                    } else {
+                        mRecyclerView.setVisibility(View.GONE);
+                        mIvNoData.setVisibility(View.VISIBLE);
+                        mTvInput.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    hideDialog();
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            hideDialog();
-        }
+        });
     }
 
     public void goTop() {

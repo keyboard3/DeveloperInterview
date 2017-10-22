@@ -13,7 +13,7 @@ import com.qihoo360.replugin.RePluginCallbacks;
 public class RePlugin360Application extends RePluginApplication {
     @Override
     protected RePluginCallbacks createCallbacks() {
-        return new com.github.keyboard3.developerinterview.repair.HostCallbacks(this);
+        return new com.github.keyboard3.developerinterview.callback.HostCallbacks(this);
     }
 
     @Override

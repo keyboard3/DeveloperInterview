@@ -1,4 +1,4 @@
-package com.github.keyboard3.developerinterview.repair;
+package com.github.keyboard3.developerinterview.callback;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,7 @@ public class HostCallbacks extends RePluginCallbacks {
     @Override
     public boolean onPluginNotExistsForActivity(final Context context, String plugin, Intent intent, int process) {
         if (plugin.equals(ConfigConst.PACKAGE_SELFVIEW)) {
-            AllenChecker.startVersionCheck(context, HttpClient.getInstance().mSelfBuilder.build());
+            AllenChecker.startVersionCheck(context, HttpClient.getInstance(context).mSelfBuilder.build());
         }
         return super.onPluginNotExistsForActivity(context, plugin, intent, process);
     }

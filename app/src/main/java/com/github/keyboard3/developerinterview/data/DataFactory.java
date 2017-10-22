@@ -1,28 +1,34 @@
 package com.github.keyboard3.developerinterview.data;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
+import android.util.Log;
+import android.util.SparseArray;
 
 import com.github.keyboard3.developerinterview.ConfigConst;
+import com.github.keyboard3.developerinterview.callback.Callback;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
-import com.github.keyboard3.developerinterview.util.FileUtil;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
+
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author keyboard3
@@ -31,15 +37,30 @@ import java.util.TreeSet;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class DataFactory {
-    private static Map<Integer, List<Problem>> listMap = new ArrayMap<>();
-    private BaseProblemState BaseProblemState;
+    private static final String TAG = "DataFactory";
+    /**
+     * 存入了所有类型的题目集合
+     */
+    private static Map<Integer, SparseArray<Problem>> listMap = new ArrayMap<>();
+    private SparseArray<Problem> problems;
+    public List<Problem> problemList;
+    private BaseProblemState problemState;
     private Context applicationContext;
-    private String problemJsonPath;
+    public String problemJsonPath;
 
-    public DataFactory(Context applicationContext, BaseProblemState BaseProblemState) {
+    public DataFactory(Context applicationContext, BaseProblemState problemState) {
+        if (problemState == null || applicationContext == null) {
+            return;
+        }
         this.applicationContext = applicationContext;
-        this.BaseProblemState = BaseProblemState;
-        problemJsonPath = ConfigConst.STORAGE_DIRECTORY + "/" + BaseProblemState.getTypeStr() + "/" + BaseProblemState.getTypeStr() + ".json";
+        this.problemState = problemState;
+        problemJsonPath = ConfigConst.STORAGE_DIRECTORY + "/" + problemState.getTypeStr() + "/" + problemState.getTypeStr() + ".json";
+
+        //创建文件夹
+        File dir = new File(problemJsonPath);
+        if (!dir.getParentFile().exists()) {
+            dir.getParentFile().mkdirs();
+        }
     }
 
     /**
@@ -54,66 +75,95 @@ public class DataFactory {
     }
 
     /**
-     * 查询到题目集合，保证集合是有序的
+     * 根据
      *
      * @return
      */
-    public List<Problem> queryByType() {
-        if (BaseProblemState == null) {
-            return null;
-        }
-        List<Problem> list = new ArrayList();
-        if (!listMap.containsKey(BaseProblemState.getType()) || listMap.get(BaseProblemState.getType()) == null) {
-            try {
-                Gson gson = new Gson();
-                String content;
-                File file = new File(problemJsonPath);
-                if (!file.exists()) {
-                    //将assets目录的问题文件复制到sdcard
-                    AssetManager assets = applicationContext.getAssets();
-                    InputStream open = assets.open(BaseProblemState + ".json");
-                    FileUtil.copyFile(open, file);
-                }
-                InputStream input = new FileInputStream(file);
-                content = CharStreams.toString(new InputStreamReader(input));
-                TreeSet<Problem> data = gson.fromJson(content, new TypeToken<TreeSet<Problem>>() {
-                }.getType());
-                list.addAll(data);
-                listMap.put(BaseProblemState.getType(), list);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void initProblemsByType() {
+        if (problems == null) {
+            problems = listMap.get(problemState.getType());
+            if (problems == null) {
+                init2LocalProblems(null);
             }
-        } else {
-            list = listMap.get(BaseProblemState.getType());
         }
-        return list;
     }
 
     /**
-     * 二分查询算法查询题目 【算法】
+     * 就是初始化本地的题目
+     */
+    public void init2LocalProblems(final Callback<List<Problem>> callback) {
+        final Gson gson = new Gson();
+        final File file = new File(problemJsonPath);
+        problems = new SparseArray<>();
+        try {
+
+            if (!file.exists()) {
+                HttpClient.getInstance(applicationContext).getProblems(problemState.getTypeStr() + ".json", new Consumer<List<Problem>>() {
+                    @Override
+                    public void accept(List<Problem> list) throws Exception {
+                        problemList = list;
+                        Log.d(TAG, "获取成功:" + list.size());
+                        //一次性写入文件
+                        FileOutputStream outputStream = new FileOutputStream(file);
+                        outputStream.write(gson.toJson(list).getBytes());
+                        //保存到缓存中
+                        saveMemoryCache(list);
+                        if (callback != null) {
+                            callback.success(list);
+                        }
+                    }
+                });
+            } else {
+                Log.d(TAG, "init2LocalProblems 本地读取");
+                InputStream input = new FileInputStream(file);
+                String content = CharStreams.toString(new InputStreamReader(input));
+                problemList = new Gson().fromJson(content, new TypeToken<List<Problem>>() {
+                }.getType());
+                saveMemoryCache(problemList);
+                if (callback != null) {
+                    callback.success(problemList);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveMemoryCache(List<Problem> list) {
+        for (Problem item : list) {
+            problems.put(item.getId(), item);
+        }
+        listMap.put(problemState.getType(), problems);
+    }
+
+    /**
+     * 异步查询题目
      *
      * @param id
      * @return
      */
-    public Problem queryProblem(String id) {
+    public void asyncQueryProblem(String id, final Callback callback) {
         Integer Id = Integer.parseInt(id);
-        Problem entity = null;
-        List<Problem> list = queryByType();
-        int left = 0;
-        int right = list.size() - 1;
-        int mid;
-        while (left <= right) {
-            mid = (left + right + 1) / 2;
-            Problem item = list.get(mid);
-            if (Id < item.getId()) {
-                right = mid - 1;
-            } else if (Id > item.getId()) {
-                left = mid + 1;
-            } else {
-                entity = list.get(mid);
-                break;
-            }
-        }
-        return entity;
+        io.reactivex.Observable.just(Id)
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<Integer, ObservableSource<Problem>>() {
+                    @Override
+                    public ObservableSource<Problem> apply(Integer id) throws Exception {
+
+                        return (ObservableSource<Problem>) problems.get(id);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Problem>() {
+                    @Override
+                    public void accept(Problem problem) throws Exception {
+                        callback.success(problem);
+                    }
+                });
+    }
+
+    public Problem queryProblem(String sid) {
+        Integer id = Integer.parseInt(sid);
+        initProblemsByType();
+        return problems.get(id);
     }
 }

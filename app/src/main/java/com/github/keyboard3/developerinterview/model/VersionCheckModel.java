@@ -10,9 +10,7 @@ import com.github.keyboard3.developerinterview.entity.Version;
 import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.util.VersionUtil;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.functions.Consumer;
 
 /**
  * 版本检测相关逻辑
@@ -24,26 +22,19 @@ import retrofit2.Response;
 public class VersionCheckModel {
     public static void versionCheck(final Context context) {
         //弹出更新内容
-        HttpClient.getInstance().upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, new Callback<Version>() {
+        final HttpClient httpClient = HttpClient.getInstance(context);
+        httpClient.upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, new Consumer<Version>() {
             @Override
-            public void onResponse(Call<Version> call, Response<Version> response) {
-                if (response.isSuccessful()) {
-                    Version entity = response.body();
-                    if (entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0) {
-                        new AlertDialog.Builder(context)
-                                .setTitle(entity.getVersionShort())
-                                .setMessage(entity.getChangelog())
-                                .show();
-                    } else {
-                        AllenChecker.startVersionCheck(context, HttpClient.getInstance().mHostBuilder.build());
-                        Toast.makeText(context, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
-                    }
+            public void accept(Version entity) throws Exception {
+                if (entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0) {
+                    new AlertDialog.Builder(context)
+                            .setTitle(entity.getVersionShort())
+                            .setMessage(entity.getChangelog())
+                            .show();
+                } else {
+                    AllenChecker.startVersionCheck(context, httpClient.mHostBuilder.build());
+                    Toast.makeText(context, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Version> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

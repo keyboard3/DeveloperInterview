@@ -31,7 +31,7 @@ public class HtmlState extends BaseProblemState {
     public BaseProblemState setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
         fab.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(typeStr), typeStr);
+        fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(this), typeStr);
         fragmentTransaction.commit();
         return this;
     }

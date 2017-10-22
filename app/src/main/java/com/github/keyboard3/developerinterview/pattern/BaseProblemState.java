@@ -3,6 +3,8 @@ package com.github.keyboard3.developerinterview.pattern;
 import android.app.FragmentManager;
 import android.support.design.widget.FloatingActionButton;
 
+import java.io.Serializable;
+
 /**
  * 问题状态的基类
  *
@@ -10,7 +12,7 @@ import android.support.design.widget.FloatingActionButton;
  * @date 2017/9/7
  */
 
-public abstract class BaseProblemState {
+public abstract class BaseProblemState implements Serializable{
     /**
      * 根据类型设置Fragment
      *
