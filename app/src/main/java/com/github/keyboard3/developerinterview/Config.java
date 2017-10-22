@@ -6,7 +6,10 @@ import android.os.Environment;
 import com.github.keyboard3.developerinterview.entity.Problem;
 
 /**
- * Created by keyboard3 on 2017/9/3.
+ * 配置文件
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 
 public class Config {

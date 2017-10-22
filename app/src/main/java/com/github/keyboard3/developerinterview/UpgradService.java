@@ -9,7 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 /**
- * Created by keyboard3 on 2017/9/6.
+ * 自动升级服务
+ * todo 改成启动检查
+ *
+ * @author keyboard3
+ * @date 2017/9/6
  */
 
 public class UpgradService extends AVersionService {

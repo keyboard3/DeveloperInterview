@@ -9,7 +9,10 @@ import com.github.keyboard3.developerinterview.fragment.ProblemsFragment;
 import com.github.keyboard3.developerinterview.R;
 
 /**
- * Created by keyboard3 on 2017/9/7.
+ * Android状态
+ *
+ * @author keyboard3
+ * @date 2017/9/7
  */
 
 public class AndroidState extends BaseProblemState {

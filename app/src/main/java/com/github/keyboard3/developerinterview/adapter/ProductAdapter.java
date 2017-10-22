@@ -14,7 +14,9 @@ import java.util.List;
 
 /**
  * 作品适配器
- * Created by keyboard3 on 2017/9/12.
+ *
+ * @author keyboard3
+ * @date 2017/9/12
  */
 public class ProductAdapter extends BaseAdapter<ProductAdapter.MyViewHolder, PluginInfo> {
 

@@ -22,7 +22,10 @@ import com.werb.mediautilsdemo.MediaUtils;
 import java.io.File;
 
 /**
- * Created by keyboard3 on 2017/9/23.
+ * 语音记录按钮
+ *
+ * @author keyboard3
+ * @date 2017/9/23
  */
 
 public class RecordButton extends android.support.v7.widget.AppCompatTextView {
@@ -72,7 +75,9 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
             case MotionEvent.ACTION_DOWN:
                 startAnim(true);
                 mMediaUtils.record();
-                if (mRecordListener != null) mRecordListener.onStart();
+                if (mRecordListener != null) {
+                    mRecordListener.onStart();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 stopAnim();
@@ -85,12 +90,15 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
                     if (duration < 5) {
                         mMediaUtils.stopRecordUnSave();
                         Toast.makeText(getContext(), R.string.audio_time_short, Toast.LENGTH_SHORT).show();
-                        if (mRecordListener != null)
+                        if (mRecordListener != null) {
                             mRecordListener.onError(getResources().getString(R.string.audio_time_short));
+                        }
                     } else {
                         mMediaUtils.stopRecordSave();
                         Toast.makeText(getContext(), R.string.audio_file_save, Toast.LENGTH_SHORT).show();
-                        if (mRecordListener != null) mRecordListener.onEnd();
+                        if (mRecordListener != null) {
+                            mRecordListener.onEnd();
+                        }
                     }
                 }
                 break;
@@ -104,31 +112,32 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
                     startAnim(false);
                 }
                 break;
+            default:
+
         }
         super.dispatchTouchEvent(event);
         return true;
     }
 
     private int getDuration(String str) {
+        String value = "0";
         String a = str.substring(0, 1);
         String b = str.substring(1, 2);
         String c = str.substring(3, 4);
         String d = str.substring(4);
         String mDuration;
-        if (a.equals("0") && b.equals("0")) {
-            if (c.equals("0") && Integer.valueOf(d) < 1) {
+        if (value.equals(a) && b.equals(value)) {
+            if (c.equals(value) && Integer.valueOf(d) < 1) {
                 return -2;
-            } else if (c.equals("0") && Integer.valueOf(d) > 1) {
+            } else if (c.equals(value) && Integer.valueOf(d) > 1) {
                 mDuration = d;
-                return Integer.valueOf(d);
             } else {
                 mDuration = c + d;
-                return Integer.valueOf(c + d);
             }
         } else {
             mDuration = maximum + "";
-            return -1;
         }
+        return Integer.valueOf(mDuration);
     }
 
     private void startAnim(boolean isStart) {
@@ -157,13 +166,17 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
     }
 
     private void stopAnim() {
-        if (mPopWindow != null) mPopWindow.dismiss();
+        if (mPopWindow != null) {
+            mPopWindow.dismiss();
+        }
         setBackground(getResources().getDrawable(R.color.color_primary));
         mChronometer.stop();
     }
 
     private void moveAnim() {
-        if (mPopWindow != null) mPopWindow.dismiss();
+        if (mPopWindow != null) {
+            mPopWindow.dismiss();
+        }
         mInfo.setText(R.string.audio_release_cancel);
         micIcon.setBackground(null);
         micIcon.setBackground(getResources().getDrawable(R.drawable.ic_undo_black_24dp));
@@ -187,10 +200,21 @@ public class RecordButton extends android.support.v7.widget.AppCompatTextView {
     }
 
     public interface OnRecordListener {
+        /**
+         * 开始记录
+         */
         void onStart();
 
+        /**
+         * 结束记录
+         */
         void onEnd();
 
+        /**
+         * 出现错误
+         *
+         * @param msg
+         */
         void onError(String msg);
     }
 }

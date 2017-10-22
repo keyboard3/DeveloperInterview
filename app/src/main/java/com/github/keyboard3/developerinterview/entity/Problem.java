@@ -8,7 +8,10 @@ import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import java.io.Serializable;
 
 /**
- * Created by keyboard3 on 2017/9/3.
+ * 题目类实体
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 
 public class Problem implements Serializable, Comparable<Problem> {
@@ -27,7 +30,8 @@ public class Problem implements Serializable, Comparable<Problem> {
     public String content;
     public String answer;
     public String source;
-    public int type;//1java 2android 3html
+    //1java 2android 3html
+    public int type;
 
     public int getId() {
         return Integer.parseInt(id);

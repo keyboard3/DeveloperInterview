@@ -9,7 +9,10 @@ import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.fragment.ProductListFragment;
 
 /**
- * Created by keyboard3 on 2017/9/7.
+ * 自己的作品状态
+ *
+ * @author keyboard3
+ * @date 2017/9/7
  */
 
 public class ProductState extends BaseProblemState {

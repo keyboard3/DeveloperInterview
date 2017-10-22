@@ -1,7 +1,10 @@
 package com.github.keyboard3.developerinterview.entity;
 
 /**
- * Created by keyboard3 on 2017/9/12.
+ * 栏目类型的插件信息
+ *
+ * @author keyboard3
+ * @date 2017/9/12
  */
 
 public class PluginInfo {

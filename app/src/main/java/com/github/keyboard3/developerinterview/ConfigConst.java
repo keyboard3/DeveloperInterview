@@ -6,10 +6,13 @@ import android.os.Environment;
 import com.github.keyboard3.developerinterview.entity.Problem;
 
 /**
- * Created by keyboard3 on 2017/9/3.
+ * 配置变量类
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 
-public class ConfigConsts {
+public class ConfigConst {
     public static final String INTENT_ENTITY = "intent_entity";
     public static final String INTENT_KEY = "intent_key";
     public static final String INTENT_SEARCH_KEY = "search_key";

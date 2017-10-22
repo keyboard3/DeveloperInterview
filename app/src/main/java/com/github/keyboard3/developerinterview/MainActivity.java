@@ -26,18 +26,17 @@ import com.github.keyboard3.developerinterview.pattern.JavaState;
 import com.github.keyboard3.developerinterview.pattern.OtherState;
 import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 
-import java.util.Collections;
-
 /**
  * 容器页面  包含左侧导航和右侧内容
+ *
+ * @author keyboard3
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private static final int P_READ_EXTERNAL_STORAGE = 101;//sdcard读写权限
+    private static final int P_READ_EXTERNAL_STORAGE = 101;
 
+    private BaseProblemState mProblemType = JavaState.getInstance();
     private FloatingActionButton mFab;
-
-    private BaseProblemState mProblemType = JavaState.getInstance();//初始的是javaType
     private long mFirstClickTime = 0;
 
     @Override
@@ -65,8 +64,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onBackPressed() {
-        if (webBackUrl()) return;
-        if (closeDrawer()) return;
+        if (webBackUrl()) {
+            return;
+        }
+        if (closeDrawer()) {
+            return;
+        }
         doubleClickQuit();
     }
 
@@ -107,6 +110,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     mProblemType.setFragmentByType(mFab, getFragmentManager());
                 }
                 break;
+            default:
         }
     }
 
@@ -117,8 +121,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onClick(View view) {
                 ProblemsFragment fragment = getContentFragment();
-                if (fragment != null)
+                if (fragment != null) {
                     fragment.goTop();
+                }
             }
         });
 

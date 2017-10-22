@@ -7,7 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
- * Created by keyboard3 on 2017/9/5.
+ * 版本工具类
+ *
+ * @author keyboard3
+ * @date 2017/9/5
  */
 
 public class VersionUtil {

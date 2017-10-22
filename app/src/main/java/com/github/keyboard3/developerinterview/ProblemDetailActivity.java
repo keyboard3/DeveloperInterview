@@ -23,7 +23,9 @@ import com.github.keyboard3.developerinterview.util.SystemUtil;
 import nl.changer.audiowife.AudioWife;
 
 /**
- * 题目详情
+ * 题目详情页
+ *
+ * @author keyboard3
  */
 public class ProblemDetailActivity extends BaseActivity {
     public static final String TAG = "ProblemDetailActivity";
@@ -35,7 +37,9 @@ public class ProblemDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_problem_detail);
         setTitle(R.string.title_problem_detail);
 
-        if (initIntentData()) return;
+        if (initIntentData()) {
+            return;
+        }
         initViews();
     }
 
@@ -57,13 +61,14 @@ public class ProblemDetailActivity extends BaseActivity {
             case R.id.action_share:
                 SystemUtil.sendText(this, Config.getShareInnerLink(this, mEntity));
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private boolean initIntentData() {
-        mEntity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);//从应用进来
-        if (mEntity == null) {//从外面进来
+        mEntity = (Problem) getIntent().getSerializableExtra(Config.INTENT_ENTITY);
+        if (mEntity == null) {
             String uri = getIntent().getStringExtra(Config.INTENT_KEY);
             if (TextUtils.isEmpty(uri)) {
                 uri = getIntent().getData().toString();

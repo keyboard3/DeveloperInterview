@@ -11,7 +11,10 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.R;
 
 /**
- * Created by keyboard3 on 2017/9/7.
+ * 系统工具类
+ *
+ * @author keyboard3
+ * @date 2017/9/7
  */
 
 public class SystemUtil {

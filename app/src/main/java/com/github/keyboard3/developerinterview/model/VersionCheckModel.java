@@ -15,13 +15,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by keyboard3 on 2017/9/22.
+ * 版本检测相关逻辑
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
 public class VersionCheckModel {
     public static void versionCheck(final Context context) {
         //弹出更新内容
-        HttpClient.getInstance().upgrad(Config.FIR_HOST_APPID, Config.FIR_API_TOKEN, new Callback<Version>() {
+        HttpClient.getInstance().upgrade(Config.FIR_HOST_APPID, Config.FIR_API_TOKEN, new Callback<Version>() {
             @Override
             public void onResponse(Call<Version> call, Response<Version> response) {
                 if (response.isSuccessful()) {

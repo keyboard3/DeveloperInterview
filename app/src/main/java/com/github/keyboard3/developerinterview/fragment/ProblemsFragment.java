@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.keyboard3.developerinterview.ConfigConsts;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.ProblemDetailActivity;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.SettingActivity;
@@ -37,6 +37,8 @@ import java.util.List;
 /**
  * 内容页面 展示不同类型的问题列表
  * A ProblemsFragment {@link Fragment} subclass.
+ *
+ * @author keyboard3
  */
 public class ProblemsFragment extends BaseFragment {
     private static String TAG = "ProblemsFragment";
@@ -56,7 +58,7 @@ public class ProblemsFragment extends BaseFragment {
     public static ProblemsFragment newInstance(String type) {
 
         Bundle args = new Bundle();
-        args.putString(ConfigConsts.INTENT_KEY, type);
+        args.putString(ConfigConst.INTENT_KEY, type);
         ProblemsFragment fragment = new ProblemsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -71,8 +73,8 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mProblemType = getArguments().getString(ConfigConsts.INTENT_KEY);
-        mDirPath = ConfigConsts.STORAGE_DIRECTORY + "/" + mProblemType + "/";
+        mProblemType = getArguments().getString(ConfigConst.INTENT_KEY);
+        mDirPath = ConfigConst.STORAGE_DIRECTORY + "/" + mProblemType + "/";
         mProblemJsonPath = mDirPath + mProblemType + ".json";
         EventBus.getDefault().register(this);
 
@@ -104,7 +106,7 @@ public class ProblemsFragment extends BaseFragment {
             public void onItemClick(View itemView, int position) {
                 Problem entity = mList.get(position);
                 Intent intent = new Intent(getActivity(), ProblemDetailActivity.class);
-                intent.putExtra(ConfigConsts.INTENT_ENTITY, entity);
+                intent.putExtra(ConfigConst.INTENT_ENTITY, entity);
                 startActivity(intent);
             }
         });
@@ -159,20 +161,19 @@ public class ProblemsFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRefreshEvent(SettingActivity.refreshEvent event) {
+    public void onRefreshEvent(SettingActivity.RefreshEvent event) {
         initData();
         mAdapter.notifyDataSetChanged();
     }
 
-    //todo 1.使用rxJava 在子线程执行操作
-    //todo 3.添加进入leetCode 账号
     protected void initData() {
         toggleDialogAdvance(true);
         showDialog();
         //创建文件夹
         File dir = new File(mDirPath);
-        if (!dir.exists())
+        if (!dir.exists()) {
             dir.mkdirs();
+        }
 
         File file = new File(mProblemJsonPath);
         try {

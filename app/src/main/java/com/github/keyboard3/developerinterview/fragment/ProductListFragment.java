@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.github.keyboard3.developerinterview.ConfigConsts;
+import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.adapter.BaseAdapter;
 import com.github.keyboard3.developerinterview.adapter.ProductAdapter;
@@ -23,6 +23,11 @@ import com.qihoo360.replugin.RePlugin;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 产品列表
+ *
+ * @author keyboard3
+ */
 public class ProductListFragment extends BaseFragment {
 
     private ProductAdapter mAdapter;
@@ -47,7 +52,7 @@ public class ProductListFragment extends BaseFragment {
             @Override
             public void onItemClick(View itemView, int position) {
                 PluginInfo entity = mList.get(position);
-                com.qihoo360.replugin.model.PluginInfo pi = RePlugin.install(ConfigConsts.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
+                com.qihoo360.replugin.model.PluginInfo pi = RePlugin.install(ConfigConst.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
                 if (pi != null) {
                     RePlugin.preload(pi);
                 }

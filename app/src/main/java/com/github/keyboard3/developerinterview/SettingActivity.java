@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.model.ProblemsIOModel;
+import com.github.keyboard3.developerinterview.model.ProblemsIoModel;
 import com.github.keyboard3.developerinterview.model.VersionCheckModel;
 import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.FileUtil;
@@ -26,7 +26,8 @@ import java.util.LinkedList;
 /**
  * 设置
  * 导入、导出、版本检测
- * todo 3.爬虫同步工匠若水的题目
+ *
+ * @author keyboard3
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -65,11 +66,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private void initDialog() {
         mProblemTypes = new String[ProblemStateFactory.mapString.keySet().size()];
-        ProblemStateFactory.mapString.keySet().toArray(mProblemTypes);//todo 1 RxJava 过滤数据
+        ProblemStateFactory.mapString.keySet().toArray(mProblemTypes);
 
         mOutputDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.setting_select_type)
                 .setItems(mProblemTypes, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //选择题目类型 调用系统的发送文件功能
                         String type = mProblemTypes[which];
@@ -84,6 +86,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mInputDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.setting_select_type)
                 .setItems(mProblemTypes, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //导入 选中需导入题目类型并打开题目文件的
                         mCurTypeStr = mProblemTypes[which];
@@ -105,7 +108,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 item.setType(mCurTypeStr);
                             }
                         }
-                        ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
+                        ProblemsIoModel.input2localFile(mOldList, mOldTargetFile);
                     }
                 }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -121,11 +124,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         if (resultCode == RESULT_OK && requestCode == FILE_CODE) {
             try {
                 initSelectedFile();
-                mValidNum = ProblemsIOModel.computeDiffList(mOldList, mNewList, mOldTargetFile, this, data.getData());
-                if (mValidNum == -1) return;
+                mValidNum = ProblemsIoModel.computeDiffList(mOldList, mNewList, mOldTargetFile, this, data.getData());
+                if (mValidNum == -1) {
+                    return;
+                }
 
                 if (problemTypeOk()) {
-                    ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
+                    ProblemsIoModel.input2localFile(mOldList, mOldTargetFile);
                 } else {
                     mForceTransferDialog.show();//类型不全部正确 强转对话框提示
                 }
@@ -153,6 +158,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     VersionCheckModel.versionCheck(getApplicationContext());
                 }
                 break;
+            default:
         }
     }
 
@@ -166,6 +172,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     mInputDialog.show();
                 }
                 break;
+            default:
         }
     }
 
@@ -184,6 +191,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         return problemTypeOk;
     }
 
-    public static class refreshEvent {
+    public static class RefreshEvent {
     }
 }

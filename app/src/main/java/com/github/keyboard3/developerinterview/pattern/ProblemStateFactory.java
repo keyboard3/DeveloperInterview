@@ -13,16 +13,21 @@ import java.util.Map;
 
 /**
  * 问题的状态模式和工厂模式
- * Created by keyboard3 on 2017/9/7.
+ *
+ * @author keyboard3
+ * @date 2017/9/7
  */
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class ProblemStateFactory {
-    public static SparseArray<? super BaseProblemState> mapType = new SparseArray<>();//限定通配符的下界
-    public static Map<String, ? super BaseProblemState> mapString = new ArrayMap<>();//限定通配符的下界
-    public static SparseArray<? super BaseProblemState> mapMenuId = new SparseArray<>();//限定通配符的下界
+    public static SparseArray<? super BaseProblemState> mapType = new SparseArray<>();
+    public static Map<String, ? super BaseProblemState> mapString = new ArrayMap<>();
+    public static SparseArray<? super BaseProblemState> mapMenuId = new SparseArray<>();
 
     static {
+        /**
+         * todo 通过注解完成这部分动态功能
+         */
         mapType.put(JavaState.type, JavaState.getInstance());
         mapType.put(AndroidState.type, AndroidState.getInstance());
         mapType.put(HtmlState.type, HtmlState.getInstance());

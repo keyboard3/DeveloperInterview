@@ -15,6 +15,12 @@ import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
+/**
+ * 基类的Activity 让子类更加专注的实现自己的业务
+ *
+ * @author keyboard3
+ * @date 2017/9/3
+ */
 public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
     private ProgressDialog mProgressDialog;
@@ -32,6 +38,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
         }
     }
 
+    @Override
     public void setTitle(@StringRes int titleRid) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(titleRid);
@@ -52,7 +59,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (hasActionBar()) {
-            if (item.getItemId() == android.R.id.home) {//返回按钮
+            if (item.getItemId() == android.R.id.home) {
                 finish();
                 return true;
             }
@@ -84,8 +91,14 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     @Override
     public void hideDialog() {
         if (mAdvanceDialogToggle && mAdvanceProgressView != null) {
+            if (mAdvanceProgressView == null) {
+                return;
+            }
             mAdvanceProgressView.hide();
-        } else if ((mAdvanceDialogToggle == false || mAdvanceProgressView == null) && mProgressDialog != null) {
+        } else {
+            if (mProgressDialog == null) {
+                return;
+            }
             mProgressDialog.hide();
         }
     }
@@ -97,8 +110,9 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
 
     protected boolean checkPermission(@NonNull String[] permissions, @NonNull int requestCode) {
-        if (mPermissionChecker == null)
+        if (mPermissionChecker == null) {
             mPermissionChecker = new CustomPermissionChecker(this);
+        }
 
         if (mPermissionChecker.isLackPermissions(permissions)) {
             mPermissionChecker.requestPermissions(requestCode);

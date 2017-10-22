@@ -11,7 +11,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by keyboard3 on 2017/9/6.
+ * 网络请求的外观类
+ *
+ * @author keyboard3
+ * @date 2017/9/6
  */
 
 public class HttpClient {
@@ -48,9 +51,9 @@ public class HttpClient {
         return Single.instance;
     }
 
-    public void upgrad(String appId, String api_token, Callback<Version> versionCall) {
-        Call<Version> upgrad = mService.upgrad(appId, api_token);
-        upgrad.enqueue(versionCall);
-        upgrad.request();
+    public void upgrade(String appId, String api_token, Callback<Version> versionCall) {
+        Call<Version> call = mService.upgrade(appId, api_token);
+        call.enqueue(versionCall);
+        call.request();
     }
 }

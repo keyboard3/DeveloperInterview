@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * 语音列表
+ *
+ * @author ganchunyu
  */
 public class AudioListActivity extends BaseActivity {
     private static final int P_READ_EXTERNAL_STORAGE = 101;
@@ -115,16 +117,23 @@ public class AudioListActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                if (AudioModel.deleteAudio(getApplicationContext(), adapter)) return true;
+                if (AudioModel.deleteAudio(getApplicationContext(), adapter)) {
+                    return true;
+                }
                 AudioModel.getAudioDataFromFile(mAudioList, mPath, adapter);
                 adapter.init();
                 return true;
             case R.id.action_set:
-                if (AudioModel.setAudio(this, adapter, mEntity)) return true;
+                if (AudioModel.setAudio(this, adapter, mEntity)) {
+                    return true;
+                }
                 break;
             case R.id.action_share:
-                if (AudioModel.shareAudio(adapter, getApplicationContext())) return true;
+                if (AudioModel.shareAudio(adapter, getApplicationContext())) {
+                    return true;
+                }
                 break;
+            default:
         }
         return super.onOptionsItemSelected(item);
     }

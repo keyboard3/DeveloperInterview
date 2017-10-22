@@ -7,7 +7,10 @@ import android.webkit.WebViewClient;
 import com.github.keyboard3.developerinterview.base.IProgressDialog;
 
 /**
- * Created by keyboard3 on 2017/9/22.
+ * WebViewClient的扩展页面进度条
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
 public class CusWebViewClient extends WebViewClient implements IProgressDialog {
@@ -31,13 +34,16 @@ public class CusWebViewClient extends WebViewClient implements IProgressDialog {
 
     @Override
     public void showDialog() {
-        if (dialog != null)
+        if (dialog != null) {
             dialog.showDialog();
+        }
     }
 
     @Override
     public void hideDialog() {
-        if (dialog != null) dialog.hideDialog();
+        if (dialog != null) {
+            dialog.hideDialog();
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.github.keyboard3.developerinterview.fragment;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -18,8 +17,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * 面经内容
- * ContentFragment {@link Fragment} subclass.
+ * 面经基本内容
+ *
+ * @author keyboard3
  */
 public class ContentFragment extends BaseFragment {
 

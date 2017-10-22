@@ -14,7 +14,9 @@ import java.util.List;
 
 /**
  * 问题列表页适配器
- * Created by keyboard3 on 2017/9/3.
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Problem> {
 

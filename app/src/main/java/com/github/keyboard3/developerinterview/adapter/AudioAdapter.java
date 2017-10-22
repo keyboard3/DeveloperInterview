@@ -17,7 +17,9 @@ import nl.changer.audiowife.AudioWife;
 
 /**
  * 语音列表页适配器
- * Created by keyboard3 on 2017/9/3.
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 
 public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String> {
@@ -37,7 +39,9 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
 
     @Override
     public void onBindViewHolder(AudioAdapter.MyViewHolder holder, int position) {
-        if (mAwr.get() == null) return;
+        if (mAwr.get() == null) {
+            return;
+        }
         holder.setPosition(position);
         String audioUrl = mData.get(position);
         //初始化默认UI
@@ -64,7 +68,9 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
         Log.d(TAG, "init");
         for (ViewHolder item1 : mViewHolders) {
             MyViewHolder item = (MyViewHolder) item1;
-            if (item == null) continue;
+            if (item == null) {
+                continue;
+            }
             item.audioContainer.removeAllViews();
             if (item.radioButton.isChecked()) {
                 item.radioButton.setChecked(false);

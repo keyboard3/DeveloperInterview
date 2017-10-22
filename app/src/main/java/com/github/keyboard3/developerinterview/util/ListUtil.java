@@ -3,7 +3,10 @@ package com.github.keyboard3.developerinterview.util;
 import java.util.List;
 
 /**
- * Created by keyboard3 on 2017/9/6.
+ * 列表辅助相关工具
+ *
+ * @author keyboard3
+ * @date 2017/9/6
  */
 
 public class ListUtil {

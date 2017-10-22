@@ -8,7 +8,10 @@ import com.github.keyboard3.developerinterview.R;
 import com.wang.avi.AVLoadingIndicatorView;
 
 /**
- * A BaseFragment {@link Fragment} subclass.
+ * 基类的Fragment 让子类更加专注的实现自己的业务
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 public class BaseFragment extends Fragment implements IProgressDialog {
     private ProgressDialog mProgressDialog;
@@ -38,9 +41,15 @@ public class BaseFragment extends Fragment implements IProgressDialog {
 
     @Override
     public void hideDialog() {
-        if (mAdvanceDialogToggle && mAdvanceProgressView != null) {
+        if (mAdvanceDialogToggle) {
+            if (mAdvanceProgressView == null) {
+                return;
+            }
             mAdvanceProgressView.hide();
-        } else if ((mAdvanceDialogToggle == false || mAdvanceProgressView == null) && mProgressDialog != null) {
+        } else {
+            if (mProgressDialog == null) {
+                return;
+            }
             mProgressDialog.hide();
         }
     }

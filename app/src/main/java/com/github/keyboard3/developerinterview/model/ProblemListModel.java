@@ -1,9 +1,6 @@
 package com.github.keyboard3.developerinterview.model;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +27,10 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * Created by keyboard3 on 2017/9/22.
+ * 问题列表相关逻辑
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
 public class ProblemListModel {
@@ -81,31 +81,5 @@ public class ProblemListModel {
         }
         mAdapter.notifyItemRemoved(position);
         Toast.makeText(applicationContext, R.string.com_delete_success, Toast.LENGTH_SHORT).show();
-    }
-
-    public static void deleteItem(final Activity activity, final ProblemAdapter mAdapter, final List<Problem> mList, final String mProblemJsonPath, String mDirPath, final int position) {
-        Problem problem = mList.get(position);
-        String path = mDirPath + problem.id + "/";
-        File audio = new File(path);
-        audio.delete();
-        if (audio.exists()) {
-            new AlertDialog.Builder(activity).setTitle(R.string.com_tint)
-                    .setMessage(R.string.home_delete_audio)
-                    .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            ProblemListModel.removeProblem(activity, mAdapter, mList, position, mProblemJsonPath);
-                        }
-                    }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    ProblemListModel.removeProblem(activity, mAdapter, mList, position, mProblemJsonPath);
-                }
-            }).create().show();
-        } else {
-            ProblemListModel.removeProblem(activity, mAdapter, mList, position, mProblemJsonPath);
-        }
     }
 }

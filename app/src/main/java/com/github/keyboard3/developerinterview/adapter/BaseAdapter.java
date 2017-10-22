@@ -10,7 +10,9 @@ import java.util.List;
 
 /**
  * 基类适配器
- * Created by keyboard3 on 2017/9/3.
+ *
+ * @author keyboard3
+ * @date 2017/9/3
  */
 
 public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
@@ -18,7 +20,7 @@ public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends 
     protected List<ViewHolder> mViewHolders;
     protected List<D> mData;
 
-    private OnItemClickListener mListener;//外部listView的 itemClick
+    private OnItemClickListener mListener;
 
     public BaseAdapter(List<D> data, Activity activity) {
         if (activity == null || data == null) {
@@ -53,6 +55,12 @@ public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends 
     }
 
     public interface OnItemClickListener {
+        /**
+         * item的点击事件
+         *
+         * @param itemView
+         * @param position
+         */
         void onItemClick(View itemView, int position);
     }
 

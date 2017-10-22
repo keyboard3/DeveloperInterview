@@ -26,10 +26,13 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
- * Created by keyboard3 on 2017/9/22.
+ * 问题IO读写相关逻辑
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
-public class ProblemsIOModel {
+public class ProblemsIoModel {
     /**
      * 两个有序链表合并有序算法 【算法】
      * todo 可以放到子线程中计算
@@ -92,6 +95,6 @@ public class ProblemsIOModel {
     public static void input2localFile(LinkedList<Problem> mOldList, File mOldTargetFile) {
         //保存到本地
         FileUtil.copyFile(new ByteArrayInputStream(new Gson().toJson(mOldList).getBytes()), mOldTargetFile);
-        EventBus.getDefault().post(new SettingActivity.refreshEvent());
+        EventBus.getDefault().post(new SettingActivity.RefreshEvent());
     }
 }

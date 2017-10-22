@@ -16,7 +16,10 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by keyboard3 on 2017/9/22.
+ * 语音相关逻辑
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
 public class AudioModel {

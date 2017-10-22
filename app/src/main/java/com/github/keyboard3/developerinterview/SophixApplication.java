@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
-import com.github.keyboard3.developerinterview.hotRepair.HostCallbacks;
 import com.github.keyboard3.developerinterview.util.VersionUtil;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.RePluginConfig;
@@ -14,7 +13,8 @@ import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 
 /**
- * Created by keyboard3 on 2017/9/5.
+ * @author keyboard3
+ * @date 2017/9/5
  */
 
 public class SophixApplication extends Application {
@@ -31,7 +31,7 @@ public class SophixApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         RePluginConfig c = new RePluginConfig();
-        c.setCallbacks(new HostCallbacks(base));
+        c.setCallbacks(new com.github.keyboard3.developerinterview.repair.HostCallbacks(base));
         RePlugin.App.attachBaseContext(this, c);
     }
 
@@ -67,6 +67,7 @@ public class SophixApplication extends Application {
             case TRIM_MEMORY_RUNNING_MODERATE:
                 Log.d("memory", "TRIM_MEMORY_RUNNING_MODERATE");
                 break;
+            default:
         }
 
         RePlugin.App.onTrimMemory(level);

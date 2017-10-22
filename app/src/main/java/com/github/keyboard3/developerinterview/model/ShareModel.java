@@ -15,8 +15,10 @@ import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
 
 /**
- * 分享处理逻辑类
- * Created by keyboard3 on 2017/9/22.
+ * 分享处理逻辑
+ *
+ * @author keyboard3
+ * @date 2017/9/22
  */
 
 public class ShareModel {

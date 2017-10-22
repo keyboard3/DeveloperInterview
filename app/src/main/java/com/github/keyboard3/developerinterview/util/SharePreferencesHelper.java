@@ -9,7 +9,10 @@ import android.support.annotation.Nullable;
 import com.github.keyboard3.developerinterview.pattern.JavaState;
 
 /**
- * Created by keyboard3 on 2017/9/4.
+ * SharePreferences帮助类
+ *
+ * @author keyboard3
+ * @date 2017/9/4
  */
 
 public class SharePreferencesHelper {
@@ -26,7 +29,7 @@ public class SharePreferencesHelper {
         edit.commit();
     }
 
-    public void putInt(@Nullable String key,@Nullable Integer value) {
+    public void putInt(@Nullable String key, @Nullable Integer value) {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putInt(key, value);
         edit.commit();

@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * Created by keyboard3 on 2017/9/8.
+ * @author keyboard3
+ * @date 2017/9/8
  */
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -59,7 +59,9 @@ public class DataFactory {
      * @return
      */
     public List<Problem> queryByType() {
-        if (BaseProblemState == null) return null;
+        if (BaseProblemState == null) {
+            return null;
+        }
         List<Problem> list = new ArrayList();
         if (!listMap.containsKey(BaseProblemState.getType()) || listMap.get(BaseProblemState.getType()) == null) {
             try {
