@@ -2,10 +2,13 @@ package com.github.keyboard3.developerinterview.data;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.ArrayMap;
 
 import com.github.keyboard3.developerinterview.Config;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.pattern.ProblemType;
+import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.util.FileUtil;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
@@ -26,16 +29,17 @@ import java.util.TreeSet;
  * Created by keyboard3 on 2017/9/8.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class DataFactory {
-    private static Map<Integer, List<Problem>> listMap = new HashMap<>();
-    private ProblemType problemType;
+    private static Map<Integer, List<Problem>> listMap = new ArrayMap<>();
+    private BaseProblemState BaseProblemState;
     private Context applicationContext;
     private String problemJsonPath;
 
-    public DataFactory(Context applicationContext, ProblemType problemType) {
+    public DataFactory(Context applicationContext, BaseProblemState BaseProblemState) {
         this.applicationContext = applicationContext;
-        this.problemType = problemType;
-        problemJsonPath = Config.STORAGE_DIRECTORY + "/" + problemType.getTypeStr() + "/" + problemType.getTypeStr() + ".json";
+        this.BaseProblemState = BaseProblemState;
+        problemJsonPath = Config.STORAGE_DIRECTORY + "/" + BaseProblemState.getTypeStr() + "/" + BaseProblemState.getTypeStr() + ".json";
     }
 
     /**
@@ -55,9 +59,9 @@ public class DataFactory {
      * @return
      */
     public List<Problem> queryByType() {
-        if (problemType == null) return null;
+        if (BaseProblemState == null) return null;
         List<Problem> list = new ArrayList();
-        if (!listMap.containsKey(problemType.getType()) || listMap.get(problemType.getType()) == null) {
+        if (!listMap.containsKey(BaseProblemState.getType()) || listMap.get(BaseProblemState.getType()) == null) {
             try {
                 Gson gson = new Gson();
                 String content;
@@ -65,7 +69,7 @@ public class DataFactory {
                 if (!file.exists()) {
                     //将assets目录的问题文件复制到sdcard
                     AssetManager assets = applicationContext.getAssets();
-                    InputStream open = assets.open(problemType + ".json");
+                    InputStream open = assets.open(BaseProblemState + ".json");
                     FileUtil.copyFile(open, file);
                 }
                 InputStream input = new FileInputStream(file);
@@ -73,12 +77,12 @@ public class DataFactory {
                 TreeSet<Problem> data = gson.fromJson(content, new TypeToken<TreeSet<Problem>>() {
                 }.getType());
                 list.addAll(data);
-                listMap.put(problemType.getType(), list);
+                listMap.put(BaseProblemState.getType(), list);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            list = listMap.get(problemType.getType());
+            list = listMap.get(BaseProblemState.getType());
         }
         return list;
     }

@@ -16,24 +16,20 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.allenliu.versionchecklib.core.AllenChecker;
+import com.github.keyboard3.developerinterview.base.BaseActivity;
+import com.github.keyboard3.developerinterview.fragment.ContentFragment;
+import com.github.keyboard3.developerinterview.fragment.ProblemsFragment;
 import com.github.keyboard3.developerinterview.http.HttpClient;
-import com.github.keyboard3.developerinterview.fragments.ContentFragment;
-import com.github.keyboard3.developerinterview.fragments.ProblemsFragment;
 import com.github.keyboard3.developerinterview.model.ShareModel;
-import com.github.keyboard3.developerinterview.pattern.JavaType;
-import com.github.keyboard3.developerinterview.pattern.OtherType;
-import com.github.keyboard3.developerinterview.pattern.ProblemType;
-import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
+import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
+import com.github.keyboard3.developerinterview.pattern.JavaState;
+import com.github.keyboard3.developerinterview.pattern.OtherState;
+import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
+
+import java.util.Collections;
 
 /**
  * 容器页面  包含左侧导航和右侧内容
- * todo n 自己定制导航栏板块（仅支持选择显示的板块）
- * todo n 支持gitHub正好登录
- * todo n 音频文字识别 分享
- * todo n 支持markdown答案内容显示
- * todo n 题目录入数据库中,题目手动录入。语音录入
- * todo n 支持文字搜索 标题。标题、内容、答案。搜索文字标红。语音搜索识别
- * todo 应用图标。
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -41,7 +37,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private FloatingActionButton mFab;
 
-    private ProblemType mProblemType = JavaType.getInstance();//初始的是javaType
+    private BaseProblemState mProblemType = JavaState.getInstance();//初始的是javaType
     private long mFirstClickTime = 0;
 
     @Override
@@ -95,7 +91,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mProblemType = ProblemTypeFactory.getProblemTypeByMenu(item.getItemId());
+        mProblemType = ProblemStateFactory.getProblemTypeByMenu(item.getItemId());
         mProblemType.setFragmentByType(mFab, getFragmentManager());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -166,7 +162,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private boolean webBackUrl() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(OtherType.typeStr);
+        Fragment fragment = getFragmentManager().findFragmentByTag(OtherState.typeStr);
         if (fragment != null) {
             ContentFragment other = (ContentFragment) fragment;
             if (other.mWebView.canGoBack()) {

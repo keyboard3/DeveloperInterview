@@ -1,18 +1,1 @@
-[
-  {
-    "outputType": {
-      "type": "APK"
-    },
-    "apkInfo": {
-      "type": "MAIN",
-      "splits": [],
-      "versionCode": 10
-    },
-    "path": "app-official-release.apk",
-    "properties": {
-      "packageId": "com.github.keyboard3.developerinterview",
-      "split": "",
-      "minSdkVersion": "18"
-    }
-  }
-]
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":10},"path":"app-official-release.apk","properties":{"packageId":"com.github.keyboard3.developerinterview","split":"","minSdkVersion":"19"}}]

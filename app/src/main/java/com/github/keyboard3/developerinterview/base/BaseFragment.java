@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 
 import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 /**

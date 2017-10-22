@@ -3,6 +3,8 @@ package com.github.keyboard3.developerinterview.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.keyboard3.developerinterview.pattern.JavaState;
 
@@ -14,8 +16,8 @@ public class SharePreferencesHelper {
 
     private final SharedPreferences sharedPreferences;
 
-    public SharePreferencesHelper(Activity activity, String name) {
-        sharedPreferences = activity.getSharedPreferences(JavaState.typeStr, Context.MODE_PRIVATE);
+    public SharePreferencesHelper(@NonNull Activity activity, @Nullable String name) {
+        sharedPreferences = activity.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     public void putString(String key, String value) {
@@ -24,7 +26,7 @@ public class SharePreferencesHelper {
         edit.commit();
     }
 
-    public void putInt(String key, Integer value) {
+    public void putInt(@Nullable String key,@Nullable Integer value) {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putInt(key, value);
         edit.commit();
@@ -34,7 +36,7 @@ public class SharePreferencesHelper {
         return sharedPreferences;
     }
 
-    public String getString(String key) {
+    public String getString(@Nullable String key) {
         return sharedPreferences.getString(key, "");
     }
 }

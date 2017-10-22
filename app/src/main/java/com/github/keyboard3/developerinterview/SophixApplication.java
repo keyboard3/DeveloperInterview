@@ -38,12 +38,37 @@ public class SophixApplication extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+        Log.d("memory", "onLowMemory");
         RePlugin.App.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
+        switch (level) {
+            case TRIM_MEMORY_COMPLETE:
+                Log.d("memory", "TRIM_MEMORY_COMPLETE");
+                break;
+            case TRIM_MEMORY_MODERATE:
+                Log.d("memory", "TRIM_MEMORY_MODERATE");
+                break;
+            case TRIM_MEMORY_BACKGROUND:
+                Log.d("memory", "TRIM_MEMORY_BACKGROUND");
+                break;
+            case TRIM_MEMORY_UI_HIDDEN:
+                Log.d("memory", "TRIM_MEMORY_UI_HIDDEN");
+                break;
+            case TRIM_MEMORY_RUNNING_CRITICAL:
+                Log.d("memory", "TRIM_MEMORY_RUNNING_CRITICAL");
+                break;
+            case TRIM_MEMORY_RUNNING_LOW:
+                Log.d("memory", "TRIM_MEMORY_RUNNING_LOW");
+                break;
+            case TRIM_MEMORY_RUNNING_MODERATE:
+                Log.d("memory", "TRIM_MEMORY_RUNNING_MODERATE");
+                break;
+        }
+
         RePlugin.App.onTrimMemory(level);
     }
 

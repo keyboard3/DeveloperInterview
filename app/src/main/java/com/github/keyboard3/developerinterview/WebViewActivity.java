@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
 import com.github.keyboard3.developerinterview.view.CusWebViewClient;

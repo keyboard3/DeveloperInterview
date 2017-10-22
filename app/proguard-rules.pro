@@ -30,7 +30,13 @@
 -keep public class com.github.keyboard3.developerinterview.entity.** { *; }
 -keep public class com.github.keyboard3.developerinterview.Config { *; }
 #-------------------------------------------------------------------------
-
+-assumenosideeffects class android.util.Log{
+    public static *** v(...);
+    public static *** i(...);
+    public static *** d(...);
+    public static *** w(...);
+    public static *** e(...);
+}
 #---------------------------------2.第三方包-------------------------------
 #eventBus
 -keepattributes *Annotation*

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import java.io.OutputStream;
  */
 
 public class FileUtil {
-    public static void copyFile(InputStream ins, File file) {
+    public static void copyFile(@NonNull InputStream ins, @NonNull File file) {
         OutputStream os = null;
         try {
             os = new FileOutputStream(file);
@@ -33,7 +34,7 @@ public class FileUtil {
         }
     }
 
-    public static void openFile(final Context context, final String path) {
+    public static void openFile(@NonNull final Context context, @NonNull final String path) {
         openFile(context, new File(path));
     }
 
@@ -43,7 +44,7 @@ public class FileUtil {
      * @param context
      * @param target
      */
-    public static void openFile(final Context context, final File target) {
+    public static void openFile(@NonNull final Context context, @NonNull final File target) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -12,10 +12,11 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ShareModel;
 import com.github.keyboard3.developerinterview.model.WebViewModel;
-import com.github.keyboard3.developerinterview.pattern.JavaType;
+import com.github.keyboard3.developerinterview.pattern.JavaState;
 import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
 
@@ -117,7 +118,7 @@ public class ProblemDetailActivity extends BaseActivity {
 
     private void initData() {
         ViewGroup audioContainer = findViewById(R.id.audio_container);
-        SharePreferencesHelper spHelper = new SharePreferencesHelper(this, JavaType.typeStr);
+        SharePreferencesHelper spHelper = new SharePreferencesHelper(this, JavaState.typeStr);
         String path = spHelper.getSP().getString(mEntity.id, "");
         if (!TextUtils.isEmpty(path)) {
             audioContainer.removeAllViews();

@@ -1,5 +1,8 @@
 package com.github.keyboard3.developerinterview.pattern;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.ArrayMap;
 import android.util.SparseArray;
 
 import com.github.keyboard3.developerinterview.R;
@@ -13,9 +16,10 @@ import java.util.Map;
  * Created by keyboard3 on 2017/9/7.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class ProblemStateFactory {
     public static SparseArray<? super BaseProblemState> mapType = new SparseArray<>();//限定通配符的下界
-    public static Map<String, ? super BaseProblemState> mapString = new HashMap<>();//限定通配符的下界
+    public static Map<String, ? super BaseProblemState> mapString = new ArrayMap<>();//限定通配符的下界
     public static SparseArray<? super BaseProblemState> mapMenuId = new SparseArray<>();//限定通配符的下界
 
     static {

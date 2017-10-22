@@ -12,10 +12,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ProblemsIOModel;
 import com.github.keyboard3.developerinterview.model.VersionCheckModel;
-import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
+import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.FileUtil;
 import com.github.keyboard3.developerinterview.util.VersionUtil;
 
@@ -63,8 +64,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initDialog() {
-        mProblemTypes = new String[ProblemTypeFactory.mapString.keySet().size()];
-        ProblemTypeFactory.mapString.keySet().toArray(mProblemTypes);//todo 1 RxJava 过滤数据
+        mProblemTypes = new String[ProblemStateFactory.mapString.keySet().size()];
+        ProblemStateFactory.mapString.keySet().toArray(mProblemTypes);//todo 1 RxJava 过滤数据
 
         mOutputDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.setting_select_type)

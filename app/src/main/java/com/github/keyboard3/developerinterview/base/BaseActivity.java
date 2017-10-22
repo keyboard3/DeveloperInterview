@@ -2,6 +2,10 @@ package com.github.keyboard3.developerinterview.base;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -28,7 +32,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
         }
     }
 
-    public void setTitle(int titleRid) {
+    public void setTitle(@StringRes int titleRid) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(titleRid);
     }
@@ -58,6 +62,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
     protected void toggleDialogAdvance(boolean toggle) {
         mAdvanceDialogToggle = toggle;
+
     }
 
     @Override
@@ -91,7 +96,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     }
 
 
-    protected boolean checkPermission(String[] permissions, int requestCode) {
+    protected boolean checkPermission(@NonNull String[] permissions, @NonNull int requestCode) {
         if (mPermissionChecker == null)
             mPermissionChecker = new CustomPermissionChecker(this);
 
@@ -102,7 +107,7 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
         return false;
     }
 
-    protected boolean hasAllPermissionsGranted(int[] grantResults) {
+    protected boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
         if (!mPermissionChecker.hasAllPermissionsGranted(grantResults)) {
             showPermissionDialog();
             return false;

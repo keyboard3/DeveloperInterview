@@ -10,8 +10,8 @@ import com.github.keyboard3.developerinterview.ProblemDetailActivity;
 import com.github.keyboard3.developerinterview.WebViewActivity;
 import com.github.keyboard3.developerinterview.data.DataFactory;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.pattern.ProblemType;
-import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
+import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
+import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
 
 /**
@@ -46,7 +46,7 @@ public class ShareModel {
         String source = data.getQueryParameter(Config.INTENT_SOURCE);
         String title = data.getQueryParameter(Config.INTENT_TITLE);
         if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
-            ProblemType problemType = ProblemTypeFactory.getProblemType(Integer.parseInt(type));
+            BaseProblemState problemType = ProblemStateFactory.getProblemType(Integer.parseInt(type));
             mEntity = new DataFactory(activity.getApplicationContext(), problemType).queryProblem(id);
             if (mEntity == null) {
                 if (!TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {

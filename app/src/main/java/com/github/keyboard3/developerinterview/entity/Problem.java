@@ -3,7 +3,7 @@ package com.github.keyboard3.developerinterview.entity;
 import android.support.annotation.NonNull;
 
 import com.github.keyboard3.developerinterview.Config;
-import com.github.keyboard3.developerinterview.pattern.ProblemTypeFactory;
+import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 
 import java.io.Serializable;
 
@@ -34,11 +34,11 @@ public class Problem implements Serializable, Comparable<Problem> {
     }
 
     public void setType(String typeName) {
-        type = ProblemTypeFactory.getProblemType(typeName).getType();
+        type = ProblemStateFactory.getProblemType(typeName).getType();
     }
 
     public int getTypeIcon() {
-        return ProblemTypeFactory.getProblemType(type).getTypeIcon();
+        return ProblemStateFactory.getProblemType(type).getTypeIcon();
     }
 
     public String getStorageDir() {
@@ -46,7 +46,7 @@ public class Problem implements Serializable, Comparable<Problem> {
     }
 
     public String getTypeName() {
-        return ProblemTypeFactory.getProblemType(type).getTypeStr();
+        return ProblemStateFactory.getProblemType(type).getTypeStr();
     }
 
     @Override

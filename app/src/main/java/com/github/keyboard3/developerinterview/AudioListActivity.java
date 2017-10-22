@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.keyboard3.developerinterview.adapter.AudioAdapter;
+import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.AudioModel;
 import com.github.keyboard3.developerinterview.view.RecordButton;
@@ -21,13 +22,10 @@ import java.util.List;
  * 语音列表
  */
 public class AudioListActivity extends BaseActivity {
-    public static final String TAG = "AudioListActivity";
-    public static final int P_READ_EXTERNAL_STORAGE = 101;
-    public static final int P_RECORD_AUDIO = 102;
+    private static final int P_READ_EXTERNAL_STORAGE = 101;
+    private static final int P_RECORD_AUDIO = 102;
 
-    private RecordButton mBtnRecord;
-
-    private List<String> mAudioList = new ArrayList<>();
+    private final List<String> mAudioList = new ArrayList<>();
     private Problem mEntity;
     private String mPath;
 
@@ -45,7 +43,9 @@ public class AudioListActivity extends BaseActivity {
     }
 
     private void initActionBar() {
-        getSupportActionBar().setTitle(R.string.title_audio);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.title_audio);
+        }
     }
 
     private void initData() {
@@ -92,7 +92,7 @@ public class AudioListActivity extends BaseActivity {
         adapter = new AudioAdapter(mAudioList, this);
         recyclerView.setAdapter(adapter);
 
-        mBtnRecord = findViewById(R.id.btn_record);
+        RecordButton mBtnRecord = findViewById(R.id.btn_record);
         mBtnRecord.init(this, mPath, mEntity.getTypeName() + "-" + mEntity.id);
         mBtnRecord.setOnRecordListener(new RecordButton.OnRecordListener() {
             @Override

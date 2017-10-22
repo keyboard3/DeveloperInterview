@@ -4,7 +4,7 @@ ext {
             compileSdkVersion: 26,
             buildToolsVersion: "26.0.1",
             applicationId    : "com.github.keyboard3.developerinterview",
-            minSdkVersion    : 18,
+            minSdkVersion    : 19,
             targetSdkVersion : 26,
             versionCode      : 10,
             versionName      : "1.6.3",
