@@ -16,7 +16,7 @@ DeveloperInterview 是一个用于开发者针对面试题录制语音回答复�
 </div> 
 
 ## 下载
-![interview.apk](http://download.fir.im/v2/app/install/59acbc2d959d6940060002ee?download_token=f5bde66bb46dd67c2517a94d1a165d63&source=update)
+![interview.apk](https://fir.im/interview)
 
 # 拓展规划
 
@@ -29,4 +29,4 @@ DeveloperInterview 是一个用于开发者针对面试题录制语音回答复�
 
 # 致谢
 
-- 感谢[工匠若水](https://github.com/TotemsCN/Base/blob/master/Java%20SE/Java.md)github 版每日一题。
+- 感谢[工匠若水](https://github.com/TotemsCN/Base/blob/master/Java%20SE/Java.md) github 版每日一题。
