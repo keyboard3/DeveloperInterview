@@ -16,7 +16,7 @@ DeveloperInterview 是一个用于开发者针对面试题录制语音回答复�
 </div> 
 
 ## 下载
-![interview.apk](https://fir.im/interview)
+[interview.apk](https://fir.im/interview)
 
 # 拓展规划
 
