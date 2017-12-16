@@ -1,6 +1,9 @@
 # 简介
 DeveloperInterview 是一个用于开发者针对面试题录制语音回答复习的 App
 
+## 下载
+[interview.apk](https://fir.im/interview)
+
 # 技术点
 ## 依赖库
  - 基础核心类库：guava
@@ -42,10 +45,7 @@ DeveloperInterview 是一个用于开发者针对面试题录制语音回答复�
 <div>
     <div style="display:inline;"><img src="images/5.png" width="332"></div>
     <div style="display:inline;"><img src="images/6.png" width="332"></div> 
-</div> 
-
-## 下载
-[interview.apk](https://fir.im/interview)
+</div>
 
 # 拓展规划
 
