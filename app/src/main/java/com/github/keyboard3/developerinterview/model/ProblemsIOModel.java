@@ -32,7 +32,7 @@ import java.util.ListIterator;
  * @date 2017/9/22
  */
 
-public class ProblemsIoModel {
+public class ProblemsIOModel {
     /**
      * 两个有序链表合并有序算法 【算法】
      * todo 可以放到子线程中计算

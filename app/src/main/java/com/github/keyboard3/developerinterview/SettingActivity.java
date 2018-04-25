@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.model.ProblemsIoModel;
+import com.github.keyboard3.developerinterview.model.ProblemsIOModel;
 import com.github.keyboard3.developerinterview.model.VersionCheckModel;
 import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.FileUtil;
@@ -108,7 +108,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 item.setType(mCurTypeStr);
                             }
                         }
-                        ProblemsIoModel.input2localFile(mOldList, mOldTargetFile);
+                        ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
                     }
                 }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -124,13 +124,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         if (resultCode == RESULT_OK && requestCode == FILE_CODE) {
             try {
                 initSelectedFile();
-                mValidNum = ProblemsIoModel.computeDiffList(mOldList, mNewList, mOldTargetFile, this, data.getData());
+                mValidNum = ProblemsIOModel.computeDiffList(mOldList, mNewList, mOldTargetFile, this, data.getData());
                 if (mValidNum == -1) {
                     return;
                 }
 
                 if (problemTypeOk()) {
-                    ProblemsIoModel.input2localFile(mOldList, mOldTargetFile);
+                    ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
                 } else {
                     mForceTransferDialog.show();//类型不全部正确 强转对话框提示
                 }

@@ -29,7 +29,6 @@ android {
             applicationId rootProject.ext.android.applicationId + "_beta"
             versionCode rootProject.ext.android.d_versionCode
             versionName rootProject.ext.android.d_versionName
-            //minSdkVersion rootProject.ext.android.targetSdkVersion
             resValue "string", "app_name", "beta"
             buildConfigField "boolean", "official", "false"
             dimension "vesion"
@@ -45,11 +44,6 @@ android {
     }
 }
 apply plugin: 'replugin-host-gradle'
-/**
- * 配置项均为可选配置，默认无需添加
- * 更多可选配置项参见replugin-host-gradle的RepluginConfig类
- * 可更改配置项参见 自动生成RePluginHostConfig.java
- */
 repluginHostConfig {
     /**
      * 是否使用 AppCompat 库
@@ -81,7 +75,7 @@ dependencies {
     implementation 'net.the4thdimension:audio-wife:1.0.3'
     implementation project(':MediaUtils')
     implementation 'joda-time:joda-time:2.9.9'
-    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.1.0'
+    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.2'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.orhanobut:Logger:1.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
