@@ -92,7 +92,7 @@ public class ProblemsIOModel {
         return num;
     }
 
-    public static void input2localFile(LinkedList<Problem> mOldList, File mOldTargetFile) {
+    public static void inputToLocalFile(LinkedList<Problem> mOldList, File mOldTargetFile) {
         //保存到本地
         FileUtil.copyFile(new ByteArrayInputStream(new Gson().toJson(mOldList).getBytes()), mOldTargetFile);
         EventBus.getDefault().post(new SettingActivity.RefreshEvent());

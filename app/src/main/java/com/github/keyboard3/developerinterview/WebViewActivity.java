@@ -10,9 +10,13 @@ import android.widget.Toast;
 import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
-import com.github.keyboard3.developerinterview.view.CusWebViewClient;
+import com.github.keyboard3.developerinterview.view.ExtProgressWebViewClient;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 网页页面
@@ -20,69 +24,37 @@ import java.lang.reflect.Method;
  * @author keyboard3
  */
 public class WebViewActivity extends BaseActivity {
+    @BindView(R.id.wb_content) WebView htmlContainer;
 
-    private WebView mWebView;
-    private String mSearchKey;
-    private String mUrl;
+    private String searchKey;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         setTitle(R.string.title_web);
-        initData();
-        initWebView();
-    }
 
-    private void initData() {
-        mUrl = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
-        mSearchKey = getIntent().getStringExtra(ConfigConst.INTENT_SEARCH_KEY);
-    }
-
-    private void initWebView() {
-        toggleDialogAdvance(true);
-
-        mWebView = findViewById(R.id.wb_content);
-        mWebView.loadUrl(mUrl);
-        mWebView.getSettings().supportZoom();
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new CusWebViewClient((IProgressDialog) this) {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                getSupportActionBar().setTitle(view.getTitle());
-                if (!TextUtils.isEmpty(mSearchKey)) {
-                    searchContent(mSearchKey);
-                }
-            }
-        });
-    }
-
-    public void searchContent(String content) {
-        mWebView.findAllAsync(content);
-        try {
-            Method m = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
-            m.invoke(mWebView, true);
-        } catch (Throwable ignored) {
-
-        }
+        ButterKnife.bind(this);
+        initUrlAndSearchKeyFromIntent();
+        initWebviewWithData();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_copy_url:
-                SystemUtil.setClipboard(getApplicationContext(), mWebView.getTitle(), mWebView.getUrl());
+                SystemUtil.setClipboard(getApplicationContext(), htmlContainer.getTitle(), htmlContainer.getUrl());
                 Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_open_url:
-                SystemUtil.openBrowser(WebViewActivity.this, mWebView.getUrl());
+                SystemUtil.openBrowser(WebViewActivity.this, htmlContainer.getUrl());
                 break;
             case R.id.action_refresh:
-                mWebView.reload();
+                htmlContainer.reload();
                 break;
             case R.id.action_send:
-                SystemUtil.sendText(WebViewActivity.this, mWebView.getUrl());
+                SystemUtil.sendText(WebViewActivity.this, htmlContainer.getUrl());
                 break;
             default:
         }
@@ -93,5 +65,43 @@ public class WebViewActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.webview, menu);
         return true;
+    }
+
+    private void initUrlAndSearchKeyFromIntent() {
+        url = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
+        searchKey = getIntent().getStringExtra(ConfigConst.INTENT_SEARCH_KEY);
+    }
+
+    private void initWebviewWithData() {
+        toggleDialogAdvance(true);
+
+        htmlContainer.loadUrl(url);
+        htmlContainer.getSettings().supportZoom();
+        htmlContainer.getSettings().setJavaScriptEnabled(true);
+        htmlContainer.setWebViewClient(new ExtProgressWebViewClient((IProgressDialog) this) {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                getSupportActionBar().setTitle(view.getTitle());
+
+                if (!TextUtils.isEmpty(searchKey)) {
+                    try {
+                        searchContent(searchKey);
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void searchContent(String content) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        htmlContainer.findAllAsync(content);
+        Method setFindIsUpMethod = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
+        setFindIsUpMethod.invoke(htmlContainer, true);
     }
 }

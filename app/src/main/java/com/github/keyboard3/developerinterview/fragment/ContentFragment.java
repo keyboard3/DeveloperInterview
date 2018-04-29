@@ -10,7 +10,7 @@ import android.webkit.WebView;
 
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.base.BaseFragment;
-import com.github.keyboard3.developerinterview.view.CusWebViewClient;
+import com.github.keyboard3.developerinterview.view.ExtProgressWebViewClient;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class ContentFragment extends BaseFragment {
 
-    public WebView mWebView;
+    public WebView htmlContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +38,7 @@ public class ContentFragment extends BaseFragment {
     }
 
     private void initView() {
-        mWebView = getActivity().findViewById(R.id.wb_content);
+        htmlContainer = getActivity().findViewById(R.id.wb_content);
         String content = "[Android 名企面试题及涉及知识点整理。](https://github.com/karmalove/AndroidInterview)\n" +
                 "[gtibook版面试资料](http://www.jackywang.tech/AndroidInterview-Q-A/)\n" +
                 "[［干货］2017已来，最全面试总结——这些Android面试题你一定需要](http://www.jianshu.com/p/39e8768843d2)\n" +
@@ -62,10 +62,10 @@ public class ContentFragment extends BaseFragment {
         while (matcher.find()) {
             htmlData.append("<a href='").append(matcher.group(2)).append("'>").append(matcher.group(1)).append("</a></br>");
         }
-        mWebView.getSettings().setDefaultTextEncodingName("UTF-8");
-        mWebView.loadData(htmlData.toString(), "text/html; charset=UTF-8", null);
-        mWebView.getSettings().supportZoom();
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new CusWebViewClient(this));
+        htmlContainer.getSettings().setDefaultTextEncodingName("UTF-8");
+        htmlContainer.loadData(htmlData.toString(), "text/html; charset=UTF-8", null);
+        htmlContainer.getSettings().supportZoom();
+        htmlContainer.getSettings().setJavaScriptEnabled(true);
+        htmlContainer.setWebViewClient(new ExtProgressWebViewClient(this));
     }
 }

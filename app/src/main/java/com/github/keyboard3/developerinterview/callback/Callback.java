@@ -8,10 +8,6 @@ package com.github.keyboard3.developerinterview.callback;
  */
 
 public interface Callback<T> {
-    /**
-     * 异步成功回调
-     *
-     * @param item
-     */
     void success(T item);
+    void fail(Throwable error);
 }

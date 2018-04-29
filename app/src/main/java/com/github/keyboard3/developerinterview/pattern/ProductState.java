@@ -6,7 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.fragment.ProductListFragment;
+import com.github.keyboard3.developerinterview.fragment.ProductsFragment;
 
 /**
  * 自己的作品状态
@@ -31,7 +31,7 @@ public class ProductState extends BaseProblemState {
     public BaseProblemState setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
         fab.setVisibility(View.INVISIBLE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new ProductListFragment(), typeStr);
+        fragmentTransaction.replace(R.id.fragment_container, new ProductsFragment(), typeStr);
         fragmentTransaction.commit();
         return this;
     }

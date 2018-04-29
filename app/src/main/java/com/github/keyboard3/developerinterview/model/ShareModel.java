@@ -8,11 +8,13 @@ import android.text.TextUtils;
 import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.ProblemDetailActivity;
 import com.github.keyboard3.developerinterview.WebViewActivity;
-import com.github.keyboard3.developerinterview.data.DataFactory;
+import com.github.keyboard3.developerinterview.data.ProblemsDrive;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
+
+import java.io.IOException;
 
 /**
  * 分享处理逻辑
@@ -41,27 +43,26 @@ public class ShareModel {
         }
     }
 
-    public static Problem problemOpenComingIntent(Activity activity, Uri data) {
-        Problem mEntity = null;
+    public static Problem problemOpenComingIntent(Activity activity, Uri data) throws IOException {
+        Problem problem = null;
         String id = data.getQueryParameter(ConfigConst.INTENT_ID);
         String type = data.getQueryParameter(ConfigConst.INTENT_TYPE);
         String source = data.getQueryParameter(ConfigConst.INTENT_SOURCE);
         String title = data.getQueryParameter(ConfigConst.INTENT_TITLE);
+
         if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
             BaseProblemState problemType = ProblemStateFactory.getProblemType(Integer.parseInt(type));
-            mEntity = new DataFactory(activity.getApplicationContext(), problemType).queryProblem(id);
-            if (mEntity == null) {
-                if (!TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
-                    Intent intent = new Intent(activity, WebViewActivity.class);
-                    intent.putExtra(ConfigConst.INTENT_KEY, source);
-                    intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, title);
-                    activity.startActivity(intent);
-                    activity.finish();
-                    return mEntity;
-                }
+            problem = new ProblemsDrive(activity.getApplicationContext(), problemType).queryProblem(id);
+            if (problem == null && !TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
+                Intent intent = new Intent(activity, WebViewActivity.class);
+                intent.putExtra(ConfigConst.INTENT_KEY, source);
+                intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, title);
+                activity.startActivity(intent);
+                activity.finish();
+                return problem;
             }
         }
-        return mEntity;
+        return problem;
     }
 
     public static void openInnerUri(Activity activity) {

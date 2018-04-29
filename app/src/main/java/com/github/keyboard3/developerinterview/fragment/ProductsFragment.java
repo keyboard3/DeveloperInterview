@@ -28,10 +28,10 @@ import java.util.List;
  *
  * @author keyboard3
  */
-public class ProductListFragment extends BaseFragment {
+public class ProductsFragment extends BaseFragment {
 
-    private ProductAdapter mAdapter;
-    private List<PluginInfo> mList = new ArrayList<>();
+    private ProductAdapter adapter;
+    private List<PluginInfo> appPlugins = new ArrayList<>();
 
     @Nullable
     @Override
@@ -46,12 +46,12 @@ public class ProductListFragment extends BaseFragment {
         RecyclerView mRecyclerView = getView().findViewById(R.id.rl_content);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new ProductAdapter(mList, getActivity());
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+        adapter = new ProductAdapter(appPlugins, getActivity());
+        mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                PluginInfo entity = mList.get(position);
+                PluginInfo entity = appPlugins.get(position);
                 com.qihoo360.replugin.model.PluginInfo pi = RePlugin.install(ConfigConst.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
                 if (pi != null) {
                     RePlugin.preload(pi);
@@ -78,7 +78,7 @@ public class ProductListFragment extends BaseFragment {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                final PluginInfo entity = mList.get(viewHolder.getAdapterPosition());
+                final PluginInfo entity = appPlugins.get(viewHolder.getAdapterPosition());
                 new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
                         .setMessage(R.string.products_dialog_uninstall)
                         .setPositiveButton(getString(R.string.com_ok), new DialogInterface.OnClickListener() {
@@ -95,7 +95,7 @@ public class ProductListFragment extends BaseFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        mAdapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     }
                 }).create().show();
             }
@@ -111,7 +111,7 @@ public class ProductListFragment extends BaseFragment {
     }
 
     private void initData() {
-        mList.add(new PluginInfo("selfView",
+        appPlugins.add(new PluginInfo("selfView",
                 "com.github.keyboard3.selfview",
                 "com.github.keyboard3.selfview.MainActivity",
                 "自定义view集合"));

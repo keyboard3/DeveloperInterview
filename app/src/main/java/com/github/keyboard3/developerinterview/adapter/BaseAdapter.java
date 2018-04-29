@@ -15,25 +15,25 @@ import java.util.List;
  * @date 2017/9/3
  */
 
-public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
-    protected WeakReference<Activity> mAwr;
-    protected List<ViewHolder> mViewHolders;
-    protected List<D> mData;
+public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, type> extends RecyclerView.Adapter<T> {
+    protected WeakReference<Activity> weakActivty;
+    protected List<ViewHolder> viewHolders;
+    protected List<type> data;
 
     private OnItemClickListener mListener;
 
-    public BaseAdapter(List<D> data, Activity activity) {
+    public BaseAdapter(List<type> data, Activity activity) {
         if (activity == null || data == null) {
             return;
         }
-        this.mData = data;
-        mAwr = new WeakReference(activity);
-        mViewHolders = new ArrayList<>();
+        this.data = data;
+        weakActivty = new WeakReference(activity);
+        viewHolders = new ArrayList<>();
     }
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        return data == null ? 0 : data.size();
     }
 
     protected void initViewHolder(BaseAdapter.ViewHolder viewHolder) {

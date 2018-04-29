@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -20,6 +19,11 @@ import com.github.keyboard3.developerinterview.pattern.JavaState;
 import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
 import com.github.keyboard3.developerinterview.util.SystemUtil;
 
+import java.io.IOException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nl.changer.audiowife.AudioWife;
 
 /**
@@ -29,24 +33,29 @@ import nl.changer.audiowife.AudioWife;
  */
 public class ProblemDetailActivity extends BaseActivity {
     public static final String TAG = "ProblemDetailActivity";
-    private Problem mEntity;
+    private Problem problem;
+    @BindView(R.id.tv_title) TextView titleView;
+    @BindView(R.id.tv_content) TextView contentView;
+    @BindView(R.id.tv_source) TextView sourceView;
+    @BindView(R.id.tv_audio) TextView audioView;
+    @BindView(R.id.wb_answer) WebView answerHtmlView;
+    @BindView(R.id.audio_container) ViewGroup audioContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_problem_detail);
         setTitle(R.string.title_problem_detail);
+        ButterKnife.bind(this);
 
-        if (initIntentData()) {
-            return;
-        }
-        initViews();
+        if (initProblemFromIntentAndCheck()) return;
+        initViewsWithProblem();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+        initAudioViewWithProblem();
     }
 
     @Override
@@ -59,72 +68,60 @@ public class ProblemDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                SystemUtil.sendText(this, ConfigConst.getShareInnerLink(this, mEntity));
+                SystemUtil.sendText(this, ConfigConst.getShareInnerLink(this, problem));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private boolean initIntentData() {
-        mEntity = (Problem) getIntent().getSerializableExtra(ConfigConst.INTENT_ENTITY);
-        if (mEntity == null) {
-            String uri = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
-            if (TextUtils.isEmpty(uri)) {
-                uri = getIntent().getData().toString();
-            }
-            mEntity = ShareModel.problemOpenComingIntent(this, Uri.parse(uri));
-            if (mEntity == null) {
-                return true;
-            }
-        }
-        if (mEntity == null) {
-            Toast.makeText(this, R.string.problem_no_exist, Toast.LENGTH_SHORT).show();
-            finish();
-            return true;
-        }
-        return false;
+    @OnClick(R.id.tv_audio) void audioViewClick(){
+        Intent intent = new Intent(ProblemDetailActivity.this, AudioListActivity.class);
+        intent.putExtra(ConfigConst.INTENT_ENTITY, problem);
+        startActivity(intent);
     }
 
-    private void initViews() {
-        toggleDialogAdvance(false);
+    @OnClick(R.id.tv_source) void sourceViewClick(){
+        Intent intent = new Intent(ProblemDetailActivity.this, WebViewActivity.class);
+        intent.putExtra(ConfigConst.INTENT_KEY, problem.source);
+        intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, problem.title);
+        startActivity(intent);
+    }
 
-        TextView tvTitle = findViewById(R.id.tv_title);
-        TextView tvContent = findViewById(R.id.tv_content);
-        TextView tvSource = findViewById(R.id.tv_source);
-        TextView tvAudio = findViewById(R.id.tv_audio);
-        WebView wb_answer = findViewById(R.id.wb_answer);
+    private boolean initProblemFromIntentAndCheck() {
+        try {
+            problem = (Problem) getIntent().getSerializableExtra(ConfigConst.INTENT_ENTITY);
+            String uri = "";
 
-        tvTitle.setText(mEntity.title);
-        tvContent.setText(mEntity.content);
+            if (problem != null) return false;
+
+            uri = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
+            if (TextUtils.isEmpty(uri))
+                uri = getIntent().getData().toString();
+
+            problem = ShareModel.problemOpenComingIntent(this, Uri.parse(uri));
+
+            if (problem == null) {
+                Toast.makeText(this, R.string.problem_no_exist, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return problem == null;
+    }
+
+    private void initViewsWithProblem() {
+        titleView.setText(problem.title);
+        contentView.setText(problem.content);
 
         toggleDialogAdvance(true);
-        WebViewModel.initWebView(wb_answer, mEntity.answer, this);
-
-        tvAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProblemDetailActivity.this, AudioListActivity.class);
-                intent.putExtra(ConfigConst.INTENT_ENTITY, mEntity);
-                startActivity(intent);
-            }
-        });
-        tvSource.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProblemDetailActivity.this, WebViewActivity.class);
-                intent.putExtra(ConfigConst.INTENT_KEY, mEntity.source);
-                intent.putExtra(ConfigConst.INTENT_SEARCH_KEY, mEntity.title);
-                startActivity(intent);
-            }
-        });
+        WebViewModel.initWebView(answerHtmlView, problem.answer, this);
     }
 
-
-    private void initData() {
-        ViewGroup audioContainer = findViewById(R.id.audio_container);
+    private void initAudioViewWithProblem() {
         SharePreferencesHelper spHelper = new SharePreferencesHelper(this, JavaState.typeStr);
-        String path = spHelper.getSP().getString(mEntity.id, "");
+        String path = spHelper.getSP().getString(problem.id, "");
         if (!TextUtils.isEmpty(path)) {
             audioContainer.removeAllViews();
             new AudioWife().init(this, Uri.parse(path))

@@ -21,7 +21,7 @@ import com.github.keyboard3.developerinterview.SettingActivity;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.base.BaseFragment;
 import com.github.keyboard3.developerinterview.callback.Callback;
-import com.github.keyboard3.developerinterview.data.DataFactory;
+import com.github.keyboard3.developerinterview.data.ProblemsDrive;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.model.ProblemListModel;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
@@ -32,9 +32,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -46,16 +50,16 @@ import java.util.List;
 public class ProblemsFragment extends BaseFragment {
     private static String TAG = "ProblemsFragment";
 
-    private RecyclerView mRecyclerView;
-    private View mIvNoData;
-    private View mTvInput;
+    @BindView(R.id.rl_content) RecyclerView problemsView;
+    @BindView(R.id.iv_nodata) View noDataView;
+    @BindView(R.id.tv_input) View inputView;
 
-    private List<Problem> mList = new ArrayList<>();
-    private ProblemAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private BaseProblemState mState;
-    private SharePreferencesHelper mSpHelper;
-    private DataFactory dataFactory;
+    private List<Problem> problems = new ArrayList<>();
+    private ProblemAdapter adapter;
+    private LinearLayoutManager linearLayoutManager;
+    private BaseProblemState problemState;
+    private SharePreferencesHelper spHelper;
+    private ProblemsDrive problemsDrive;
 
     public static ProblemsFragment newInstance(BaseProblemState state) {
 
@@ -69,90 +73,51 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_problems, container, false);
+        View view= inflater.inflate(R.layout.fragment_problems, container, false);
+        ButterKnife.bind(this,view);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mState = (BaseProblemState) getArguments().getSerializable(ConfigConst.INTENT_KEY);
-        dataFactory = new DataFactory(getActivity().getApplicationContext(), mState);
-
         EventBus.getDefault().register(this);
 
-        mRecyclerView = getView().findViewById(R.id.rl_content);
-        mIvNoData = getView().findViewById(R.id.iv_nodata);
-        mTvInput = getView().findViewById(R.id.tv_input);
-        mTvInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), SettingActivity.class));
-            }
-        });
+        problemState = (BaseProblemState) getArguments().getSerializable(ConfigConst.INTENT_KEY);
+        problemsDrive = new ProblemsDrive(getActivity().getApplicationContext(), problemState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mSpHelper = new SharePreferencesHelper(getActivity(), mState.getTypeStr());
-        mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        ProblemListModel.restoreListPosition(mLinearLayoutManager, mSpHelper);
-        mAdapter = new ProblemAdapter(mList, getActivity());
-        initData();
 
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
+        spHelper = new SharePreferencesHelper(getActivity(), problemState.getTypeStr());
+
+        linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        problemsView.setLayoutManager(linearLayoutManager);
+        ProblemListModel.restoreListPosition(linearLayoutManager, spHelper);
+        adapter = new ProblemAdapter(problems, getActivity());
+
+        initProblemsFromNet();
+
+        problemsView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                Problem entity = mList.get(position);
+                Problem entity = problems.get(position);
                 Intent intent = new Intent(getActivity(), ProblemDetailActivity.class);
                 intent.putExtra(ConfigConst.INTENT_ENTITY, entity);
                 startActivity(intent);
             }
         });
-        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
-                    viewHolder) {
-                int flag = ItemTouchHelper.LEFT;
-                return makeMovementFlags(0, flag);
-            }
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder
-                    viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
-                        .setMessage(R.string.home_delete_problem)
-                        .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                ProblemListModel.removeProblem(getActivity(), mAdapter, mList, viewHolder.getAdapterPosition(), dataFactory.problemJsonPath);
-                                dialogInterface.dismiss();
-                            }
-                        }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }).create().show();
-            }
-        };
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(mRecyclerView);
+        new ItemTouchHelper(callback).attachToRecyclerView(problemsView);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //离开保存当前的位置
-        ProblemListModel.saveListPosition(mRecyclerView, mLinearLayoutManager, mSpHelper);
+        ProblemListModel.saveListPosition(problemsView, linearLayoutManager, spHelper);
     }
 
     @Override
@@ -163,27 +128,66 @@ public class ProblemsFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshEvent(SettingActivity.RefreshEvent event) {
-        initData();
-        mAdapter.notifyDataSetChanged();
+        initProblemsFromNet();
+        adapter.notifyDataSetChanged();
     }
 
-    protected void initData() {
+    @OnClick(R.id.tv_input) void inputViewClick(){
+        startActivity(new Intent(getActivity(), SettingActivity.class));
+    }
+
+    ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
+                viewHolder) {
+            int flag = ItemTouchHelper.LEFT;
+            return makeMovementFlags(0, flag);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder
+                viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+            new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
+                    .setMessage(R.string.home_delete_problem)
+                    .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ProblemListModel.removeProblem(getActivity(), adapter, problems, viewHolder.getAdapterPosition(), problemsDrive.problemJsonPath);
+                            dialogInterface.dismiss();
+                        }
+                    }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    adapter.notifyDataSetChanged();
+                }
+            }).create().show();
+        }
+    };
+
+    protected void initProblemsFromNet() {
         toggleDialogAdvance(true);
         showDialog();
-        dataFactory.init2LocalProblems(new Callback<List<Problem>>() {
+        problemsDrive.asyncFetchProblems(new Callback<List<Problem>>() {
             @Override
             public void success(List<Problem> item) {
-                mList.addAll(item);
-                mAdapter.notifyDataSetChanged();
                 try {
-                    if (!ListUtil.isEmpty(mList)) {
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        mIvNoData.setVisibility(View.GONE);
-                        mTvInput.setVisibility(View.GONE);
+                    problems.addAll(item);
+                    adapter.notifyDataSetChanged();
+
+                    if (!ListUtil.isEmpty(problems)) {
+                        problemsView.setVisibility(View.VISIBLE);
+                        noDataView.setVisibility(View.GONE);
+                        inputView.setVisibility(View.GONE);
                     } else {
-                        mRecyclerView.setVisibility(View.GONE);
-                        mIvNoData.setVisibility(View.VISIBLE);
-                        mTvInput.setVisibility(View.VISIBLE);
+                        problemsView.setVisibility(View.GONE);
+                        noDataView.setVisibility(View.VISIBLE);
+                        inputView.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -191,10 +195,15 @@ public class ProblemsFragment extends BaseFragment {
                     hideDialog();
                 }
             }
+
+            @Override
+            public void fail(Throwable error) {
+                hideDialog();
+            }
         });
     }
 
     public void goTop() {
-        mRecyclerView.scrollToPosition(0);
+        problemsView.scrollToPosition(0);
     }
 }

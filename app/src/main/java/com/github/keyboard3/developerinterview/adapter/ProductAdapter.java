@@ -29,13 +29,13 @@ public class ProductAdapter extends BaseAdapter<ProductAdapter.MyViewHolder, Plu
         ProductAdapter.MyViewHolder viewHolder = new ProductAdapter.MyViewHolder(LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.item_list_problem, parent, false));
         initViewHolder(viewHolder);
-        mViewHolders.add(viewHolder);
+        viewHolders.add(viewHolder);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ProductAdapter.MyViewHolder holder, int position) {
-        PluginInfo entity = mData.get(position);
+        PluginInfo entity = data.get(position);
         holder.icon.setImageResource(R.mipmap.ic_menu_product);
         holder.tvTitle.setText(entity.name);
         holder.tvContent.setText(entity.desc);

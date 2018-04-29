@@ -33,30 +33,28 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
     public AudioAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_audio, parent, false));
         initViewHolder(viewHolder);
-        mViewHolders.add(viewHolder);
+        viewHolders.add(viewHolder);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(AudioAdapter.MyViewHolder holder, int position) {
-        if (mAwr.get() == null) {
+        if (weakActivty.get() == null) {
             return;
         }
         holder.setPosition(position);
-        String audioUrl = mData.get(position);
-        //初始化默认UI
-        new AudioWife().init(mAwr.get(), Uri.parse(audioUrl))
-                .useDefaultUi(holder.audioContainer, mAwr.get().getLayoutInflater());
+        String audioUrl = data.get(position);
+        new AudioWife().init(weakActivty.get(), Uri.parse(audioUrl))
+                       .useDefaultUi(holder.audioContainer, weakActivty.get().getLayoutInflater());
     }
 
     public List<String> getSelectedItems() {
         Log.d(TAG, "getSelectedItems");
         List<String> list = new ArrayList<>();
-        for (ViewHolder item1 :
-                mViewHolders) {
+        for (ViewHolder item1 : viewHolders) {
             MyViewHolder item = (MyViewHolder) item1;
             if (item.radioButton.isChecked()) {
-                String path = mData.get(item.position);
+                String path = data.get(item.position);
                 Log.d(TAG, "viewHolder-hash¬code:" + item.hashCode() + "position:" + item.position + " path:" + path);
                 list.add(path);
             }
@@ -66,7 +64,7 @@ public class AudioAdapter extends BaseAdapter<AudioAdapter.MyViewHolder, String>
 
     public void init() {
         Log.d(TAG, "init");
-        for (ViewHolder item1 : mViewHolders) {
+        for (ViewHolder item1 : viewHolders) {
             MyViewHolder item = (MyViewHolder) item1;
             if (item == null) {
                 continue;

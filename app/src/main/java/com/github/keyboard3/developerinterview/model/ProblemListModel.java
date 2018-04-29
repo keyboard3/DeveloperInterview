@@ -1,7 +1,6 @@
 package com.github.keyboard3.developerinterview.model;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,18 +10,10 @@ import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.adapter.ProblemAdapter;
 import com.github.keyboard3.developerinterview.entity.Problem;
-import com.github.keyboard3.developerinterview.util.FileUtil;
 import com.github.keyboard3.developerinterview.util.SharePreferencesHelper;
-import com.google.common.io.CharStreams;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -41,13 +32,13 @@ public class ProblemListModel {
         if (view != null) {
             top = view.getTop();
         }
-        mSpHelper.putInt(ConfigConst.INTENT_LIST_POSITION, position);
+        mSpHelper.putInt(ConfigConst.INTENT_POSITIONS, position);
         mSpHelper.putInt(ConfigConst.INTENT_LIST_TOP, top);
     }
 
     public static void restoreListPosition(LinearLayoutManager mLinearLayoutManager, SharePreferencesHelper mSpHelper) {
         //下次进来还是显示上次的位置
-        final int position = mSpHelper.getSP().getInt(ConfigConst.INTENT_LIST_POSITION, 0);
+        final int position = mSpHelper.getSP().getInt(ConfigConst.INTENT_POSITIONS, 0);
         int top = mSpHelper.getSP().getInt(ConfigConst.INTENT_LIST_TOP, 0);
         mLinearLayoutManager.scrollToPositionWithOffset(position, top);
     }

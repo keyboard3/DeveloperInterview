@@ -4,14 +4,11 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.keyboard3.developerinterview.R;
-import com.github.keyboard3.developerinterview.base.IProgressDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.werb.mediautilsdemo.CustomPermissionChecker;
 
@@ -23,12 +20,11 @@ import com.werb.mediautilsdemo.CustomPermissionChecker;
  */
 public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
-    private ProgressDialog mProgressDialog;
-    private AVLoadingIndicatorView mAdvanceProgressView;
-    private Toolbar mToolbar;
-
-    private CustomPermissionChecker mPermissionChecker;
-    private boolean mAdvanceDialogToggle;
+    private AVLoadingIndicatorView advanceProgressView;
+    private CustomPermissionChecker permissionChecker;
+    private ProgressDialog progressDialog;
+    private Toolbar toolbar;
+    private boolean advanceDialogToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +45,11 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     }
 
     protected Toolbar findToolbar() {
-        if (mToolbar == null) {
-            mToolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(mToolbar);
+        if (toolbar == null) {
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
         }
-        return mToolbar;
+        return toolbar;
     }
 
     @Override
@@ -68,61 +64,61 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     }
 
     protected void toggleDialogAdvance(boolean toggle) {
-        mAdvanceDialogToggle = toggle;
+        advanceDialogToggle = toggle;
 
     }
 
     @Override
     public void showDialog() {
-        if (mAdvanceDialogToggle && mAdvanceProgressView == null) {
-            mAdvanceProgressView = findViewById(R.id.avi);
-        } else if (!mAdvanceDialogToggle && mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_loading));
-            mProgressDialog.setIndeterminate(true);
+        if (advanceDialogToggle && advanceProgressView == null) {
+            advanceProgressView = findViewById(R.id.avi);
+        } else if (!advanceDialogToggle && progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(getString(R.string.com_loading));
+            progressDialog.setIndeterminate(true);
         }
-        if (mAdvanceDialogToggle) {
-            mAdvanceProgressView.show();
+        if (advanceDialogToggle) {
+            advanceProgressView.show();
         } else {
-            mProgressDialog.show();
+            progressDialog.show();
         }
     }
 
     @Override
     public void hideDialog() {
-        if (mAdvanceDialogToggle && mAdvanceProgressView != null) {
-            if (mAdvanceProgressView == null) {
+        if (advanceDialogToggle && advanceProgressView != null) {
+            if (advanceProgressView == null) {
                 return;
             }
-            mAdvanceProgressView.hide();
+            advanceProgressView.hide();
         } else {
-            if (mProgressDialog == null) {
+            if (progressDialog == null) {
                 return;
             }
-            mProgressDialog.hide();
+            progressDialog.hide();
         }
     }
 
     @Override
     public boolean isShowing() {
-        return mProgressDialog.isShowing();
+        return progressDialog.isShowing();
     }
 
 
     protected boolean checkPermission(@NonNull String[] permissions, @NonNull int requestCode) {
-        if (mPermissionChecker == null) {
-            mPermissionChecker = new CustomPermissionChecker(this);
+        if (permissionChecker == null) {
+            permissionChecker = new CustomPermissionChecker(this);
         }
 
-        if (mPermissionChecker.isLackPermissions(permissions)) {
-            mPermissionChecker.requestPermissions(requestCode);
+        if (permissionChecker.isLackPermissions(permissions)) {
+            permissionChecker.requestPermissions(requestCode);
             return true;
         }
         return false;
     }
 
     protected boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
-        if (!mPermissionChecker.hasAllPermissionsGranted(grantResults)) {
+        if (!permissionChecker.hasAllPermissionsGranted(grantResults)) {
             showPermissionDialog();
             return false;
         }
@@ -130,6 +126,6 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     }
 
     protected void showPermissionDialog() {
-        mPermissionChecker.showDialog();
+        permissionChecker.showDialog();
     }
 }

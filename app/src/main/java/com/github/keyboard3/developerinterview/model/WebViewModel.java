@@ -3,7 +3,7 @@ package com.github.keyboard3.developerinterview.model;
 import android.webkit.WebView;
 
 import com.github.keyboard3.developerinterview.base.IProgressDialog;
-import com.github.keyboard3.developerinterview.view.CusWebViewClient;
+import com.github.keyboard3.developerinterview.view.ExtProgressWebViewClient;
 
 /**
  * webView相关逻辑
@@ -20,6 +20,6 @@ public class WebViewModel {
             webview.getSettings().setDefaultTextEncodingName("UTF-8");
             webview.loadData(content, "text/html; charset=UTF-8", null);
         }
-        webview.setWebViewClient(new CusWebViewClient(progressDialog));
+        webview.setWebViewClient(new ExtProgressWebViewClient(progressDialog));
     }
 }

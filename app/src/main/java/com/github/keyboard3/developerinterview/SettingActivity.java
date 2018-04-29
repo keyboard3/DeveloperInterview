@@ -23,58 +23,115 @@ import com.github.keyboard3.developerinterview.util.VersionUtil;
 import java.io.File;
 import java.util.LinkedList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * 设置
  * 导入、导出、版本检测
  *
  * @author keyboard3
  */
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity {
 
     private static final String TAG = "SettingActivity";
     private static final int FILE_CODE = 101;
-    private static final int P_READ_EXTERNAL_STORAGE = 102;
+    private static final int PERMISSION_READ_EXTERNAL_STORAGE = 102;
 
-    private AlertDialog mOutputDialog;
-    private AlertDialog mForceTransferDialog;
-    private Dialog mInputDialog;
+    private AlertDialog outputProblemsDialog;
+    private AlertDialog forceTransferProblemsDialog;
+    private Dialog inputProblemsDialog;
+    @BindView(R.id.tv_version) TextView versionView;
 
-    private LinkedList<Problem> mOldList = new LinkedList<>();
-    private LinkedList<Problem> mNewList = new LinkedList<>();
-    private File mOldTargetFile;
-    private String mCurTypeStr = "";
-    private String[] mProblemTypes;
-    private int mValidNum;
+    private LinkedList<Problem> oldProblems = new LinkedList<>();
+    private LinkedList<Problem> newProblems = new LinkedList<>();
+    private String curTypeStr = "";
+    private String[] problemTypes;
+    private File oldTargetFile;
+    private int validNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        ButterKnife.bind(this);
+
         setTitle(R.string.title_setting);
-        initView();
-        initDialog();
+        initVersionView();
+        initProblemDialogs();
     }
 
-    private void initView() {
-        findViewById(R.id.ll_input).setOnClickListener(this);
-        findViewById(R.id.ll_output).setOnClickListener(this);
-        findViewById(R.id.ll_version).setOnClickListener(this);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == RESULT_OK && requestCode == FILE_CODE) {
+                createSelectedProblemTypeFile();
 
-        TextView tvVersion = findViewById(R.id.tv_version);
-        tvVersion.setText(getString(R.string.setting_version) + VersionUtil.getVersion(this));
+                validNum = ProblemsIOModel.computeDiffList(oldProblems, newProblems, oldTargetFile, this, data.getData());
+                if (validNum == -1) return;
+
+                if (checkAllProblemType()) {
+                    ProblemsIOModel.inputToLocalFile(oldProblems, oldTargetFile);
+                } else {
+                    forceTransferProblemsDialog.show();//类型不全部正确 强转对话框提示
+                }
+
+                Toast.makeText(this, getString(R.string.setting_input_success) + validNum, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void initDialog() {
-        mProblemTypes = new String[ProblemStateFactory.mapString.keySet().size()];
-        ProblemStateFactory.mapString.keySet().toArray(mProblemTypes);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        mOutputDialog = new AlertDialog.Builder(this)
+        if(requestCode == PERMISSION_READ_EXTERNAL_STORAGE
+                && hasAllPermissionsGranted(grantResults)) {
+            inputProblemsDialog.show();
+        }
+    }
+
+    @OnClick({R.id.ll_input,R.id.ll_output,R.id.ll_version})
+    void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_input:
+                if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
+                                    , PERMISSION_READ_EXTERNAL_STORAGE)) {
+                    inputProblemsDialog.show();
+                }
+                break;
+            case R.id.ll_output:
+                outputProblemsDialog.show();
+                break;
+            case R.id.ll_version:
+                if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
+                                    , PERMISSION_READ_EXTERNAL_STORAGE)) {
+                    VersionCheckModel.versionCheck(getApplicationContext());
+                }
+                break;
+            default:
+        }
+    }
+
+    private void initVersionView() {
+        versionView.setText(getString(R.string.setting_version) + VersionUtil.getVersion(this));
+    }
+
+    private void initProblemDialogs() {
+        problemTypes = new String[ProblemStateFactory.mapString.keySet().size()];
+        ProblemStateFactory.mapString.keySet().toArray(problemTypes);
+
+        outputProblemsDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.setting_select_type)
-                .setItems(mProblemTypes, new DialogInterface.OnClickListener() {
+                .setItems(problemTypes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //选择题目类型 调用系统的发送文件功能
-                        String type = mProblemTypes[which];
+                        String type = problemTypes[which];
                         FileUtil.openFile(SettingActivity.this,
                                 new File(Environment.getExternalStorageDirectory()
                                         + "/" + ConfigConst.APP_DIR
@@ -83,32 +140,30 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         dialog.dismiss();
                     }
                 }).create();
-        mInputDialog = new AlertDialog.Builder(this)
+        inputProblemsDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.setting_select_type)
-                .setItems(mProblemTypes, new DialogInterface.OnClickListener() {
+                .setItems(problemTypes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //导入 选中需导入题目类型并打开题目文件的
-                        mCurTypeStr = mProblemTypes[which];
+                        curTypeStr = problemTypes[which];
                         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                         intent.setType("text/*");
                         startActivityForResult(intent, FILE_CODE);
                         dialog.dismiss();
                     }
                 }).create();
-        //修改导入文件的题目类型
-        mForceTransferDialog = new AlertDialog.Builder(this)
+        forceTransferProblemsDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.com_tint)
                 .setMessage(R.string.setting_check_type)
                 .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        for (Problem item : mNewList) {
-                            if (!item.getTypeName().equals(mCurTypeStr)) {
-                                item.setType(mCurTypeStr);
+                        for (Problem item : newProblems) {
+                            if (!item.getTypeName().equals(curTypeStr)) {
+                                item.setType(curTypeStr);
                             }
                         }
-                        ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
+                        ProblemsIOModel.inputToLocalFile(oldProblems, oldTargetFile);
                     }
                 }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -118,72 +173,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }).create();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == FILE_CODE) {
-            try {
-                initSelectedFile();
-                mValidNum = ProblemsIOModel.computeDiffList(mOldList, mNewList, mOldTargetFile, this, data.getData());
-                if (mValidNum == -1) {
-                    return;
-                }
-
-                if (problemTypeOk()) {
-                    ProblemsIOModel.input2localFile(mOldList, mOldTargetFile);
-                } else {
-                    mForceTransferDialog.show();//类型不全部正确 强转对话框提示
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(this, getString(R.string.setting_input_success) + mValidNum, Toast.LENGTH_SHORT).show();
-        }
+    private void createSelectedProblemTypeFile() {
+        oldTargetFile = new File(ConfigConst.STORAGE_DIRECTORY + "/" + curTypeStr + "/" + curTypeStr + ".json");
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ll_input:
-                //申请权限
-                if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, P_READ_EXTERNAL_STORAGE)) {
-                    mInputDialog.show();
-                }
-                break;
-            case R.id.ll_output:
-                mOutputDialog.show();
-                break;
-            case R.id.ll_version:
-                if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, P_READ_EXTERNAL_STORAGE)) {
-                    VersionCheckModel.versionCheck(getApplicationContext());
-                }
-                break;
-            default:
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case P_READ_EXTERNAL_STORAGE:
-                if (hasAllPermissionsGranted(grantResults)) {
-                    mInputDialog.show();
-                }
-                break;
-            default:
-        }
-    }
-
-    private void initSelectedFile() {
-        mOldTargetFile = new File(ConfigConst.STORAGE_DIRECTORY + "/" + mCurTypeStr + "/" + mCurTypeStr + ".json");
-    }
-
-    private boolean problemTypeOk() {
+    private boolean checkAllProblemType() {
         boolean problemTypeOk = true;
-        for (Problem item : mNewList) {
-            if (!item.getTypeName().equals(mCurTypeStr)) {
+        for (Problem item : newProblems) {
+            if (!item.getTypeName().equals(curTypeStr)) {
                 problemTypeOk = false;
                 break;
             }

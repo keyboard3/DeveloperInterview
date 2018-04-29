@@ -14,54 +14,53 @@ import com.wang.avi.AVLoadingIndicatorView;
  * @date 2017/9/3
  */
 public class BaseFragment extends Fragment implements IProgressDialog {
-    private ProgressDialog mProgressDialog;
-    private AVLoadingIndicatorView mAdvanceProgressView;
-
-    private boolean mAdvanceDialogToggle;
+    private ProgressDialog progressDialog;
+    private AVLoadingIndicatorView advanceProgressView;
+    private boolean isAdvanceDialogOpen;
 
     protected void toggleDialogAdvance(boolean toggle) {
-        mAdvanceDialogToggle = toggle;
+        isAdvanceDialogOpen = toggle;
     }
 
     @Override
     public void showDialog() {
-        if (mAdvanceDialogToggle && mAdvanceProgressView == null) {
-            mAdvanceProgressView = getView().findViewById(R.id.avi);
-        } else if (!mAdvanceDialogToggle && mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage(getString(R.string.com_loading));
-            mProgressDialog.setIndeterminate(true);
+        if (isAdvanceDialogOpen && advanceProgressView == null) {
+            advanceProgressView = getView().findViewById(R.id.avi);
+        } else if (!isAdvanceDialogOpen && progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getString(R.string.com_loading));
+            progressDialog.setIndeterminate(true);
         }
-        if (mAdvanceDialogToggle) {
-            if (mAdvanceProgressView == null) {
+        if (isAdvanceDialogOpen) {
+            if (advanceProgressView == null) {
                 return;
             }
-            mAdvanceProgressView.show();
+            advanceProgressView.show();
         } else {
-            if (mProgressDialog == null) {
+            if (progressDialog == null) {
                 return;
             }
-            mProgressDialog.show();
+            progressDialog.show();
         }
     }
 
     @Override
     public void hideDialog() {
-        if (mAdvanceDialogToggle) {
-            if (mAdvanceProgressView == null) {
+        if (isAdvanceDialogOpen) {
+            if (advanceProgressView == null) {
                 return;
             }
-            mAdvanceProgressView.hide();
+            advanceProgressView.hide();
         } else {
-            if (mProgressDialog == null) {
+            if (progressDialog == null) {
                 return;
             }
-            mProgressDialog.hide();
+            progressDialog.hide();
         }
     }
 
     @Override
     public boolean isShowing() {
-        return mProgressDialog.isShowing();
+        return progressDialog.isShowing();
     }
 }

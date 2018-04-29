@@ -13,10 +13,10 @@ import com.github.keyboard3.developerinterview.base.IProgressDialog;
  * @date 2017/9/22
  */
 
-public class CusWebViewClient extends WebViewClient implements IProgressDialog {
+public class ExtProgressWebViewClient extends WebViewClient implements IProgressDialog {
     IProgressDialog dialog;
 
-    public CusWebViewClient(IProgressDialog dialog) {
+    public ExtProgressWebViewClient(IProgressDialog dialog) {
         this.dialog = dialog;
     }
 

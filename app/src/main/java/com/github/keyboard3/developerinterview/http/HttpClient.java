@@ -96,11 +96,10 @@ public class HttpClient {
                 .subscribe(success, consumerError);
     }
 
-    public void getProblems(String problemType, Consumer<List<Problem>> success) {
-        Log.d(TAG, "getProblems 网络请求:" + problemType);
+    public void getProblems(String problemType, Consumer<List<Problem>> success,Consumer<Throwable> consumerError) {
         mService.getProblems(problemType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(success, consumerError);
+                .subscribe(success,consumerError);
     }
 }

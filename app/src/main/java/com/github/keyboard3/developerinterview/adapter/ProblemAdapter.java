@@ -36,7 +36,7 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.setPosition(position);
-        Problem entity = mData.get(position);
+        Problem entity = data.get(position);
         holder.icon.setImageResource(entity.getTypeIcon());
         holder.tvTitle.setText(entity.title);
         holder.tvContent.setText(entity.content);

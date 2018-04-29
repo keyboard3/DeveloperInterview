@@ -66,17 +66,16 @@ public class AudioModel {
         return false;
     }
 
-    public static void getAudioDataFromFile(List<String> mAudioList, String mPath, AudioAdapter adapter) {
-        mAudioList.clear();
-        //从指定目录下所有文件的名字  组成绝对文件的地址
-        File dir = new File(mPath);
+    public static void initAudiosFromPathAndNotify(List<String> audios, String problemsPath, AudioAdapter adapter) {
+        audios.clear();
+        File dir = new File(problemsPath);
         if (dir == null) return;
 
         File[] files = dir.listFiles();
         if (files == null) return;
 
         for (File item : files) {
-            mAudioList.add(item.getAbsolutePath());
+            audios.add(item.getAbsolutePath());
         }
         if (adapter != null)
             adapter.notifyDataSetChanged();
