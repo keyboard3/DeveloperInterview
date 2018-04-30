@@ -28,7 +28,7 @@ public class ProblemStateFactory {
                                         ,OtherState.class
                                         ,ProductState.class};
     public static BaseProblemState [] problemStates = new BaseProblemState[problemsClass.length];
-
+    static EmptyProblemState emptyProblemState = new EmptyProblemState();
     static {
         try {
             for (int i = 0; i < problemsClass.length; i++) {
@@ -47,23 +47,22 @@ public class ProblemStateFactory {
                 problemNameToStateMap.put(problemName, problemStates[i]);
                 problemMenuIdToStateMap.put(menuId, problemStates[i]);
             }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public static BaseProblemState getProblemStateById(int id) {
-        return (BaseProblemState) problemIdToStateMap.get(id);
+        Object object = problemIdToStateMap.get(id);
+        return (BaseProblemState) (object == null ? emptyProblemState: object);
     }
 
     public static BaseProblemState getProblemStateByName(String name) {
-        return (BaseProblemState) problemNameToStateMap.get(name);
+        Object object = problemNameToStateMap.get(name);
+        return (BaseProblemState) (object == null ? emptyProblemState: object);
     }
 
     public static BaseProblemState getProblemStateByMenu(int menuId) {
-        return (BaseProblemState) problemMenuIdToStateMap.get(menuId);
+        Object object = problemMenuIdToStateMap.get(menuId);
+        return (BaseProblemState) (object == null ? emptyProblemState: object);
     }
 }

@@ -13,6 +13,9 @@ import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 问题列表页适配器
  *
@@ -40,22 +43,20 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
         Problem entity = data.get(position);
 
         ProblemStateFactory.getProblemStateById(entity.type)
-                .setImageViewIcon(holder.icon);
+                            .setImageViewIcon(holder.icon);
 
         holder.tvTitle.setText(entity.title);
         holder.tvContent.setText(entity.content);
     }
 
     public static class MyViewHolder extends BaseAdapter.ViewHolder {
-        public ImageView icon;
-        public TextView tvTitle;
-        public TextView tvContent;
+        @BindView(R.id.iv_type) public ImageView icon;
+        @BindView(R.id.tv_title) public TextView tvTitle;
+        @BindView(R.id.tv_content) public TextView tvContent;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.iv_type);
-            tvTitle = itemView.findViewById(R.id.tv_title);
-            tvContent = itemView.findViewById(R.id.tv_content);
+            ButterKnife.bind(this,itemView);
         }
     }
 }

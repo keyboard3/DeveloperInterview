@@ -37,7 +37,7 @@ public class WebViewActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         initUrlAndSearchKeyFromIntent();
-        initWebviewWithData();
+        initWebWithData();
     }
 
     @Override
@@ -72,9 +72,8 @@ public class WebViewActivity extends BaseActivity {
         searchKey = getIntent().getStringExtra(ConfigConst.INTENT_SEARCH_KEY);
     }
 
-    void initWebviewWithData() {
+    void initWebWithData() {
         toggleDialogAdvance(true);
-
         htmlContainer.loadUrl(url);
         htmlContainer.getSettings().supportZoom();
         htmlContainer.getSettings().setJavaScriptEnabled(true);
@@ -82,18 +81,13 @@ public class WebViewActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                getSupportActionBar().setTitle(view.getTitle());
 
-                if (!TextUtils.isEmpty(searchKey)) {
-                    try {
-                        searchContent(searchKey);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                getSupportActionBar().setTitle(view.getTitle());
+                if(TextUtils.isEmpty(searchKey)) return;
+                try {
+                    searchContent(searchKey);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

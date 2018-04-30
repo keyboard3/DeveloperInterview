@@ -52,48 +52,46 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (hasActionBar()) {
-            if (item.getItemId() == android.R.id.home) {
-                finish();
-                return true;
-            }
+        if (hasActionBar() && item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     protected void toggleDialogAdvance(boolean toggle) {
         advanceDialogToggle = toggle;
-
     }
 
     @Override
     public void showDialog() {
-        if (advanceDialogToggle && advanceProgressView == null) {
-            advanceProgressView = findViewById(R.id.avi);
-        } else if (!advanceDialogToggle && progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(getString(R.string.com_loading));
-            progressDialog.setIndeterminate(true);
-        }
-        if (advanceDialogToggle) {
-            advanceProgressView.show();
-        } else {
-            progressDialog.show();
+        try {
+            if (advanceDialogToggle && advanceProgressView == null)
+                advanceProgressView = findViewById(R.id.avi);
+            else if (!advanceDialogToggle && progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage(getString(R.string.com_loading));
+                progressDialog.setIndeterminate(true);
+            }
+
+            if (advanceDialogToggle)
+                advanceProgressView.show();
+            else
+                progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void hideDialog() {
-        if (advanceDialogToggle && advanceProgressView != null) {
-            if (advanceProgressView == null) {
-                return;
-            }
-            advanceProgressView.hide();
-        } else {
-            if (progressDialog == null) {
-                return;
-            }
-            progressDialog.hide();
+        try {
+            if (advanceDialogToggle)
+                advanceProgressView.hide();
+            else
+                progressDialog.hide();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -24,38 +24,33 @@ public class BaseFragment extends Fragment implements IProgressDialog {
 
     @Override
     public void showDialog() {
-        if (isAdvanceDialogOpen && advanceProgressView == null) {
-            advanceProgressView = getView().findViewById(R.id.avi);
-        } else if (!isAdvanceDialogOpen && progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage(getString(R.string.com_loading));
-            progressDialog.setIndeterminate(true);
-        }
-        if (isAdvanceDialogOpen) {
-            if (advanceProgressView == null) {
-                return;
+        try {
+            if (isAdvanceDialogOpen && advanceProgressView == null)
+                advanceProgressView = getView().findViewById(R.id.avi);
+            else if (!isAdvanceDialogOpen && progressDialog == null) {
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage(getString(R.string.com_loading));
+                progressDialog.setIndeterminate(true);
             }
-            advanceProgressView.show();
-        } else {
-            if (progressDialog == null) {
-                return;
-            }
-            progressDialog.show();
+
+            if (isAdvanceDialogOpen)
+                advanceProgressView.show();
+            else
+                progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void hideDialog() {
-        if (isAdvanceDialogOpen) {
-            if (advanceProgressView == null) {
-                return;
-            }
-            advanceProgressView.hide();
-        } else {
-            if (progressDialog == null) {
-                return;
-            }
-            progressDialog.hide();
+        try {
+            if (isAdvanceDialogOpen)
+                advanceProgressView.hide();
+            else
+                progressDialog.hide();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

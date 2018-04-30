@@ -16,13 +16,15 @@ import java.io.Serializable;
 
 public class Problem implements Serializable, Comparable<Problem> {
 
-    public Problem(String id, String title, String content, String answer, String source, int type, String audio) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.answer = answer;
-        this.type = type;
-        this.source = "";
+    static Problem getEmptyProblem() {
+        Problem problem = new Problem();
+        problem.id = "";
+        problem.title = "";
+        problem.content = "";
+        problem.answer = "";
+        problem.type = 1;
+        problem.source = "";
+        return problem;
     }
 
     public String id;

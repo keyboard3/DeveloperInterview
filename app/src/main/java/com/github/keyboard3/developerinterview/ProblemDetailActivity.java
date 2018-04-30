@@ -45,7 +45,7 @@ public class ProblemDetailActivity extends BaseActivity {
         setTitle(R.string.title_problem_detail);
         ButterKnife.bind(this);
 
-        if (initProblemFromIntentAndCheck()) return;
+        initProblemFromIntentAndCheck();
         initViewsWithProblem();
     }
 
@@ -75,24 +75,14 @@ public class ProblemDetailActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    boolean initProblemFromIntentAndCheck() {
+    void initProblemFromIntentAndCheck() {
         problem = (Problem) getIntent().getSerializableExtra(ConfigConst.INTENT_ENTITY);
-        if (problem != null) return false;
-        try {
-            String uri = "";
-            uri = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
-            if (TextUtils.isEmpty(uri))
-                uri = getIntent().getData().toString();
+        if (problem != null) return;
 
-            problem = ShareModel.problemOpenComingIntent(this, Uri.parse(uri));
-            if (problem == null) {
-                Toast.makeText(this, R.string.problem_no_exist, Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return problem == null;
+        String uri = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
+        if (TextUtils.isEmpty(uri))
+            uri = getIntent().getData().toString();
+        problem = ShareModel.problemOpenComingIntent(this, Uri.parse(uri));
     }
 
     void initViewsWithProblem() {

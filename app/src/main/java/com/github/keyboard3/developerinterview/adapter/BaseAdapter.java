@@ -1,6 +1,7 @@
 package com.github.keyboard3.developerinterview.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,18 +17,15 @@ import java.util.List;
  */
 
 public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, type> extends RecyclerView.Adapter<T> {
-    protected WeakReference<Activity> weakActivty;
+    protected WeakReference<Activity> weakActivity;
     protected List<ViewHolder> viewHolders;
     protected List<type> data;
 
-    private OnItemClickListener mListener;
+    private OnItemClickListener itemClickListener;
 
-    public BaseAdapter(List<type> data, Activity activity) {
-        if (activity == null || data == null) {
-            return;
-        }
+    public BaseAdapter(@NonNull List<type> data,@NonNull Activity activity) {
         this.data = data;
-        weakActivty = new WeakReference(activity);
+        weakActivity = new WeakReference(activity);
         viewHolders = new ArrayList<>();
     }
 
@@ -42,25 +40,17 @@ public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, type> exten
 
             @Override
             public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onItemClick(view, position);
-                }
+                itemClickListener.onItemClick(view, position);
             }
         };
         viewHolder.itemView.setOnClickListener(viewHolder.listener);
     }
 
-    public void setOnItemClickListener(OnItemClickListener clickListener) {
-        mListener = clickListener;
+    public void setOnItemClickListener(@NonNull OnItemClickListener clickListener) {
+        itemClickListener = clickListener;
     }
 
     public interface OnItemClickListener {
-        /**
-         * item的点击事件
-         *
-         * @param itemView
-         * @param position
-         */
         void onItemClick(View itemView, int position);
     }
 

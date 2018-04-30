@@ -86,11 +86,8 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         resumeLastPositonOnProblemsView();
-
         initProblemsFromNet();
-
         initProblemsViewWithDaa();
     }
 
@@ -131,16 +128,7 @@ public class ProblemsFragment extends BaseFragment {
                 try {
                     problems.addAll(item);
                     adapter.notifyDataSetChanged();
-
-                    if (!ListUtil.isEmpty(problems)) {
-                        problemsView.setVisibility(View.VISIBLE);
-                        noDataView.setVisibility(View.GONE);
-                        inputView.setVisibility(View.GONE);
-                    } else {
-                        problemsView.setVisibility(View.GONE);
-                        noDataView.setVisibility(View.VISIBLE);
-                        inputView.setVisibility(View.VISIBLE);
-                    }
+                    showEmptyView(ListUtil.isEmpty(problems));
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -153,6 +141,18 @@ public class ProblemsFragment extends BaseFragment {
                 hideDialog();
             }
         });
+    }
+
+    private void showEmptyView(boolean ishide) {
+        if (!ishide) {
+            problemsView.setVisibility(View.VISIBLE);
+            noDataView.setVisibility(View.GONE);
+            inputView.setVisibility(View.GONE);
+        } else {
+            problemsView.setVisibility(View.GONE);
+            noDataView.setVisibility(View.VISIBLE);
+            inputView.setVisibility(View.VISIBLE);
+        }
     }
 
     void resumeLastPositonOnProblemsView() {
@@ -196,6 +196,7 @@ public class ProblemsFragment extends BaseFragment {
     };
 
     public void goTop() {
+        if(problemsView == null) return;
         problemsView.scrollToPosition(0);
     }
 }

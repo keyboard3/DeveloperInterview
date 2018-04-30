@@ -2,19 +2,19 @@ package com.github.keyboard3.developerinterview.data;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 
-import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.callback.Callback;
+import com.github.keyboard3.developerinterview.callback.EmptyCallback;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.util.ListUtil;
 import com.google.common.io.CharStreams;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,8 +25,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.functions.Consumer;
-
 /**
  * @author keyboard3
  * @date 2017/9/8
@@ -34,67 +32,61 @@ import io.reactivex.functions.Consumer;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class ProblemsDrive {
-    private static final String TAG = "DataFactory";
-    /**
-     * 存入了所有类型的题目集合
-     */
-    private static Map<Integer, SparseArray<Problem>> typeProblemsMap = new ArrayMap<>();
-    private SparseArray<Problem> problemSparseArray;
-    public List<Problem> problemList;
+    private static Map<Integer, SparseArray<Problem>> stateIdToProblemsMap = new ArrayMap<>();
+    private SparseArray<Problem> idToProblems;
+    public List<Problem> problems;
     private BaseProblemState problemState;
     private Context applicationContext;
-    public  String problemJsonPath;
+    public String problemJsonPath;
 
-    public ProblemsDrive(Context applicationContext, BaseProblemState problemState) {
-        if (problemState == null || applicationContext == null) {
-            return;
-        }
+    public ProblemsDrive(@NonNull Context applicationContext,@NonNull BaseProblemState problemState) {
         this.applicationContext = applicationContext;
         this.problemState = problemState;
 
+        idToProblems = problemState.getProblemsMap(stateIdToProblemsMap);
         problemJsonPath = problemState.getProblemJsonPath();
-        File dir = new File(problemJsonPath);
-        if (!dir.getParentFile().exists()) {
-            dir.getParentFile().mkdirs();
+
+        initProblemJsonDir();
+    }
+
+    private void initProblemJsonDir() {
+        File problemJsonFile = new File(problemJsonPath);
+        if (!problemJsonFile.getParentFile().exists()) {
+            problemJsonFile.getParentFile().mkdirs();
         }
     }
 
-    public void initProblemsByType() throws IOException {
-        if (problemSparseArray == null)
-            problemSparseArray = problemState.getProblemsMap(typeProblemsMap);
-        if (problemSparseArray == null)
-            asyncFetchProblems(null);
+    public void initProblemsByType() {
+        if (idToProblems == null)
+            asyncFetchProblems(new EmptyCallback());
     }
 
-    public void asyncFetchProblems(final Callback<List<Problem>> callback) {
-        problemSparseArray = new SparseArray<>();
-        final Gson gson = new Gson();
-        final File file = new File(problemJsonPath);
-
-        Logger.d("asyncFetchProblems file.exists():"+file.exists());
+    public void asyncFetchProblems(@NonNull  final Callback<List<Problem>> callback) {
+        idToProblems = new SparseArray<>();
+        final File problemJsonFile = new File(problemJsonPath);
         try {
-            if (file.exists()) {
-                InputStream inputStream = new FileInputStream(file);
+            if (problemJsonFile.exists()) {
+                InputStream inputStream = new FileInputStream(problemJsonFile);
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 String content = CharStreams.toString(inputStreamReader);
-                problemList = new Gson().fromJson(content, new TypeToken<List<Problem>>(){}.getType());
+                problems = new Gson().fromJson(content, new TypeToken<List<Problem>>() {}.getType());
 
-                saveMemoryCache(problemList);
-                if (callback != null) callback.success(problemList);
+                saveMemoryCache(problems);
+                callback.success(problems);
             } else {
-                problemState.getProblemsFromHttp(applicationContext,list -> {
-                    Logger.d("获取成功:" + list.size());
+                problemState.getProblemsFromHttp(applicationContext
+                        , list -> {
                     if (!ListUtil.isEmpty(list)) {
-                        problemList = list;
+                        problems = list;
 
-                        FileOutputStream outputStream = new FileOutputStream(file);
-                        outputStream.write(gson.toJson(list).getBytes());
+                        FileOutputStream outputStream = new FileOutputStream(problemJsonFile);
+                        outputStream.write(new Gson().toJson(list).getBytes());
                         outputStream.close();
-                    }
 
-                    saveMemoryCache(list);
-                    if (callback != null) callback.success(list);
-                },throwable ->callback.fail(throwable));
+                        saveMemoryCache(list);
+                    }
+                    callback.success(list);
+                }, throwable -> callback.fail(throwable));
             }
         } catch (IOException e) {
             callback.fail(e);
@@ -103,14 +95,15 @@ public class ProblemsDrive {
 
     private void saveMemoryCache(List<Problem> list) {
         for (Problem item : list) {
-            problemSparseArray.put(item.getId(), item);
+            idToProblems.put(item.getId(), item);
         }
-        problemState.putEntryToMap(typeProblemsMap,problemSparseArray);
+        problemState.putEntryToMap(stateIdToProblemsMap, idToProblems);
     }
 
-    public Problem queryProblem(String sid) throws IOException {
-        Integer id = Integer.parseInt(sid);
+    public Problem queryProblem(@NonNull String problemId) {
+        Integer id = Integer.parseInt(problemId);
         initProblemsByType();
-        return problemSparseArray.get(id);
+        Problem problem = idToProblems.get(id);
+        return problem == null ? new Problem() : problem;
     }
 }

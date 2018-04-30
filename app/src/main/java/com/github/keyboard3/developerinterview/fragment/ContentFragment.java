@@ -15,6 +15,9 @@ import com.github.keyboard3.developerinterview.view.ExtProgressWebViewClient;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * 面经基本内容
@@ -22,8 +25,7 @@ import java.util.regex.Pattern;
  * @author keyboard3
  */
 public class ContentFragment extends BaseFragment {
-
-    public WebView htmlContainer;
+    @BindView(R.id.wb_content) WebView htmlContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,11 +36,11 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ButterKnife.bind(this,getView());
         initHtmlWithFixContent();
     }
 
     private void initHtmlWithFixContent() {
-        htmlContainer = getActivity().findViewById(R.id.wb_content);
         String content = "[Android 名企面试题及涉及知识点整理。](https://github.com/karmalove/AndroidInterview)\n" +
                 "[gtibook版面试资料](http://www.jackywang.tech/AndroidInterview-Q-A/)\n" +
                 "[［干货］2017已来，最全面试总结——这些Android面试题你一定需要](http://www.jianshu.com/p/39e8768843d2)\n" +
@@ -67,5 +69,15 @@ public class ContentFragment extends BaseFragment {
         htmlContainer.getSettings().supportZoom();
         htmlContainer.getSettings().setJavaScriptEnabled(true);
         htmlContainer.setWebViewClient(new ExtProgressWebViewClient(this));
+    }
+
+    public boolean canGoBack(){
+        if (htmlContainer == null) return false;
+        return htmlContainer.canGoBack();
+    }
+
+    public void goBack(){
+        if(htmlContainer == null) return;
+        htmlContainer.goBack();
     }
 }

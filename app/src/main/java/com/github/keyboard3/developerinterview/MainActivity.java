@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.fragment.ContentFragment;
+import com.github.keyboard3.developerinterview.fragment.EmptyFragment;
 import com.github.keyboard3.developerinterview.fragment.ProblemsFragment;
 import com.github.keyboard3.developerinterview.model.ShareModel;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
@@ -146,11 +147,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     boolean checkWebContentAndBackUrl() {
         Fragment fragment = getFragmentManager().findFragmentByTag(OtherState.NAME);
-        ContentFragment webContentFragment = fragment != null ? (ContentFragment) fragment:null;
+        ContentFragment webFragment = (ContentFragment)(fragment==null ? new EmptyFragment():fragment);
 
-        boolean checkCanGo = webContentFragment != null && webContentFragment.htmlContainer.canGoBack();
+        boolean checkCanGo = webFragment.canGoBack();
         if (checkCanGo)
-            webContentFragment.htmlContainer.goBack();
+            webFragment.goBack();
         return checkCanGo ;
     }
 

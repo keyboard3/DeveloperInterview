@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.SparseArray;
 import android.view.View;
@@ -60,11 +61,11 @@ public abstract class BaseProblemState implements Serializable{
         HttpClient.getInstance(context).getProblems(getProblemStateName() + ".json",success,fail );
     }
 
-    public SparseArray<Problem> getProblemsMap(Map<Integer, SparseArray<Problem>> typeProblemsMap) {
+    public SparseArray<Problem> getProblemsMap(@NonNull Map<Integer, SparseArray<Problem>> typeProblemsMap) {
         return typeProblemsMap.get(getProblemStateId());
     }
 
-    public void putEntryToMap(Map<Integer, SparseArray<Problem>> typeProblemsMap, SparseArray<Problem> problemSparseArray) {
+    public void putEntryToMap(@NonNull Map<Integer, SparseArray<Problem>> typeProblemsMap,@NonNull SparseArray<Problem> problemSparseArray) {
         typeProblemsMap.put(getProblemStateId(), problemSparseArray);
     }
 }
