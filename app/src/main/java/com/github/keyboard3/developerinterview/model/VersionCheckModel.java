@@ -21,18 +21,15 @@ import io.reactivex.functions.Consumer;
 public class VersionCheckModel {
     public static void versionCheck(final Context context) {
         HttpClient httpClient = HttpClient.getInstance(context);
-        httpClient.upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, new Consumer<Version>() {
-            @Override
-            public void accept(Version entity) throws Exception {
-                boolean checkSameVersion = entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0;
-                if (checkSameVersion)
-                    new AlertDialog.Builder(context)
-                            .setTitle(entity.getVersionShort())
-                            .setMessage(entity.getChangelog())
-                            .show();
-                 else
-                    Toast.makeText(context, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
-            }
+        httpClient.upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, entity -> {
+            boolean checkSameVersion = entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0;
+            if (checkSameVersion)
+                new AlertDialog.Builder(context)
+                        .setTitle(entity.getVersionShort())
+                        .setMessage(entity.getChangelog())
+                        .show();
+            else
+                Toast.makeText(context, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
         });
     }
 }

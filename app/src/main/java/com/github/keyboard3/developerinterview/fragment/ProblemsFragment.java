@@ -96,14 +96,11 @@ public class ProblemsFragment extends BaseFragment {
 
     private void initProblemsViewWithDaa() {
         problemsView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                Problem entity = problems.get(position);
-                Intent intent = new Intent(getActivity(), ProblemDetailActivity.class);
-                intent.putExtra(ConfigConst.INTENT_ENTITY, entity);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener((itemView, position) -> {
+            Problem entity = problems.get(position);
+            Intent intent = new Intent(getActivity(), ProblemDetailActivity.class);
+            intent.putExtra(ConfigConst.INTENT_ENTITY, entity);
+            startActivity(intent);
         });
         new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(problemsView);
     }
@@ -188,19 +185,13 @@ public class ProblemsFragment extends BaseFragment {
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
             new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
                     .setMessage(R.string.home_delete_problem)
-                    .setPositiveButton(R.string.com_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            ProblemListModel.removeProblem(getActivity(), adapter, problems, viewHolder.getAdapterPosition(), problemsDrive.problemJsonPath);
-                            dialogInterface.dismiss();
-                        }
-                    }).setNegativeButton(R.string.com_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    adapter.notifyDataSetChanged();
-                }
-            }).create().show();
+                    .setPositiveButton(R.string.com_ok, (dialogInterface, i) -> {
+                        ProblemListModel.removeProblem(getActivity(), adapter, problems, viewHolder.getAdapterPosition(), problemsDrive.problemJsonPath);
+                        dialogInterface.dismiss();
+                    }).setNegativeButton(R.string.com_cancel, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }).create().show();
         }
     };
 

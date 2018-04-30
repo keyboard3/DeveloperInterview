@@ -69,18 +69,15 @@ public class ProductsFragment extends BaseFragment {
         productPluginsView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ProductAdapter(appPlugins, getActivity());
         productPluginsView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                PluginInfo entity = appPlugins.get(position);
-                com.qihoo360.replugin.model.PluginInfo plugin = RePlugin.install(ConfigConst.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
-                if (plugin != null) {
-                    RePlugin.preload(plugin);
-                }
-                showDialog();
-                RePlugin.startActivity(getActivity(), RePlugin.createIntent(entity.packageName,
-                        entity.mainClass));
+        adapter.setOnItemClickListener((itemView, position) -> {
+            PluginInfo entity = appPlugins.get(position);
+            com.qihoo360.replugin.model.PluginInfo plugin = RePlugin.install(ConfigConst.STORAGE_DIRECTORY + "/" + entity.name + ".apk");
+            if (plugin != null) {
+                RePlugin.preload(plugin);
             }
+            showDialog();
+            RePlugin.startActivity(getActivity(), RePlugin.createIntent(entity.packageName,
+                    entity.mainClass));
         });
         ItemTouchHelper touchHelper = new ItemTouchHelper(itemTouchCallback);
         touchHelper.attachToRecyclerView(productPluginsView);
@@ -105,23 +102,17 @@ public class ProductsFragment extends BaseFragment {
             final PluginInfo entity = appPlugins.get(viewHolder.getAdapterPosition());
             new AlertDialog.Builder(getActivity()).setTitle(R.string.com_tint)
                     .setMessage(R.string.products_dialog_uninstall)
-                    .setPositiveButton(getString(R.string.com_ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (RePlugin.uninstall(entity.packageName)) {
-                                Toast.makeText(getActivity(), R.string.product_uninstall_success, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity(), R.string.product_uninstall_fail, Toast.LENGTH_SHORT).show();
-                            }
-                            dialogInterface.dismiss();
+                    .setPositiveButton(getString(R.string.com_ok), (dialogInterface, i) -> {
+                        if (RePlugin.uninstall(entity.packageName)) {
+                            Toast.makeText(getActivity(), R.string.product_uninstall_success, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.product_uninstall_fail, Toast.LENGTH_SHORT).show();
                         }
-                    }).setNegativeButton(getString(R.string.com_cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    adapter.notifyDataSetChanged();
-                }
-            }).create().show();
+                        dialogInterface.dismiss();
+                    }).setNegativeButton(getString(R.string.com_cancel), (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }).create().show();
         }
     };
 }

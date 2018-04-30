@@ -72,7 +72,6 @@ public class ProblemsDrive {
         final File file = new File(problemJsonPath);
 
         Logger.d("asyncFetchProblems file.exists():"+file.exists());
-
         try {
             if (file.exists()) {
                 InputStream inputStream = new FileInputStream(file);
@@ -83,27 +82,19 @@ public class ProblemsDrive {
                 saveMemoryCache(problemList);
                 if (callback != null) callback.success(problemList);
             } else {
-                problemState.getProblemsFromHttp(applicationContext,new Consumer<List<Problem>>() {
-                    @Override
-                    public void accept(List<Problem> list) throws Exception {
-                        Logger.d("获取成功:" + list.size());
-                        if (!ListUtil.isEmpty(list)) {
-                            problemList = list;
+                problemState.getProblemsFromHttp(applicationContext,list -> {
+                    Logger.d("获取成功:" + list.size());
+                    if (!ListUtil.isEmpty(list)) {
+                        problemList = list;
 
-                            FileOutputStream outputStream = new FileOutputStream(file);
-                            outputStream.write(gson.toJson(list).getBytes());
-                            outputStream.close();
-                        }
+                        FileOutputStream outputStream = new FileOutputStream(file);
+                        outputStream.write(gson.toJson(list).getBytes());
+                        outputStream.close();
+                    }
 
-                        saveMemoryCache(list);
-                        if (callback != null) callback.success(list);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        callback.fail(throwable);
-                    }
-                });
+                    saveMemoryCache(list);
+                    if (callback != null) callback.success(list);
+                },throwable ->callback.fail(throwable));
             }
         } catch (IOException e) {
             callback.fail(e);

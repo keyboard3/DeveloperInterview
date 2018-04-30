@@ -43,12 +43,9 @@ public class HttpClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mService = retrofit.create(HttpService.class);
-        consumerError = new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                throwable.printStackTrace();
-                Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        consumerError = throwable -> {
+            throwable.printStackTrace();
+            Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show();
         };
     }
 
