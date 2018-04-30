@@ -29,31 +29,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="@string/problem_content" />
 
-        <FrameLayout
-            android:id="@+id/audio_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/wb_answer"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tv_audio"
-            app:layout_constraintTop_toBottomOf="@id/tv_content"></FrameLayout>
-
-        <TextView
-            android:id="@+id/tv_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/com_audio"
-            android:textColor="@color/color_primary"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/wb_answer"
-            app:layout_constraintLeft_toRightOf="@id/audio_container"
-            app:layout_constraintRight_toLeftOf="@+id/tv_source"
-            app:layout_constraintTop_toBottomOf="@id/tv_content" />
-
         <TextView
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"

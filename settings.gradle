@@ -1,1 +1,1 @@
-include ':app', ':MediaUtils', ':checkVersionLib'
+include ':app'

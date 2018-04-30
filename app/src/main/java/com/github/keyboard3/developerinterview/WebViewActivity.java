@@ -67,12 +67,12 @@ public class WebViewActivity extends BaseActivity {
         return true;
     }
 
-    private void initUrlAndSearchKeyFromIntent() {
+    void initUrlAndSearchKeyFromIntent() {
         url = getIntent().getStringExtra(ConfigConst.INTENT_KEY);
         searchKey = getIntent().getStringExtra(ConfigConst.INTENT_SEARCH_KEY);
     }
 
-    private void initWebviewWithData() {
+    void initWebviewWithData() {
         toggleDialogAdvance(true);
 
         htmlContainer.loadUrl(url);
@@ -99,7 +99,7 @@ public class WebViewActivity extends BaseActivity {
         });
     }
 
-    public void searchContent(String content) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void searchContent(String content) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         htmlContainer.findAllAsync(content);
         Method setFindIsUpMethod = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
         setFindIsUpMethod.invoke(htmlContainer, true);

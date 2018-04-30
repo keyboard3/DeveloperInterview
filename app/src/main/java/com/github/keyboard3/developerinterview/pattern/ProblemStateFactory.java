@@ -5,9 +5,7 @@ import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 
-import com.github.keyboard3.developerinterview.R;
-
-import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.util.Map;
 
 
@@ -20,45 +18,52 @@ import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class ProblemStateFactory {
-    public static SparseArray<? super BaseProblemState> mapType = new SparseArray<>();
-    public static Map<String, ? super BaseProblemState> mapString = new ArrayMap<>();
-    public static SparseArray<? super BaseProblemState> mapMenuId = new SparseArray<>();
+    static SparseArray<? super BaseProblemState> problemIdToStateMap = new SparseArray<>();
+    static Map<String, ? super BaseProblemState> problemNameToStateMap = new ArrayMap<>();
+    static SparseArray<? super BaseProblemState> problemMenuIdToStateMap = new SparseArray<>();
+    static Class<?> [] problemsClass = { JavaState.class
+                                        ,AndroidState.class
+                                        ,HtmlState.class
+                                        ,AlgorithmState.class
+                                        ,OtherState.class
+                                        ,ProductState.class};
+    public static BaseProblemState [] problemStates = new BaseProblemState[problemsClass.length];
 
     static {
-        /**
-         * todo 通过注解完成这部分动态功能
-         */
-        mapType.put(JavaState.type, JavaState.getInstance());
-        mapType.put(AndroidState.type, AndroidState.getInstance());
-        mapType.put(HtmlState.type, HtmlState.getInstance());
-        mapType.put(AlgorithmState.type, AlgorithmState.getInstance());
-        mapType.put(OtherState.type, OtherState.getInstance());
-        mapType.put(ProductState.type, ProductState.getInstance());
+        try {
+            for (int i = 0; i < problemsClass.length; i++) {
+                Class<?> problemStateClass = problemsClass[i];
+                problemStates[i] = (BaseProblemState) problemStateClass.newInstance();
 
-        mapString.put(JavaState.typeStr, JavaState.getInstance());
-        mapString.put(AndroidState.typeStr, AndroidState.getInstance());
-        mapString.put(HtmlState.typeStr, HtmlState.getInstance());
-        mapString.put(AlgorithmState.typeStr, AlgorithmState.getInstance());
-        mapString.put(OtherState.typeStr, OtherState.getInstance());
-        mapString.put(ProductState.typeStr, ProductState.getInstance());
+                Field idField = problemStateClass.getDeclaredField("ID");
+                Field nameField = problemStateClass.getDeclaredField("NAME");
+                Field menuIdField = problemStateClass.getDeclaredField("MENU_ID");
 
-        mapMenuId.put(R.id.menu_java, JavaState.getInstance());
-        mapMenuId.put(R.id.menu_android, AndroidState.getInstance());
-        mapMenuId.put(R.id.menu_html, HtmlState.getInstance());
-        mapMenuId.put(R.id.menu_algorithm, AlgorithmState.getInstance());
-        mapMenuId.put(R.id.menu_other, OtherState.getInstance());
-        mapMenuId.put(R.id.menu_product, ProductState.getInstance());
+                int problemId = idField.getInt(problemStateClass);
+                String problemName = nameField.get(problemStateClass).toString();
+                int menuId = menuIdField.getInt(problemStateClass);
+
+                problemIdToStateMap.put(problemId, problemStates[i]);
+                problemNameToStateMap.put(problemName, problemStates[i]);
+                problemMenuIdToStateMap.put(menuId, problemStates[i]);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+    public static BaseProblemState getProblemStateById(int id) {
+        return (BaseProblemState) problemIdToStateMap.get(id);
     }
 
-    public static BaseProblemState getProblemType(int type) {
-        return (BaseProblemState) mapType.get(type);
+    public static BaseProblemState getProblemStateByName(String name) {
+        return (BaseProblemState) problemNameToStateMap.get(name);
     }
 
-    public static BaseProblemState getProblemType(String type) {
-        return (BaseProblemState) mapString.get(type);
-    }
-
-    public static BaseProblemState getProblemTypeByMenu(int menu) {
-        return (BaseProblemState) mapMenuId.get(menu);
+    public static BaseProblemState getProblemStateByMenu(int menuId) {
+        return (BaseProblemState) problemMenuIdToStateMap.get(menuId);
     }
 }

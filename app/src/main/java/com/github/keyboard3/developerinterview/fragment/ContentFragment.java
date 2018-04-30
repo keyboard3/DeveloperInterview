@@ -34,10 +34,10 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initView();
+        initHtmlWithFixContent();
     }
 
-    private void initView() {
+    private void initHtmlWithFixContent() {
         htmlContainer = getActivity().findViewById(R.id.wb_content);
         String content = "[Android 名企面试题及涉及知识点整理。](https://github.com/karmalove/AndroidInterview)\n" +
                 "[gtibook版面试资料](http://www.jackywang.tech/AndroidInterview-Q-A/)\n" +

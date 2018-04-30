@@ -16,38 +16,24 @@ import com.github.keyboard3.developerinterview.R;
  */
 
 public class HtmlState extends BaseProblemState {
-    public static final int type = 3;
-    public static final String typeStr = "ProblemHtml";
+    public static final int ID = 3;
+    public static final String NAME = "ProblemHtml";
+    public static final int ICON = R.mipmap.ic_menu_html;
+    public static final int MENU_ID = R.id.menu_html;
 
-    static class Single {
-        static HtmlState instance = new HtmlState();
-    }
 
-    public static HtmlState getInstance() {
-        return Single.instance;
+    @Override
+    protected String getProblemStateName() {
+        return NAME;
     }
 
     @Override
-    public BaseProblemState setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
-        fab.setVisibility(View.VISIBLE);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(this), typeStr);
-        fragmentTransaction.commit();
-        return this;
+    protected int getProblemStateId() {
+        return ID;
     }
 
     @Override
-    public int getTypeIcon() {
-        return R.mipmap.ic_menu_html;
-    }
-
-    @Override
-    public String getTypeStr() {
-        return typeStr;
-    }
-
-    @Override
-    public int getType() {
-        return type;
+    protected int getProblemIcon() {
+        return ICON;
     }
 }

@@ -39,22 +39,6 @@ public class Problem implements Serializable, Comparable<Problem> {
         return Integer.parseInt(id);
     }
 
-    public void setType(String typeName) {
-        type = ProblemStateFactory.getProblemType(typeName).getType();
-    }
-
-    public int getTypeIcon() {
-        return ProblemStateFactory.getProblemType(type).getTypeIcon();
-    }
-
-    public String getStorageDir() {
-        return ConfigConst.STORAGE_DIRECTORY + "/" + getTypeName();
-    }
-
-    public String getTypeName() {
-        return ProblemStateFactory.getProblemType(type).getTypeStr();
-    }
-
     @Override
     public String toString() {
         return "Problem{" +

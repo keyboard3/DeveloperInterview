@@ -14,11 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.base.BaseActivity;
 import com.github.keyboard3.developerinterview.fragment.ContentFragment;
 import com.github.keyboard3.developerinterview.fragment.ProblemsFragment;
-import com.github.keyboard3.developerinterview.http.HttpClient;
 import com.github.keyboard3.developerinterview.model.ShareModel;
 import com.github.keyboard3.developerinterview.pattern.BaseProblemState;
 import com.github.keyboard3.developerinterview.pattern.JavaState;
@@ -35,18 +33,14 @@ import butterknife.OnClick;
  * @author keyboard3
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "MainActivity";
     private static final int PERMISSION_READ_EXTERNAL_STORAGE = 101;
 
     private BaseProblemState problemType;
-    
+    private long firstClickTime = 0;
+
     @BindView(R.id.fab) FloatingActionButton floatingActionButton;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.nav_view) NavigationView navigationView;
-
-
-
-    private long firstClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +49,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
 
         initDrawerAndNavigation();
-        initContentFragmentByProblemType();
-        startVersionCheck();
+        initProblemFragment();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(this, UpgradService.class));
     }
 
     @Override
@@ -94,8 +86,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        ProblemStateFactory.getProblemTypeByMenu(item.getItemId())
-                           .setFragmentByType(floatingActionButton, getFragmentManager());
+        ProblemStateFactory.getProblemStateByMenu(item.getItemId())
+                           .setFragmentByProblemStateName(floatingActionButton, getFragmentManager());
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -103,9 +95,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSION_READ_EXTERNAL_STORAGE
-                && hasAllPermissionsGranted(grantResults)) {
-            problemType.setFragmentByType(floatingActionButton, getFragmentManager());
+        if(requestCode == PERMISSION_READ_EXTERNAL_STORAGE) {
+            problemType.setFragmentByProblemStateName(floatingActionButton, getFragmentManager());
         }
     }
 
@@ -114,13 +105,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return false;
     }
 
-    @OnClick(R.id.fab) void floatingActionButtonClick (){
-        ProblemsFragment fragment = getContentFragment();
-        if (fragment != null) {
-            fragment.goTop();
+    @OnClick(R.id.fab)
+    void floatingActionButtonClick (){
+        try {
+            getContentFragment().goTop();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    private void initDrawerAndNavigation() {
+    public ProblemsFragment getContentFragment() {
+        return (ProblemsFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
+    }
+
+    void initDrawerAndNavigation() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this
                 , drawer
                 , findToolbar()
@@ -132,18 +129,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initContentFragmentByProblemType() {
-        problemType = JavaState.getInstance();
-        if (!checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_READ_EXTERNAL_STORAGE)) {
-            problemType.setFragmentByType(floatingActionButton, getFragmentManager());
-        }
+    void initProblemFragment() {
+        problemType = ProblemStateFactory.getProblemStateById(JavaState.ID);
+        //todo checkPermission
+        problemType.setFragmentByProblemStateName(floatingActionButton, getFragmentManager());
     }
 
-    private void startVersionCheck() {
-        AllenChecker.startVersionCheck(this, HttpClient.getInstance(getApplicationContext()).mHostBuilder.build());
-    }
-
-    private void doubleClickQuitCheck() {
+    void doubleClickQuitCheck() {
         if (System.currentTimeMillis() - firstClickTime < 2000) {
             QuitActivity.exitApplication(this);
         } else {
@@ -152,29 +144,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         firstClickTime = System.currentTimeMillis();
     }
 
-    public ProblemsFragment getContentFragment() {
-        return (ProblemsFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
-    }
+    boolean checkWebContentAndBackUrl() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(OtherState.NAME);
+        ContentFragment webContentFragment = fragment != null ? (ContentFragment) fragment:null;
 
-    private boolean checkWebContentAndBackUrl() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(OtherState.typeStr);
-        ContentFragment webContentFragment = null;
-
-        if (fragment != null)
-            webContentFragment = (ContentFragment) fragment;
-
-        if (webContentFragment !=null && webContentFragment.htmlContainer.canGoBack()) {
+        boolean checkCanGo = webContentFragment != null && webContentFragment.htmlContainer.canGoBack();
+        if (checkCanGo)
             webContentFragment.htmlContainer.goBack();
-            return true;
-        }
-        return false;
+        return checkCanGo ;
     }
 
-    private boolean checkAndCloseDrawer() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+    boolean checkAndCloseDrawer() {
+        boolean isDrawerOpen = drawer.isDrawerOpen(GravityCompat.START);
+        if (isDrawerOpen)
             drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
-        return false;
+        return isDrawerOpen;
     }
 }

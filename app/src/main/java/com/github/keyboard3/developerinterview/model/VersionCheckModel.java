@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.core.AllenChecker;
 import com.github.keyboard3.developerinterview.ConfigConst;
 import com.github.keyboard3.developerinterview.entity.Version;
 import com.github.keyboard3.developerinterview.http.HttpClient;
@@ -21,20 +20,18 @@ import io.reactivex.functions.Consumer;
 
 public class VersionCheckModel {
     public static void versionCheck(final Context context) {
-        //弹出更新内容
-        final HttpClient httpClient = HttpClient.getInstance(context);
+        HttpClient httpClient = HttpClient.getInstance(context);
         httpClient.upgrade(ConfigConst.FIR_HOST_APPID, ConfigConst.FIR_API_TOKEN, new Consumer<Version>() {
             @Override
             public void accept(Version entity) throws Exception {
-                if (entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0) {
+                boolean checkSameVersion = entity.getVersionShort().compareTo(VersionUtil.getVersion(context)) == 0;
+                if (checkSameVersion)
                     new AlertDialog.Builder(context)
                             .setTitle(entity.getVersionShort())
                             .setMessage(entity.getChangelog())
                             .show();
-                } else {
-                    AllenChecker.startVersionCheck(context, httpClient.mHostBuilder.build());
+                 else
                     Toast.makeText(context, "检测最新版本为" + entity.getVersionShort(), Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }

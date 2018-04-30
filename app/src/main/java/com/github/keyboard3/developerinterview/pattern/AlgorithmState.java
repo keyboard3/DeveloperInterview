@@ -16,8 +16,10 @@ import com.github.keyboard3.developerinterview.R;
  */
 
 public class AlgorithmState extends BaseProblemState {
-    public static final int type = 5;
-    public static final String typeStr = "ProblemAlgorithm";
+    public static final int ID = 5;
+    public static final String NAME = "ProblemAlgorithm";
+    public static final int ICON = R.mipmap.ic_menu_algorithm;
+    public static final int MENU_ID = R.id.menu_algorithm;
 
     static class Single {
         static AlgorithmState instance = new AlgorithmState();
@@ -28,7 +30,7 @@ public class AlgorithmState extends BaseProblemState {
     }
 
     @Override
-    public BaseProblemState setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
+    public BaseProblemState setFragmentByProblemStateName(FloatingActionButton fab, FragmentManager fragmentManager) {
         fab.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, ProblemsFragment.newInstance(this));
@@ -37,17 +39,17 @@ public class AlgorithmState extends BaseProblemState {
     }
 
     @Override
-    public int getTypeIcon() {
-        return R.mipmap.ic_menu_algorithm;
+    protected String getProblemStateName() {
+        return NAME;
     }
 
     @Override
-    public String getTypeStr() {
-        return typeStr;
+    protected int getProblemStateId() {
+        return ID;
     }
 
     @Override
-    public int getType() {
-        return type;
+    protected int getProblemIcon() {
+        return ICON;
     }
 }

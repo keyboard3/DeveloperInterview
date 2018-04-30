@@ -51,7 +51,7 @@ public class ShareModel {
         String title = data.getQueryParameter(ConfigConst.INTENT_TITLE);
 
         if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(type)) {
-            BaseProblemState problemType = ProblemStateFactory.getProblemType(Integer.parseInt(type));
+            BaseProblemState problemType = ProblemStateFactory.getProblemStateById(Integer.parseInt(type));
             problem = new ProblemsDrive(activity.getApplicationContext(), problemType).queryProblem(id);
             if (problem == null && !TextUtils.isEmpty(source) && !TextUtils.isEmpty(title)) {
                 Intent intent = new Intent(activity, WebViewActivity.class);

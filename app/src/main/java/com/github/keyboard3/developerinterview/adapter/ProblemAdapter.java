@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.github.keyboard3.developerinterview.R;
 import com.github.keyboard3.developerinterview.entity.Problem;
+import com.github.keyboard3.developerinterview.pattern.ProblemStateFactory;
 
 import java.util.List;
 
@@ -37,7 +38,10 @@ public class ProblemAdapter extends BaseAdapter<ProblemAdapter.MyViewHolder, Pro
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.setPosition(position);
         Problem entity = data.get(position);
-        holder.icon.setImageResource(entity.getTypeIcon());
+
+        ProblemStateFactory.getProblemStateById(entity.type)
+                .setImageViewIcon(holder.icon);
+
         holder.tvTitle.setText(entity.title);
         holder.tvContent.setText(entity.content);
     }

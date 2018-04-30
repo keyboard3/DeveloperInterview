@@ -16,38 +16,23 @@ import com.github.keyboard3.developerinterview.fragment.ProductsFragment;
  */
 
 public class ProductState extends BaseProblemState {
-    public static final int type = 7;
-    public static final String typeStr = "product";
+    public static final int ID = 7;
+    public static final String NAME = "product";
+    public static final int ICON = R.mipmap.ic_menu_product;
+    public static final int MENU_ID = R.id.menu_product;
 
-    static class Single {
-        static ProductState instance = new ProductState();
-    }
-
-    public static ProductState getInstance() {
-        return Single.instance;
+    @Override
+    protected String getProblemStateName() {
+        return NAME;
     }
 
     @Override
-    public BaseProblemState setFragmentByType(FloatingActionButton fab, FragmentManager fragmentManager) {
-        fab.setVisibility(View.INVISIBLE);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new ProductsFragment(), typeStr);
-        fragmentTransaction.commit();
-        return this;
+    protected int getProblemStateId() {
+        return ID;
     }
 
     @Override
-    public int getTypeIcon() {
-        return R.mipmap.ic_menu_product;
-    }
-
-    @Override
-    public String getTypeStr() {
-        return typeStr;
-    }
-
-    @Override
-    public int getType() {
-        return type;
+    protected int getProblemIcon() {
+        return ICON;
     }
 }

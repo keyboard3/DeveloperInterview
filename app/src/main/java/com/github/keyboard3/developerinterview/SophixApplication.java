@@ -29,11 +29,11 @@ public class SophixApplication extends Application {
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        RePluginConfig c = new RePluginConfig();
-        c.setCallbacks(new com.github.keyboard3.developerinterview.callback.HostCallbacks(base));
-        RePlugin.App.attachBaseContext(this, c);
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(context);
+        RePluginConfig rePluginConfig = new RePluginConfig();
+        rePluginConfig.setCallbacks(new com.github.keyboard3.developerinterview.callback.HostCallbacks(context));
+        RePlugin.App.attachBaseContext(this, rePluginConfig);
     }
 
     @Override
@@ -84,7 +84,6 @@ public class SophixApplication extends Application {
         String appVersion = VersionUtil.getVersion(application);
         SophixManager.getInstance().setContext(application)
                 .setAppVersion(appVersion)
-                //.setAesKey(null)
                 .setEnableDebug(true)
                 .setSecretMetaData("24614018-1",
                         "2697eb93fd779a418e51548c885c3105",
@@ -93,16 +92,11 @@ public class SophixApplication extends Application {
                 .setPatchLoadStatusStub(new PatchLoadStatusListener() {
                     @Override
                     public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
-                        // 补丁加载回调通知
                         if (code == PatchStatus.CODE_LOAD_SUCCESS) {
-                            // 表明补丁加载成功
                             Log.d(TAG, code + "：表明补丁加载成功");
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
-                            // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
-                            // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
                             Log.d(TAG, code + "：表明新补丁生效需要重启. 开发者可提示用户或者强制重启");
                         } else {
-                            // 其它错误信息, 查看PatchStatus类说明
                             Log.d(TAG, code + "：其它错误信息, 查看PatchStatus类说明");
                         }
                     }

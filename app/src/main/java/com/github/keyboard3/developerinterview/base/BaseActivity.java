@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.github.keyboard3.developerinterview.R;
 import com.wang.avi.AVLoadingIndicatorView;
-import com.werb.mediautilsdemo.CustomPermissionChecker;
 
 /**
  * 基类的Activity 让子类更加专注的实现自己的业务
@@ -21,7 +20,6 @@ import com.werb.mediautilsdemo.CustomPermissionChecker;
 public class BaseActivity extends AppCompatActivity implements IProgressDialog {
 
     private AVLoadingIndicatorView advanceProgressView;
-    private CustomPermissionChecker permissionChecker;
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
     private boolean advanceDialogToggle;
@@ -102,30 +100,5 @@ public class BaseActivity extends AppCompatActivity implements IProgressDialog {
     @Override
     public boolean isShowing() {
         return progressDialog.isShowing();
-    }
-
-
-    protected boolean checkPermission(@NonNull String[] permissions, @NonNull int requestCode) {
-        if (permissionChecker == null) {
-            permissionChecker = new CustomPermissionChecker(this);
-        }
-
-        if (permissionChecker.isLackPermissions(permissions)) {
-            permissionChecker.requestPermissions(requestCode);
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
-        if (!permissionChecker.hasAllPermissionsGranted(grantResults)) {
-            showPermissionDialog();
-            return false;
-        }
-        return true;
-    }
-
-    protected void showPermissionDialog() {
-        permissionChecker.showDialog();
     }
 }

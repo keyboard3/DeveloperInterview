@@ -1,12 +1,9 @@
 package com.github.keyboard3.developerinterview.http;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.core.VersionParams;
 import com.github.keyboard3.developerinterview.ConfigConst;
-import com.github.keyboard3.developerinterview.UpgradService;
 import com.github.keyboard3.developerinterview.entity.Problem;
 import com.github.keyboard3.developerinterview.entity.Version;
 
@@ -30,8 +27,6 @@ public class HttpClient {
     private static final String TAG = "HttpClient";
     private Context context;
     private HttpService mService;
-    public VersionParams.Builder mHostBuilder;
-    public VersionParams.Builder mSelfBuilder;
     private String baseUrl = "https://raw.githubusercontent.com/keyboard3/DeveloperInterview/";
     private static HttpClient instance;
     private Consumer<Throwable> consumerError;
@@ -39,17 +34,6 @@ public class HttpClient {
     public HttpClient(Context appContext) {
         this.context = appContext;
         init();
-        mHostBuilder = new VersionParams.Builder()
-                .setRequestUrl(ConfigConst.UPGRAD_HOST_URL)
-                .setApkName("interview")
-                .setDownloadAPKPath(ConfigConst.STORAGE_DIRECTORY)
-                .setService(UpgradService.class);
-        mSelfBuilder = new VersionParams.Builder()
-                .setApkName("selfView")
-                .setOnlyDownload(true)
-                .setRequestUrl(ConfigConst.UPGRAD_SELF_URL)
-                .setDownloadAPKPath(ConfigConst.STORAGE_DIRECTORY)
-                .setService(UpgradService.class);
     }
 
     private void init() {

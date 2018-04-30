@@ -38,7 +38,6 @@
                     android:scheme="content" />
             </intent-filter>
         </activity>
-        <activity android:name=".AudioListActivity" />
         <activity android:name=".SettingActivity" />
 
         <provider
@@ -51,11 +50,6 @@
                 android:resource="@xml/problem_path"
                 tools:replace="android:resource" />
         </provider>
-
-        <service
-            android:name=".UpgradService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name=".QuitActivity" />
     </application>

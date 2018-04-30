@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,25 +80,21 @@ public class ProblemsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
-
-        problemState = (BaseProblemState) getArguments().getSerializable(ConfigConst.INTENT_KEY);
-        problemsDrive = new ProblemsDrive(getActivity().getApplicationContext(), problemState);
+        initProblemDataFromIntent();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        spHelper = new SharePreferencesHelper(getActivity(), problemState.getTypeStr());
-
-        linearLayoutManager = new LinearLayoutManager(this.getActivity());
-        problemsView.setLayoutManager(linearLayoutManager);
-        ProblemListModel.restoreListPosition(linearLayoutManager, spHelper);
-        adapter = new ProblemAdapter(problems, getActivity());
+        resumeLastPositonOnProblemsView();
 
         initProblemsFromNet();
 
+        initProblemsViewWithDaa();
+    }
+
+    private void initProblemsViewWithDaa() {
         problemsView.setAdapter(adapter);
         adapter.setOnItemClickListener(new ProblemAdapter.OnItemClickListener() {
             @Override
@@ -110,8 +105,7 @@ public class ProblemsFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-
-        new ItemTouchHelper(callback).attachToRecyclerView(problemsView);
+        new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(problemsView);
     }
 
     @Override
@@ -126,17 +120,57 @@ public class ProblemsFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRefreshEvent(SettingActivity.RefreshEvent event) {
-        initProblemsFromNet();
-        adapter.notifyDataSetChanged();
+    private void initProblemDataFromIntent() {
+        problemState = (BaseProblemState) getArguments().getSerializable(ConfigConst.INTENT_KEY);
+        problemsDrive = new ProblemsDrive(getActivity().getApplicationContext(), problemState);
+    }
+
+    void initProblemsFromNet() {
+        toggleDialogAdvance(true);
+        showDialog();
+        problemsDrive.asyncFetchProblems(new Callback<List<Problem>>() {
+            @Override
+            public void success(List<Problem> item) {
+                try {
+                    problems.addAll(item);
+                    adapter.notifyDataSetChanged();
+
+                    if (!ListUtil.isEmpty(problems)) {
+                        problemsView.setVisibility(View.VISIBLE);
+                        noDataView.setVisibility(View.GONE);
+                        inputView.setVisibility(View.GONE);
+                    } else {
+                        problemsView.setVisibility(View.GONE);
+                        noDataView.setVisibility(View.VISIBLE);
+                        inputView.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    hideDialog();
+                }
+            }
+
+            @Override
+            public void fail(Throwable error) {
+                hideDialog();
+            }
+        });
+    }
+
+    void resumeLastPositonOnProblemsView() {
+        spHelper = problemState.createSpHelper(getActivity());
+        linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        problemsView.setLayoutManager(linearLayoutManager);
+        ProblemListModel.restoreListPosition(linearLayoutManager, spHelper);
+        adapter = new ProblemAdapter(problems, getActivity());
     }
 
     @OnClick(R.id.tv_input) void inputViewClick(){
         startActivity(new Intent(getActivity(), SettingActivity.class));
     }
 
-    ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+    ItemTouchHelper.Callback itemTouchCallback = new ItemTouchHelper.Callback() {
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
                 viewHolder) {
@@ -169,39 +203,6 @@ public class ProblemsFragment extends BaseFragment {
             }).create().show();
         }
     };
-
-    protected void initProblemsFromNet() {
-        toggleDialogAdvance(true);
-        showDialog();
-        problemsDrive.asyncFetchProblems(new Callback<List<Problem>>() {
-            @Override
-            public void success(List<Problem> item) {
-                try {
-                    problems.addAll(item);
-                    adapter.notifyDataSetChanged();
-
-                    if (!ListUtil.isEmpty(problems)) {
-                        problemsView.setVisibility(View.VISIBLE);
-                        noDataView.setVisibility(View.GONE);
-                        inputView.setVisibility(View.GONE);
-                    } else {
-                        problemsView.setVisibility(View.GONE);
-                        noDataView.setVisibility(View.VISIBLE);
-                        inputView.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    hideDialog();
-                }
-            }
-
-            @Override
-            public void fail(Throwable error) {
-                hideDialog();
-            }
-        });
-    }
 
     public void goTop() {
         problemsView.scrollToPosition(0);
